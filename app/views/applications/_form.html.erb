@@ -1,0 +1,21 @@
+<%= form_with model: [@job, @job.applications.build] do |form| %>
+  <p>
+    <%= form.label :applicant_id %><br>
+    <%= form.text_field :applicant_id %>
+  </p>
+  <p>
+    <%= form.label :application_text %><br>
+    <%= form.text_area :application_text %>
+  </p>
+  <p>
+    <%= form.label :application_documents %><br>
+    <%= form.text_area :application_documents %>
+  </p>
+<!--  <p>-->
+<!--    <%#= form.label :status %><br>-->
+    <%#= form.select :status, ['public', 'private', 'archived'], selected: 'public' %>
+<!--  </p>-->
+  <p>
+    <%= form.submit %>
+  </p>
+<% end %>

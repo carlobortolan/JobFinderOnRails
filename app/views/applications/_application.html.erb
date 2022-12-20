@@ -1,0 +1,18 @@
+<% unless false %>
+  <p>
+    <strong>Applicant:</strong>
+    <%= application.applicant_id %>
+  </p>
+
+  <p>
+    <strong>Application:</strong>
+    <%= application.application_text %>
+    <%= application.application_documents %>
+  </p>
+
+  <p>
+    <strong>Response:</strong>
+    <%= application.response.nil? ? "No response yet ..." : application.text %>
+  </p>
+
+<% end %>

@@ -1,0 +1,15 @@
+<h1>Jobs</h1>
+
+<!--Our blog has <%#= Job.public_count %> jobs and counting!-->
+
+<ul>
+  <% @jobs.each do |job| %>
+    <% unless job.archived? %>
+      <li>
+        <%= link_to job.title, job %>
+      </li>
+    <% end %>
+  <% end %>
+</ul>
+
+<%= link_to "New Job", new_job_path %>
