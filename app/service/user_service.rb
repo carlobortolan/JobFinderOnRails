@@ -22,4 +22,11 @@ class UserService
     @user_repository.find_all
   end
 
+  def get_user(user_id)
+    @user_repository.get_user(user_id)
+  end
+  def get_user_name(user_id)
+    @user_repository.get_user_name(user_id)
+  end
+
 end

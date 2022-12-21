@@ -7,8 +7,10 @@ Rails.application.routes.draw do
     resources :applications
   end
 
-  get 'jobs/:job_id/applications/:application_id/accept', :to => 'applications#accept'
-  get 'jobs/:job_id/applications/:application_id/reject', :to => 'applications#reject'
-
+  get 'jobs/(/:job_id)/applications/(/:application_id)/accept', :to => 'applications#accept', as: 'job_application_accept'
+  get 'jobs/(/:job_id)/applications/(/:application_id)/reject', :to => 'applications#reject', as: 'job_application_reject'
+  get 'exit', to: 'sessions#destroy', as: :logout
+  get ':username', to: 'users#show', as: :user
+  resources :users
   # Defines the root path route ("/")
 end

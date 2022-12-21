@@ -1,13 +1,21 @@
-<h1>Application</h1>
-
-<!--Our blog has <%#= Job.public_count %> jobs and counting!-->
+<h1>Applications for job #<%= @job.job_id %></h1>
+<h3>There are <%= @job.applications.count %> applications and counting!</h3>
 
 <ul>
   <% @applications.each do |application| %>
+    <%application.get_name.to_s %>
     <li>
-      <%= link_to application.applicant_id, job_application_path(@job.job_id, application.applicant_id)%>
+      <%=
+        link_to "#{application.get_name} (##{application.applicant_id})", job_application_path(@job.job_id, application.applicant_id)
+      %> -
+      <%=
+        link_to "accept", job_application_accept_path(@job, application.applicant_id)
+      %> -
+      <%=
+        link_to "reject", job_application_reject_path(@job, application.applicant_id)
+      %>
     </li>
   <% end %>
 </ul>
 
-<li><%= link_to "New Application"%></li>
+<li><%= link_to "New Application" %></li>

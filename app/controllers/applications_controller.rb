@@ -1,9 +1,10 @@
 class ApplicationsController < ApplicationController
   http_basic_authenticate_with name: "cb", password: "5503", only: :destroy
-  attr_accessor(:application_service)
+  attr_accessor(:application_service, :user_service)
 
   def initialize
     @application_service = ApplicationService.new(nil, nil)
+    @user_service = UserService.new
   end
 
   def index
@@ -13,6 +14,10 @@ class ApplicationsController < ApplicationController
 
   def show
     @job = Job.find(params[:job_id])
+    puts "TEST"
+    puts params
+    puts "TEST"
+    puts "TEST"
     @application = @job.applications.find_by_sql("SELECT * FROM applications a WHERE a.applicant_id = #{params[:id]} and a.job_id = #{params[:job_id]}")
   end
 

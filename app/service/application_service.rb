@@ -3,9 +3,11 @@
 # This class uses the ApplicationHelper to to handle applications
 require_relative '../../lib/notification_generator.rb'
 require_relative '../../lib/notification_generator.rb'
+
 class ApplicationService
   # [ApplicationHelper] Communicates with db.
   attr_accessor(:application_repository, :notification_generator)
+
   def initialize(application_repository, notification_generator)
     if application_repository.nil?
       @application_repository = ApplicationRepository.new
@@ -83,6 +85,7 @@ class ApplicationService
       @application_repository.change_status(job_id, account_id, -1, comment.to_s)
     end
   end
+
 
   # Accepts single application and adds optional comment by employer.
   # Sends notification message to accepted applicant.
