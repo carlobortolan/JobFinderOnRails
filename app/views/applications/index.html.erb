@@ -1,5 +1,8 @@
 <h1>Applications for job #<%= @job.job_id %></h1>
 <h3>There are <%= @job.applications.count %> applications and counting!</h3>
+<%=
+  link_to "Reject all applications", job_applications_reject_all_path(@job)
+%>
 
 <ul>
   <% @applications.each do |application| %>

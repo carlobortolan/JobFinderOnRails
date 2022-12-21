@@ -86,6 +86,15 @@ class ApplicationService
     end
   end
 
+  # Rejects single application and adds optional comment by employer.
+  # @param [int] job_id Job
+  # @param [int] account_id Id des Bewerbers
+  # @param [String] comment Rückmeldung
+  def reject_all (job_id, comment)
+    if !job_id.nil? && !comment.nil? && job_id.is_a?(Integer) && job_id > 0
+      @application_repository.reject_all(job_id, comment.to_s)
+    end
+  end
 
   # Accepts single application and adds optional comment by employer.
   # Sends notification message to accepted applicant.
@@ -98,7 +107,7 @@ class ApplicationService
       applicant = @application_repository.find_account(account_id)
       if !applicant.nil? && !applicant[:name].nil? && !applicant[:email].nil?
         @application_repository.change_status(job_id, account_id, 1, comment.to_s)
-        @application_repository.change_status_all(job_id, account_id, -1, "<STANDARD REJECTION TEXT>")
+        #@application_repository.change_status_all(job_id, account_id, -1, "<STANDARD REJECTION TEXT>")
         @notification_generator.send_notification_applicant(applicant[:name], applicant[:email], job_id, comment)
       end
     end

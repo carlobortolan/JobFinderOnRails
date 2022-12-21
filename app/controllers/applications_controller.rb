@@ -55,9 +55,18 @@ class ApplicationsController < ApplicationController
   end
 
   def reject
+    puts "param = #{params}"
     @application_service.reject(params[:job_id].to_i, params[:application_id].to_i, "REJECTED")
     puts"REJECT"
+    redirect_to job_applications_path(params[:job_id])
+  end
+
+  def reject_all
+    puts "REJECT ALL"
+    puts "params = #{params}"
+    @application_service.reject_all(params[:job_id].to_i, "REJECTED")
     redirect_to job_path(Job.find_by_job_id(params[:job_id])), status: :see_other
+    #    redirect_to job_path(@job), status: :see_other
   end
 
   private

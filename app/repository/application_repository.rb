@@ -12,6 +12,7 @@ class ApplicationRepository
   def initialize
     @client = Mysql2::Client.new(host: "localhost", port: "3306", database: "masterdata_2", username: "rm_user", password: "hô[ÕiÚéjÚ¢X*t/t¢ÕeR/ü¾nõ'g'ñ¢ß«Tíwàx²\"¡jÛß´*PZÏmõ}ßX¨º*¤àÙ7ü'ÌJÌ=´Lh#M[NöèD`¿üåvã^àði®$4¦{·d3ZE~üMêr.7>þSrÖô(òúHÒDÊ]!Ä-¯.ï!òHúã¡")
   end
+
   def set_notification (job_id, employer_id, new_value)
     # update boolean value of notification setting
     @client.query("UPDATE notifications SET notify = '#{(new_value ? 1 : 0)}' WHERE job_id = #{job_id} AND employer_id = #{employer_id}")
@@ -42,7 +43,6 @@ class ApplicationRepository
     end
   end
 
-
   # @deprecated
   def remove_old_applications (date_to)
     # remove all unanswered or rejected applications for a job with a due date before date_to
@@ -69,10 +69,10 @@ class ApplicationRepository
     # WHERE a.user_id = user_id and job job_id = a.job_id
   end
 
-  def change_status_all (job_id, account_id, new_status, response)
-    # change status to -1/1;
+  def reject_all (job_id, response)
+    # change status to -1 for all with current status 0;
     # add response
-    @client.query("UPDATE applications SET status = '#{new_status}', response = '#{response}' WHERE job_id = #{job_id} AND applicant_id <> #{account_id }")
+    @client.query("UPDATE applications SET status = '-1', response = '#{response}' WHERE job_id = #{job_id} AND status <> '1'")
     # UPDATE applications a
     # SET a.status = new_status,
     #     a.response = response
