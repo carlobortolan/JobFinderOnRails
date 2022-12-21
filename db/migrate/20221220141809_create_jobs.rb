@@ -1,6 +1,6 @@
 class CreateJobs < ActiveRecord::Migration[7.0]
   def change
-    create_table "jobs", primary_key: "job_id", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    create_table "jobs", primary_key: :job_id, id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
       t.column "job_type", "enum('typa','typb','typc')", null: true
       t.integer "job_status", limit: 1, default: 0, null: true
       t.string "status", default: 0, null: true

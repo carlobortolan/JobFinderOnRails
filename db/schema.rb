@@ -31,6 +31,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_20_142335) do
     t.string "application_documents", limit: 100
     t.string "response", limit: 500
     t.index ["applicant_id"], name: "account_id_idx"
+    t.index ["job_id", "applicant_id"], unique: true
   end
 
   create_table "jobs", primary_key: "job_id", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|

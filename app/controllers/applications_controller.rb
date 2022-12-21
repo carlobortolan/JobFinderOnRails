@@ -9,18 +9,21 @@ class ApplicationsController < ApplicationController
   def index
     @job = Job.find(params[:job_id])
     @applications = @job.applications.all
-    #@application = @job.applications.find(params[:job_id])
-
   end
 
   def show
     @job = Job.find(params[:job_id])
-    @application = @job.application.find(application_params[:applicant_id])
+    puts "TEST1"
+    puts params
+    puts "TEST2"
+    @application = @job.applications.find_by_sql("SELECT * FROM applications a WHERE a.applicant_id = #{params[:id]} and a.job_id = #{params[:job_id]}")
+    puts "TEST3"
+    #    @application = @job.applications.find(params[:id])
   end
 
-  #  http://localhost:3000/jobs/:job_id=1/applications/:job_id=1&:applicant_id=1
+  #  http://localhost:3000/jobs/:applicant_id=1/applications/:applicant_id=1&:applicant_id=1
   def new
-    @job = Job.find(params[:job_id])
+    @job = Job.find(params[:applicant_id])
     @application = Application.new
   end
 
@@ -40,8 +43,8 @@ class ApplicationsController < ApplicationController
   end
 
   def destroy
-    @job = Job.find(params[:job_id])
-    @application = @job.applications.find(params[:job_id])
+    @job = Job.find(params[:applicant_id])
+    @application = @job.applications.find(params[:applicant_id])
     @application.destroy
     redirect_to job_path(@job), status: :see_other
   end
