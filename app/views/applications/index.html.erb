@@ -1,0 +1,13 @@
+<h1>Jobs</h1>
+
+<!--Our blog has <%#= Job.public_count %> jobs and counting!-->
+
+<ul>
+  <% @applications.each do |application| %>
+    <li>
+      <%= link_to application.applicant_id, job_application_path(application)%>
+    </li>
+  <% end %>
+</ul>
+
+<%= link_to "New Application", new_job_application_path %>
