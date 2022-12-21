@@ -6,5 +6,9 @@ Rails.application.routes.draw do
   resources :jobs do
     resources :applications
   end
+
+  get 'jobs/:job_id/applications/:application_id/accept', :to => 'applications#accept'
+  get 'jobs/:job_id/applications/:application_id/reject', :to => 'applications#reject'
+
   # Defines the root path route ("/")
 end

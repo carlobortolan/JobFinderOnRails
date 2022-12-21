@@ -13,15 +13,9 @@ class ApplicationsController < ApplicationController
 
   def show
     @job = Job.find(params[:job_id])
-    puts "TEST1"
-    puts params
-    puts "TEST2"
     @application = @job.applications.find_by_sql("SELECT * FROM applications a WHERE a.applicant_id = #{params[:id]} and a.job_id = #{params[:job_id]}")
-    puts "TEST3"
-    #    @application = @job.applications.find(params[:id])
   end
 
-  #  http://localhost:3000/jobs/:applicant_id=1/applications/:applicant_id=1&:applicant_id=1
   def new
     @job = Job.find(params[:applicant_id])
     @application = Application.new
@@ -47,6 +41,18 @@ class ApplicationsController < ApplicationController
     @application = @job.applications.find(params[:applicant_id])
     @application.destroy
     redirect_to job_path(@job), status: :see_other
+  end
+
+  def accept
+    @application_service.accept(params[:job_id].to_i, params[:application_id].to_i, "ACCEPTED")
+    puts"ACCEPT"
+    redirect_to job_path(Job.find_by_job_id(params[:job_id])), status: :see_other
+  end
+
+  def reject
+    @application_service.reject(params[:job_id].to_i, params[:application_id].to_i, "REJECTED")
+    puts"REJECT"
+    redirect_to job_path(Job.find_by_job_id(params[:job_id])), status: :see_other
   end
 
   private
