@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 # @author Jan Hummel, Carlo Bortolan
 # This class uses the ApplicationHelper to to handle applications
+require_relative '../../lib/notification_generator.rb'
+require_relative '../../lib/notification_generator.rb'
 class ApplicationService
   # [ApplicationHelper] Communicates with db.
   attr_accessor(:application_repository, :notification_generator)
   def initialize(application_repository, notification_generator)
-    if (application_repository.nil? || notification_generator.nil?)
+    if application_repository.nil?
       @application_repository = ApplicationRepository.new
-      # @notification_generator = NotificationGenerator.new
+      @notification_generator = NotificationGenerator.new
     else
       @application_repository = application_repository
       @notification_generator = notification_generator

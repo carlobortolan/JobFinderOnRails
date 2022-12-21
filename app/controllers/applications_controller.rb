@@ -3,7 +3,6 @@ class ApplicationsController < ApplicationController
   attr_accessor(:application_service)
 
   def initialize
-    puts "TTT"
     @application_service = ApplicationService.new(nil, nil)
   end
 
@@ -13,12 +12,12 @@ class ApplicationsController < ApplicationController
 
   def create
     @job = Job.find(params[:job_id])
-    begin
-      @application_service.add_application(params[:job_id].to_i, application_params[:applicant_id].to_i, application_params[:application_text], application_params[:application_documents])
-      redirect_to job_path(@job)
-    rescue
-      render :duplicate, status: :conflict
-    end
+    # begin
+    @application_service.add_application(params[:job_id].to_i, application_params[:applicant_id].to_i, application_params[:application_text], application_params[:application_documents])
+    redirect_to job_path(@job)
+    # rescue
+    # render :duplicate, status: :conflict
+    # end
   end
 
   def destroy
