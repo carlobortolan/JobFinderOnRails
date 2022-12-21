@@ -1,20 +1,29 @@
 <%= form_with model: [@job, @job.applications.build] do |form| %>
-  <p>
+  <div>
     <%= form.label :applicant_id %><br>
     <%= form.text_field :applicant_id %>
-  </p>
+    <% @job.applications.build.errors.full_messages_for(:applicant_id).each do |message| %>
+      <div><%= message %></div>
+    <% end %>
+  </div>
+
   <p>
     <%= form.label :application_text %><br>
     <%= form.text_area :application_text %>
-  </p>
+    <% @job.applications.build.errors.full_messages_for(:application_text).each do |message| %>
+    <div><%= message %></div>
+  <% end %>
+
   <p>
     <%= form.label :application_documents %><br>
     <%= form.text_area :application_documents %>
-  </p>
-<!--  <p>-->
-<!--    <%#= form.label :status %><br>-->
-    <%#= form.select :status, ['public', 'private', 'archived'], selected: 'public' %>
-<!--  </p>-->
+    <% @job.applications.build.errors.full_messages_for(:application_documents).each do |message| %>
+    <div><%= message %></div>
+  <% end %>
+  <!--  <p>-->
+  <!--    <%#= form.label :status %><br>-->
+  <%#= form.select :status, ['public', 'private', 'archived'], selected: 'public' %>
+  <!--  </p>-->
   <p>
     <%= form.submit %>
   </p>

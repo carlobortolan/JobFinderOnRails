@@ -17,6 +17,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_20_142335) do
     t.datetime "registration_date", precision: nil, default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.integer "activity_status", limit: 1, default: 0, null: false
     t.string "image_url", limit: 500
+    t.string "first_name", limit: 45
+    t.string "last_name", limit: 45
     t.index ["email"], name: "account_email_UNIQUE", unique: true
   end
 
