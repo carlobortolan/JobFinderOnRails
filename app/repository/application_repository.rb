@@ -6,38 +6,42 @@ require 'rubygems'
 # @author Jan Hummel, Carlo Bortolan
 # This class communicates directly with the db and sends SQL requests
 class ApplicationRepository
-  # attr_accessor(:client)
-
   # Client parameter müssen manuell angepasst werden
 
-  def set_notification (job_id, employer_id, new_value)
-    # update boolean value of notification setting
-    ActiveRecord::Base.connection.execute("UPDATE notifications SET notify = '#{(new_value ? 1 : 0)}' WHERE job_id = #{job_id} AND employer_id = #{employer_id}")
-    # UPDATE notifications n
-    # SET n.notify = new_value,
-    # WHERE n.job_id = job_id and employer_id = n.employer_id
+  def insert_notification (job_id, employer_id, new_value)
+    query = "INSERT INTO notifications VALUES( '#{(new_value ? 1 : 0)}',#{job_id},#{employer_id})"
+    binds = [ActiveRecord::Relation::QueryAttribute.new('new_value', new_value, ActiveRecord::Type::Boolean.new),
+             ActiveRecord::Relation::QueryAttribute.new('job_id', job_id, ActiveRecord::Type::Integer.new),
+             ActiveRecord::Relation::QueryAttribute.new('employer_id', employer_id, ActiveRecord::Type::Integer.new)]
+    ApplicationRecord.connection.exec_query(query, 'SQL', binds, prepare: true)
+  end
+
+  def update_notification (job_id, employer_id, new_value)
+    query = "UPDATE notifications SET notify = '#{(new_value ? 1 : 0)}' WHERE job_id = #{job_id} AND employer_id = #{employer_id}"
+    binds = [ActiveRecord::Relation::QueryAttribute.new('new_value', new_value, ActiveRecord::Type::Boolean.new),
+             ActiveRecord::Relation::QueryAttribute.new('job_id', job_id, ActiveRecord::Type::Integer.new),
+             ActiveRecord::Relation::QueryAttribute.new('employer_id', employer_id, ActiveRecord::Type::Integer.new)]
+    ApplicationRecord.connection.exec_query(query, 'SQL', binds, prepare: true)
   end
 
   def get_notification (job_id, employer_id)
-    # get boolean value of notification setting
-      ActiveRecord::Base.connection.execute("SELECT notify FROM notifications WHERE job_id = #{job_id} AND employer_id = #{employer_id}").each do |i|
-      return i.values_at("notify")[0].to_s.eql? '1'
-    end
-    # SELECT n.notify
-    # FROM notifications n
-    # WHERE n.job_id = job_id and n.employer_id = employer_id
+    query = "SELECT notify FROM notifications WHERE job_id = #{job_id} AND employer_id = #{employer_id}"
+    binds = [ActiveRecord::Relation::QueryAttribute.new('job_id', job_id, ActiveRecord::Type::Integer.new),
+             ActiveRecord::Relation::QueryAttribute.new('employer_id', employer_id, ActiveRecord::Type::Integer.new)]
+    ApplicationRecord.connection.exec_query(query, 'SQL', binds, prepare: true).rows[0]
   end
 
   def find_employer_id (job_id)
-    ActiveRecord::Base.connection.execute("SELECT account_id FROM jobs WHERE job_id = #{job_id}").each do |i|
-      return i.values_at("account_id")[0]
-    end
+    query = "SELECT account_id FROM jobs WHERE job_id = #{job_id}"
+    binds = [ActiveRecord::Relation::QueryAttribute.new('job_id', job_id, ActiveRecord::Type::Integer.new)]
+    ApplicationRecord.connection.exec_query(query, 'SQL', binds, prepare: true).rows[0]
   end
 
   def find_account(account_id)
-    ActiveRecord::Base.connection.execute("SELECT account_id, first_name, last_name, email FROM accounts WHERE account_id = #{account_id}").each do |i|
-      return { :name => i.values_at("first_name")[0].to_s.concat(" #{i.values_at("last_name")[0].to_s}"), :email => i.values_at("email")[0].to_s }
-    end
+    query = "SELECT account_id, first_name, last_name, email FROM accounts WHERE account_id = #{account_id}"
+    binds = [ActiveRecord::Relation::QueryAttribute.new('account_id', account_id, ActiveRecord::Type::Integer.new)]
+    result = ApplicationRecord.connection.exec_query(query, 'SQL', binds, prepare: true).rows[0]
+    { :name => result[1].to_s.concat(" #{result[2].to_s}"), :email => result[3].to_s }
   end
 
   # @deprecated
@@ -48,36 +52,34 @@ class ApplicationRepository
 
   def create_application (job_id, account_id, text, documents)
     # create new application as Application: {(job_id, user_id), text, status, response}
-    # Key: job_id, user_id
-    # text & response: String
-    # status: 0=unanswered), 1=accepted, -1=rejected
-    ActiveRecord::Base.connection.execute("INSERT INTO applications(job_id, applicant_id, application_text, application_documents) VALUES (#{job_id}, #{account_id}, '#{text}', '#{documents}')")
-    # INSERT INTO applications (job_id, user_id, text, status, response)
-    # VALUES (job_id, user_id, text, 0, "");
+    query = "INSERT INTO applications(job_id, applicant_id, application_text, application_documents) VALUES (#{job_id}, #{account_id}, '#{text}', '#{documents}')"
+    binds = [ActiveRecord::Relation::QueryAttribute.new('job_id', job_id, ActiveRecord::Type::Integer.new),
+             ActiveRecord::Relation::QueryAttribute.new('account_id', account_id, ActiveRecord::Type::Integer.new),
+             ActiveRecord::Relation::QueryAttribute.new('text', text, ActiveRecord::Type::Text.new),
+             ActiveRecord::Relation::QueryAttribute.new('documents', documents, ActiveRecord::Type::String.new)]
+    ApplicationRecord.connection.exec_query(query, 'SQL', binds, prepare: true).rows[0]
   end
 
   def change_status (job_id, account_id, new_status, response)
-    # change status to -1/1;
+    # change status to -1/0/1;
     # add response
-    ActiveRecord::Base.connection.execute("UPDATE applications SET status = '#{new_status}', response = '#{response}' WHERE job_id = #{job_id} AND applicant_id = #{account_id }")
-    # UPDATE applications a
-    # SET a.status = new_status,
-    #     a.response = response
-    # WHERE a.user_id = user_id and job job_id = a.job_id
+    query = "UPDATE applications SET status = '#{new_status}', response = '#{response}' WHERE job_id = #{job_id} AND applicant_id = #{account_id }"
+    binds = [ActiveRecord::Relation::QueryAttribute.new('job_id', job_id, ActiveRecord::Type::Integer.new),
+             ActiveRecord::Relation::QueryAttribute.new('account_id', account_id, ActiveRecord::Type::Integer.new),
+             ActiveRecord::Relation::QueryAttribute.new('new_status', new_status, ActiveRecord::Type::String.new),
+             ActiveRecord::Relation::QueryAttribute.new('response', response, ActiveRecord::Type::String.new)]
+    ApplicationRecord.connection.exec_query(query, 'SQL', binds, prepare: true).rows[0]
   end
 
   def reject_all (job_id, response)
     # change status to -1 for all with current status 0;
     # add response
-    ActiveRecord::Base.connection.execute("UPDATE applications SET status = '-1', response = '#{response}' WHERE job_id = #{job_id} AND status <> '1'")
-    # UPDATE applications a
-    # SET a.status = new_status,
-    #     a.response = response
-    # WHERE a.user_id = user_id and job job_id = a.job_id
+    query = "UPDATE applications SET status = '-1', response = '#{response}' WHERE job_id = #{job_id} AND status <> '1'"
+    binds = [ActiveRecord::Relation::QueryAttribute.new('job_id', job_id, ActiveRecord::Type::Integer.new),
+             ActiveRecord::Relation::QueryAttribute.new('response', response, ActiveRecord::Type::String.new)]
+    ApplicationRecord.connection.exec_query(query, 'SQL', binds, prepare: true).rows[0]
+
+    #ActiveRecord::Base.connection.execute("UPDATE applications SET status = '-1', response = '#{response}' WHERE job_id = #{job_id} AND status <> '1'")
   end
 
 end
-
-# INSERT INTO users (first_name, last_name, email, date_of_birth)
-# VALUES ('Carlo', 'Bortolan', 'carlo.bortolan@tum.de', '2003-05-05')
-
