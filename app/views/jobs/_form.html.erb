@@ -16,13 +16,16 @@
   </div>
 
   <div>
-    <time>
-      <%= form.label :start_slot %><br>
-      <%= form.text_area :start_slot %><br>
-      <% job.errors.full_messages_for(:start_slot).each do |message| %>
-        <div><%= message %></div>
-      <% end %>
-    </time>
+    <%= form.label :start_slot %><br>
+    <%= form.datetime_field :start_slot %><br>
+  </div>
+
+  <div>
+    <%= form.label :longitude %><br>
+    <%= form.number_field :longitude %><br>
+    <%= form.label :latitude %><br>
+    <%= form.number_field :latitude %><br>
+
   </div>
 
   <div>

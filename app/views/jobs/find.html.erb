@@ -1,18 +1,26 @@
 <h1>Find jobs</h1>
 <h3><%= link_to "Do you want to create a new job instead?", new_job_path %></h3>
-We have <%= Job.count %> jobs and counting!
 
-<label>
-  <input>
-  <% my_args = { "account_id" => 1, "latitude" => 1.0, "longitude" => 1.0, "radius" => 1.0, "time" => Time.new(2022, 11, 11, 0, 0, 0), "limit" => 5 } %>
-</label>
+<% my_args = { "account_id" => 1, "latitude" => 1.0, "longitude" => 1.0, "radius" => 1.0, "time" => Time.new(2022, 11, 11, 0, 0, 0), "limit" => 5 } %>
 
-<button type="button" onclick=
-  <% result = FeedGenerator.initialize_feed(@jobs.as_json, my_args) %>>SEARCH
-</button>
+<h1>Your parameters </h1>
+<%= form_tag :action => 'find' do %>
+  Your coordinates:
+  <%= number_field_tag :longitude %>
+  <%= number_field_tag :latitude %><br>
+  Search within radius:
+  <%= number_field_tag :radius %><br>
+  Search within timeslot:
+  <%= datetime_field_tag :time %><br>
+  Set maximum number of jobs shown:
+  <%= number_field_tag :limit %><br>
+  <%= submit_tag "Submit" %>
+<% end %>
+
 <h1>Matched jobs</h1>
-<h4><%= result.eql?([401]) || result.empty? ? "no jobs found, try again with different parameters" : result %></h4>
+<%= "RESULTS = #{@result.to_s}" %>
 <h1>All available jobs</h1>
+We have <%= Job.count %> jobs and counting!
 <ul>
   <% @jobs.each do |job| %>
     <% unless job.archived? %>

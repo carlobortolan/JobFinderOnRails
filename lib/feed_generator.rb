@@ -21,10 +21,10 @@ class FeedGenerator
       puts "input was nil"
       return [401]
     end
-    if my_args["account_id"].nil? || !my_args["account_id"].is_a?(Integer) || my_args["account_id"] < 0
-      puts "account_id not correct (@my_args)"
-      return [401]
-    end
+    # if my_args["account_id"].nil? || !my_args["account_id"].is_a?(Integer) || my_args["account_id"] < 0
+    # puts "account_id not correct (@my_args)"
+    # return [401]
+    # end
     if my_args["latitude"].nil? || !my_args["latitude"].is_a?(Float)
       puts "latitude not correct (@my_args)"
       return [401]
@@ -270,7 +270,7 @@ class FeedGenerator
     puts pos
 
     # No match
-    if pos == -1 || jobs[0..pos]
+    if pos == -1 || jobs[0..pos].empty?
       return [401]
     end
 
