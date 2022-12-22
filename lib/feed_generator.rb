@@ -12,10 +12,10 @@ class FeedGenerator
   # prefiltered = [{ "job_id" => int>=0, "start_slot" => "year-month-date hours:minutes:seconds +hhmm", "location" => { "latitude" => float>=0, "longitude" => float>=0 } },
   # my_args = { "account_id" => int>=0, "latitude" => float>=0.0, "longitude" => float>=0.0, "radius" => float>=0.0, "time" => int [1, 48], "limit" => int>=0 }
   def self.initialize_feed(prefiltered, my_args)
-    # puts "DEBUG ON"
-    # puts prefiltered
-    # puts my_args
-    # puts "DEBUG OFF"
+    puts "DEBUG ON"
+    puts prefiltered
+    puts my_args
+    puts "DEBUG OFF"
 
     if prefiltered.nil? || my_args.nil? || prefiltered.empty?
       puts "input was nil"
@@ -55,8 +55,12 @@ class FeedGenerator
         return [401]
       end
       if i["start_slot"].nil? || !(i["start_slot"].is_a?(Time))
-        puts "start_slot not correct (@prefiltered)"
-        return [401]
+        begin
+          i["start_slot"] = Time.parse(i["start_slot"])
+        rescue
+          puts "start_slot correct (@prefiltered)"
+          return [401]
+        end
       end
       if i["location"].nil? || i["location"]["latitude"].nil? || !i["location"]["latitude"].is_a?(Float)
         puts "latitude not correct (@prefiltered)"
@@ -75,7 +79,7 @@ class FeedGenerator
     generate_feed(match_jobs(prefiltered, my_args), my_args["radius"], my_args["limit"])
   end
 
-  # private
+  private
 
   #@return [Array] sorted array
   def self.merge_sort(array, tgt)

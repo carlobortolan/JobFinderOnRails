@@ -4,10 +4,11 @@ class CreateJobs < ActiveRecord::Migration[7.0]
       t.column "job_type", "enum('typa','typb','typc')", null: true
       t.integer "job_status", limit: 1, default: 0, null: true
       t.string "status", default: 0, null: true
-      t.timestamp "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: true
-      t.timestamp "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: true
+      t.time "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: true
+      t.time "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: true
       t.integer "account_id", default: 0, null: true
-      t.integer "location_id", default: 0, null: true
+      t.float "latitude", default: 0, null: true
+      t.float "longitude", default: 0, null: true
       t.integer "duration", default: 0, null: true
       t.string "code_lang",limit: 2, null: true
       t.string "title", limit: 45, null: true
@@ -15,7 +16,7 @@ class CreateJobs < ActiveRecord::Migration[7.0]
       t.integer "salary", null: true
       t.column "currency", "enum('eur','usd','chf','gbp')", null: true
       t.string "image_url", limit: 500
-      t.datetime "start_slot", precision: nil, null: true
+      t.time "start_slot", precision: nil, null: true
       t.string "time_zone", limit: 45, null: true
       t.integer "application_count", default: 0, null: true
       t.integer "view_count", default: 0, null: true

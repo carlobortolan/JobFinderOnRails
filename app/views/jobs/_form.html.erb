@@ -16,6 +16,16 @@
   </div>
 
   <div>
+    <time>
+      <%= form.label :start_slot %><br>
+      <%= form.text_area :start_slot %><br>
+      <% job.errors.full_messages_for(:start_slot).each do |message| %>
+        <div><%= message %></div>
+      <% end %>
+    </time>
+  </div>
+
+  <div>
     <%= form.label :status %><br>
     <%= form.select :status, ['public', 'private', 'archived'], selected: 'public' %>
   </div>

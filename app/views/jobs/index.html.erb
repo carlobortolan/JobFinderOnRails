@@ -8,7 +8,8 @@
   <% @jobs.each do |job| %>
     <% unless job.archived? %>
       <li>
-        <%= link_to job.title, job %>
+        <b><%= link_to job.title, job %></b>
+        <%= link_to "(apply)", new_job_application_path(job) %>
       </li>
     <% end %>
   <% end %>

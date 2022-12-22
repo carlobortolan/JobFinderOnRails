@@ -3,19 +3,26 @@
 We have <%= Job.count %> jobs and counting!
 
 <label>
-  <input> a
-</label>
-<h1>All available Jobs</h1>
+  <input>
+  <% my_args = { "account_id" => 1, "latitude" => 1.0, "longitude" => 1.0, "radius" => 1.0, "time" => Time.now, "limit" => 5 }  %>
+  </label>
+  <button>SEARCH
+    <%  FeedGenerator.initialize_feed(@jobs.as_json, my_args) %>
+    <%  #Job.start_search(@jobs, @my_args) %>
+  </button>
+  <h1>All available Jobs</h1>
 
-<ul>
-  <% @jobs.each do |job| %>
-    <% unless job.archived? %>
-      <li>
-        <%= link_to job.title, job %>
-      </li>
-    <% end %>
-  <% end %>
-</ul>
---------------------------------------<br><br>
-<%= link_to "Carlo Bortolan", "https://github.com/carlobortolan" %><br>
-<%= link_to "Jan Hummel", "https://github.com/github4touchdouble" %><br>
+  <ul>
+    <%  @jobs.each do |job| %>
+    <%  unless job.archived? %>
+    <li>
+      <b><%=  link_to job.title, job %></b>
+      <%=  link_to "(apply)", new_job_application_path(job) %>
+    </li>
+    <%  end %>
+    <%  end %>
+  </ul>
+
+  --------------------------------------<br><br>
+  <%=  link_to "Carlo Bortolan", "https://github.com/carlobortolan" %><br>
+  <%=  link_to "Jan Hummel", "https://github.com/github4touchdouble" %><br>

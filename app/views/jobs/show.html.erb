@@ -1,13 +1,12 @@
 <h1><%= @job.title %></h1>
-
 <p><%= @job.description %></p>
+<p><%= @job.start_slot %></p>
 
 <ul>
   <li><%= link_to "Edit", edit_job_path(@job) %></li>
   <li><%= link_to "Destroy", job_path(@job), data: {
     turbo_method: :delete,
-    turbo_confirm: "Are you sure?"
-  } %></li>
+    turbo_confirm: "Are you sure?" } %> </li>
   <li><%= link_to "Show all applications", job_applications_path(@job) %></li>
 </ul>
 

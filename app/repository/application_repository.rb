@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-
+# TODO: ERROR CATCHING
 # @author Jan Hummel, Carlo Bortolan
 # This class communicates directly with the db and sends SQL requests
 class ApplicationRepository

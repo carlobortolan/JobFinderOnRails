@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 # TODO: Implement JobRepository
+# TODO: ERROR CATCHING
 
 class JobRepository
 

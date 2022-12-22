@@ -1,3 +1,5 @@
+require_relative '../../lib/feed_generator.rb'
+
 class JobsController < ApplicationController
   http_basic_authenticate_with name: "cb", password: "5503", except: [:index, :show]
 
@@ -48,9 +50,14 @@ class JobsController < ApplicationController
     @jobs = Job.all
   end
 
+  #def start_search
+  #  puts "STR #{@my_args}"
+  #  FeedGenerator.initialize_feed([], @my_args)
+  #end
+
   private
 
   def job_params
-    params.require(:job).permit(:title, :description, :status)
+    params.require(:job).permit(:title, :description, :start_slot, :status)
   end
 end

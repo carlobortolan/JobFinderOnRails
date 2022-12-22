@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 # TODO: Add missing methods to AccountRepository
+# TODO: ERROR CATCHING
 class AccountRepository
   def get_account(account_id)
     #      ActiveRecord::Base.connection.query("SELECT * FROM accounts WHERE account_id = #{account_id}")

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 # TODO: Implement UserRepository
+# TODO: ERROR CATCHING
 
 class UserRepository
   def add_user(user)
