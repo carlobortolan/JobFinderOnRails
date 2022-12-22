@@ -44,8 +44,8 @@ class JobsController < ApplicationController
     redirect_to jobs_path, status: :see_other
   end
 
-  def all_applications
-    @job = Job.find(params[:id])
+  def find
+    @jobs = Job.all
   end
 
   private

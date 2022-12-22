@@ -22,7 +22,7 @@ class ApplicationsController < ApplicationController
   end
 
   def new
-    @job = Job.find(params[:applicant_id])
+    @job = Job.find(params[:job_id])
     @application = Application.new
   end
 
@@ -42,7 +42,7 @@ class ApplicationsController < ApplicationController
   end
 
   def destroy
-    @job = Job.find(params[:applicant_id])
+    @job = Job.find(params[:job_id])
     @application = @job.applications.find(params[:applicant_id])
     @application.destroy
     redirect_to job_path(@job), status: :see_other
