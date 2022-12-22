@@ -1,7 +1,4 @@
 # frozen_string_literal: true
-# Applications: {(job_id, user_id), text, status, response}
-# Notifications: {(job_id, employer_id), notify}
-require 'rubygems'
 
 # @author Jan Hummel, Carlo Bortolan
 # This class communicates directly with the db and sends SQL requests
@@ -79,7 +76,7 @@ class ApplicationRepository
              ActiveRecord::Relation::QueryAttribute.new('response', response, ActiveRecord::Type::String.new)]
     ApplicationRecord.connection.exec_query(query, 'SQL', binds, prepare: true).rows[0]
 
-    #ActiveRecord::Base.connection.execute("UPDATE applications SET status = '-1', response = '#{response}' WHERE job_id = #{job_id} AND status <> '1'")
+    # ActiveRecord::Base.connection.execute("UPDATE applications SET status = '-1', response = '#{response}' WHERE job_id = #{job_id} AND status <> '1'")
   end
 
 end
