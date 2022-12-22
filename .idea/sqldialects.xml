@@ -2,5 +2,6 @@
 <project version="4">
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/app/controllers/applications_controller.rb" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/app/repository/application_repository.rb" dialect="MySQL" />
   </component>
 </project>
