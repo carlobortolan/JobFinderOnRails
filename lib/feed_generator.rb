@@ -57,16 +57,17 @@ class FeedGenerator
       if i["start_slot"].nil? || !(i["start_slot"].is_a?(Time))
         begin
           i["start_slot"] = Time.parse(i["start_slot"])
+          puts "correcting start-slot"
         rescue
           puts "start_slot correct (@prefiltered)"
           return [401]
         end
       end
-      if i["location"].nil? || i["location"]["latitude"].nil? || !i["location"]["latitude"].is_a?(Float)
+      if i["latitude"].nil? || !i["latitude"].is_a?(Float)
         puts "latitude not correct (@prefiltered)"
         return [401]
       end
-      if i["location"].nil? || i["location"]["longitude"].nil? || !i["location"]["longitude"].is_a?(Float)
+      if i["longitude"].nil? || !i["longitude"].is_a?(Float)
         puts "latitude not correct (@prefiltered)"
         return [401]
       end
@@ -76,7 +77,9 @@ class FeedGenerator
         i["distance"] = nil
       end
     end
-    generate_feed(match_jobs(prefiltered, my_args), my_args["radius"], my_args["limit"])
+    r1 = match_jobs(prefiltered, my_args)
+    puts "R1 === #{r1}"
+    generate_feed(r1, my_args["radius"], my_args["limit"])
   end
 
   private
@@ -221,8 +224,8 @@ class FeedGenerator
     user_lat = user_pos.values_at("latitude")[0]
     user_lon = user_pos.values_at("longitude")[0]
     args.each do |job|
-      job_lat = job.values_at("location")[0].values_at("latitude")[0]
-      job_lon = job.values_at("location")[0].values_at("longitude")[0]
+      job_lat = job.values_at("latitude")[0]
+      job_lon = job.values_at("longitude")[0]
 
       job["distance"] = distance([user_lat, user_lon], [job_lat, job_lon])
     end
@@ -263,15 +266,17 @@ class FeedGenerator
       return [401]
     end
 
-    pos = binary_compare(jobs, radius, "distance")
+    pos = FeedGenerator.binary_compare(jobs, radius, "distance")
+    puts pos
 
     # No match
-    if pos == -1 || jobs.slice(0, pos).nil?
+    if pos == -1 || jobs[0..pos]
       return [401]
     end
 
     # If number of matched jobs is greater than 'limit', exactly 'limit'-number of jobs will be returned
-    jobs.slice(0, pos).length > limit ? jobs.slice(0, limit) : jobs.slice(0, pos)
+    # jobs.slice(0, pos).length > limit ? jobs.slice(0, limit) : jobs.slice(0, pos)
+    jobs[0..pos]
   end
 end
 
