@@ -11,8 +11,8 @@ class CreateJobs < ActiveRecord::Migration[7.0]
       t.float "longitude", default: 0
       t.integer "duration", default: 0
       t.string "code_lang", limit: 2
-      t.string "title", limit: 45
-      t.string "description", limit: 500
+      t.string "title", limit: 100
+      t.text "description"
       t.integer "salary"
       t.column "currency", "enum('eur','usd','chf','gbp')"
       t.string "image_url", limit: 500

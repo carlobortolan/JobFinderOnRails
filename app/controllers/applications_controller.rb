@@ -1,7 +1,9 @@
 class ApplicationsController < ApplicationController
   layout 'standard'
-  http_basic_authenticate_with name: "cb", password: "5503", only: :destroy
+  http_basic_authenticate_with name: "cb", password: "1", except: :index
+
   attr_accessor(:application_service, :user_service)
+
   def initialize
     @application_service = ApplicationService.new(nil, nil)
     @user_service = UserService.new
@@ -50,14 +52,14 @@ class ApplicationsController < ApplicationController
 
   def accept
     @application_service.accept(params[:job_id].to_i, params[:application_id].to_i, "ACCEPTED")
-    puts"ACCEPT"
+    puts "ACCEPT"
     redirect_to job_path(Job.find_by_job_id(params[:job_id])), status: :see_other
   end
 
   def reject
     puts "param = #{params}"
     @application_service.reject(params[:job_id].to_i, params[:application_id].to_i, "REJECTED")
-    puts"REJECT"
+    puts "REJECT"
     redirect_to job_applications_path(params[:job_id])
   end
 

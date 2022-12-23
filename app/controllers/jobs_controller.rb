@@ -2,7 +2,7 @@ require_relative '../../lib/feed_generator.rb'
 
 class JobsController < ApplicationController
   layout 'standard'
-  http_basic_authenticate_with name: "cb", password: "5503", except: [:index, :show]
+  http_basic_authenticate_with name: "cb", password: "1", except: [:index, :show]
 
   def initialize
     @job_service = JobService.new
@@ -79,6 +79,6 @@ class JobsController < ApplicationController
   private
 
   def job_params
-    params.require(:job).permit(:title, :description, :start_slot, :longitude, :latitude, :status)
+    params.require(:job).permit(:title, :description, :start_slot, :longitude, :latitude, :status,:account_id)
   end
 end

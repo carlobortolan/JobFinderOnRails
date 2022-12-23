@@ -4,7 +4,7 @@
 
 <% my_args = { "account_id" => 1, "latitude" => 1.0, "longitude" => 1.0, "radius" => 1.0, "time" => Time.new(2022, 11, 11, 0, 0, 0), "limit" => 5 } %>
 
-<h1>Your parameters </h1>
+<h2>Your parameters </h2>
 <%= form_tag :action => 'parse_inputs' do %>
   Your coordinates:
   <%= number_field_tag :longitude, (0.0) %>
@@ -17,8 +17,8 @@
   <%= submit_tag "Submit" %>
 <% end %>
 
-<h1>All available jobs</h1>
-We have <%= Job.count %> jobs and counting!
+<h2>All available jobs</h2>
+<h3>We have <%= Job.count %> jobs and counting!</h3>
 <ul>
   <% @jobs.each do |job| %>
     <% unless job.archived? %>

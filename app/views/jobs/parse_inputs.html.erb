@@ -1,7 +1,7 @@
 <%= stylesheet_link_tag "style" %>
 <h1>Find jobs</h1>
 <h3><%= link_to "Do you want to create a new job instead?", new_job_path %></h3>
-<h1>Your parameters </h1>
+<h2>Your parameters </h2>
 <%= form_tag :action => 'parse_inputs' do %>
   Your coordinates:
   <%= @my_args["longitude"] %>
@@ -15,7 +15,7 @@
   <%= submit_tag "Submit" %>
 <% end %>
 
-<h1>Matched jobs</h1>
+<h2>Matched jobs</h2>
 <% if @result.eql?([401]) || @result.empty? %>
   <h3><%= "No job found for your search. Try again with different parameters!" %></h3>
   <ul>
@@ -30,15 +30,4 @@
 </ul>
 
 
-2022-12-03 09:09:00
 
-<%= link_to jobs_find_path(@jobs) %>
-
-<%= number_field_tag :"" %><br>
-<%= email_field_tag :"" %><br>
-<%= image_submit_tag :"" %><br>
-<%= password_field_tag :"" %><br>
-<%= range_field_tag :"" %><br>
-<%= search_field_tag :"" %><br>
-<%= telephone_field_tag :"" %><br>
-<%= telephone_field_tag :"" %><br>

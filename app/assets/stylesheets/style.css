@@ -20,6 +20,7 @@ a {
     color: #646cff;
     text-decoration: inherit;
 }
+
 a:hover {
     color: #535bf2;
 }
@@ -34,6 +35,11 @@ body {
 
 h1 {
     font-size: 3.2em;
+    line-height: 1.1;
+}
+
+h2 {
+    font-size: 2em;
     line-height: 1.1;
 }
 
@@ -59,9 +65,11 @@ button {
     cursor: pointer;
     transition: border-color 0.25s;
 }
+
 button:hover {
     border-color: #646cff;
 }
+
 button:focus,
 button:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
@@ -72,10 +80,31 @@ button:focus-visible {
         color: #213547;
         background-color: #ffffff;
     }
+
     a:hover {
         color: #747bff;
     }
+
     button {
         background-color: #f9f9f9;
     }
+}
+
+info,
+.success,
+.warning,
+.error,
+.validation {
+    border: 1px solid;
+    margin: 10px auto;
+    padding: 15px 10px 15px 50px;
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    max-width: 460px;
+}
+
+.error {
+    color: #D8000C;
+    background-color: #FFBABA;
+    background-image: url('https://i.imgur.com/GnyDvKN.png');
 }
