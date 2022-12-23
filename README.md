@@ -1,7 +1,4 @@
-<h1>
-<br>
-<a href="https://gitlab.com/github4touchdouble/versuchundirrtum/"><img src="https://gitlab.com/github4touchdouble/versuchundirrtum/-/raw/dev/versuch_und_irrtum.png" alt="V&I" width="500"></a>
-</h1>
+<h1>Versuch und Irrtum on RAILS</h1>
 
 ## License
 
@@ -22,13 +19,14 @@ defined in the Apache-2.0 license, shall be dual licensed as above, without any 
 3. Update the documentation
    using `$ yardoc 'app/views/*.html.erb' 'app/controllers/*.rb' 'app/models/*.rb' 'app/helpers/*.rb' 'app/repository/*.rb' 'app/service/*.rb' 'app/controllers/*.rb' 'lib/**/*.rb'`
 4. View the documentation under: http://localhost:63342/<your-project-name>/doc/
+
 </details>
 
 ## Functionality
 
 ### Managing of applications for available jobs
 
-The system is able to manage application (supporting
+The system is able to manage jobs and application (supporting
 basic [CRUD-Operations](https://www.javatpoint.com/crud-operations-in-sql)) and notifies the employer when a new
 application is submitted as well as the applicant when his application is accepted.
 
@@ -40,9 +38,25 @@ The system receives a set of available jobs and filters them returning a sorted 
 
 ## How it works
 
-## Config
+**EITHER** (*recommended*)
+- create a new schema called _`masterdata2`_ in your MySql Database
+- add a new user called `rm_user` with all access rights and the password `hô[ÕiÚéjÚ¢X*t/t¢ÕeR/ü¾nõ'g'ñ¢ß«Tíwàx²"¡jÛß´*PZÏmõ}ßX¨º*¤àÙ7ü'ÌJÌ=´Lh#M[NöèD`¿üåvã^àði®$4¦{·d3ZE~üMêr.7>þSrÖô(òúHÒDÊ]!Ä-¯.ï!òHúã¡`
+- run `$ ruby bin\rails db:migrate` or `$ bin/rails migrate` (depending on your OS)
+- run `$ ruby bin\rails server` or `$ bin/rails server` (depending on your OS)
 
+**OR**
+- modify the values for
+  - `default: username`, ` default: password`, 
+  - `production: database`, 
+  - `production: database`, `deployment: username`
+- run `$ ruby bin\rails db:migrate` or `$ bin/rails migrate` (depending on your OS)
+- run `$ ruby bin\rails server` or `$ bin/rails server` (depending on your OS)
+
+
+## Config
+*(not yet added)*
 ## Sources
+*(not yet added)*
 
 ---
 > Carlo Bortolan &nbsp;&middot;&nbsp;
