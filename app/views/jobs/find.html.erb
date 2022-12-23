@@ -11,9 +11,16 @@
   Search within radius:
   <%= number_field_tag :radius %><br>
   Search within timeslot:
-  <%= datetime_field_tag :time %><br>
+  <%= datetime_local_field_tag :time, default = Time.now %><br>
   Set maximum number of jobs shown:
-  <%= number_field_tag :limit %><br>
+  <%= number_field_tag :"" %><br>
+  <%= email_field_tag :"" %><br>
+  <%= image_submit_tag :"" %><br>
+  <%= password_field_tag :"" %><br>
+  <%= range_field_tag :"" %><br>
+  <%= search_field_tag :"" %><br>
+  <%= telephone_field_tag :"" %><br>
+  <%= telephone_field_tag :"" %><br>
   <%= submit_tag "Submit" %>
 <% end %>
 

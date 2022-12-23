@@ -33,17 +33,20 @@ class FeedGenerator
       puts "longitude not correct (@my_args)"
       return [401]
     end
-    if my_args["radius"].nil? || !my_args["radius"].is_a?(Float) || my_args["radius"] < 0
+    if my_args["radius"].nil? || my_args["radius"] < 0
+      my_args["radius"] = 50.0
       puts "radius not correct (@my_args)"
-      return [401]
+    elsif !my_args["radius"].is_a?(Float)
+      my_args["radius"] = my_args["radius"].to_f
     end
+
     if my_args["time"].nil? || !my_args["time"].is_a?(Time)
+      my_args["time"] = Time.now
       puts "time not correct (@my_args)"
-      return [401]
     end
     if my_args["limit"].nil? || !my_args["limit"].kind_of?(Integer) || my_args["limit"] < 0
       puts "limit not correct (@my_args)"
-      return [401]
+      my_args["limit"] = 50
     end
     prefiltered.each do |i|
       if i.nil?

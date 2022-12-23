@@ -3,6 +3,10 @@ require_relative '../../lib/feed_generator.rb'
 class JobsController < ApplicationController
   http_basic_authenticate_with name: "cb", password: "5503", except: [:index, :show]
 
+  def initialize
+    @job_service = JobService.new
+  end
+
   def index
     @jobs = Job.all
   end
@@ -19,10 +23,10 @@ class JobsController < ApplicationController
     @job = Job.new(job_params)
 
     if @job.save
+      @job_service.set_notification(@job[:id].to_i, @job[:account_id].to_i, params[:job][:notify].eql?("1"))
       redirect_to @job
-    else
-      render :new, status: :unprocessable_entity
     end
+    render :new, status: :unprocessable_entity
   end
 
   def edit
@@ -33,6 +37,7 @@ class JobsController < ApplicationController
     @job = Job.find(params[:id])
 
     if @job.update(job_params)
+      @job_service.edit_notification(@job[:id].to_i, @job[:account_id].to_i, params[:job][:notify].eql?("1"))
       redirect_to @job
     else
       render :edit, status: :unprocessable_entity
@@ -58,11 +63,6 @@ class JobsController < ApplicationController
 
   def parse_inputs
     puts "PARAMS = #{params}"
-    params[:longitude].to_f
-    params[:latitude].to_f
-    params[:radius].to_f
-    params[:time]
-    params[:limit]
     my_args = { "longitude" => params[:longitude].to_f, "latitude" => params[:latitude].to_f, "radius" => params[:radius].to_f, "time" => Time.parse(params[:time]), "limit" => params[:limit].to_i }
     @result = FeedGenerator.initialize_feed(Job.all.as_json, my_args)
     puts @result

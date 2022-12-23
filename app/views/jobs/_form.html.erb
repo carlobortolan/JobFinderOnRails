@@ -29,6 +29,11 @@
   </div>
 
   <div>
+    <%= form.label "Do you want to receive a notification when a new application is submitted?" %><br>
+    <%= form.check_box :notify %><br>
+  </div>
+
+  <div>
     <%= form.label :status %><br>
     <%= form.select :status, ['public', 'private', 'archived'], selected: 'public' %>
   </div>

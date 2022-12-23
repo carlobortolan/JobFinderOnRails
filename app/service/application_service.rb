@@ -66,15 +66,7 @@ class ApplicationService
     end
   end
 
-  # Sets the notifications for the employer of a certain job to on (true) or off (false).
-  # @param [int] job_id Job
-  # @param [int] employer_id Id des Arbeitgebers
-  # @param [boolean] notify Notifications on/off
-  def set_notification (job_id, employer_id, notify)
-    if !job_id.nil? && !employer_id.nil? && job_id.is_a?(Integer) && employer_id.is_a?(Integer) && job_id > 0 && employer_id > 0 && [true, false].include?(notify)
-      @application_repository.set_notification(job_id, employer_id, notify)
-    end
-  end
+
 
   # Rejects single application and adds optional comment by employer.
   # @param [int] job_id Job
