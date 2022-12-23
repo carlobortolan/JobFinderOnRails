@@ -53,20 +53,20 @@ class JobsController < ApplicationController
 
   def find
     @jobs = Job.all
-    begin
-      my_args = { "longitude" => params[:longitude].to_f, "latitude" => params[:latitude].to_f, "radius" => params[:radius].to_f, "time" => Time.parse(params[:time]), "limit" => params[:limit].to_i }
-      @result = FeedGenerator.initialize_feed(@jobs.as_json, my_args)
-    rescue
-      # Ignored
-    end
+    # begin
+    # my_args = { "longitude" => params[:longitude].to_f, "latitude" => params[:latitude].to_f, "radius" => params[:radius].to_f, "time" => Time.parse(params[:time]), "limit" => params[:limit].to_i }
+    #@result = FeedGenerator.initialize_feed(@jobs.as_json, my_args)
+    # rescue
+    # Ignored
+    # end
   end
 
   def parse_inputs
     puts "PARAMS = #{params}"
     my_args = { "longitude" => params[:longitude].to_f, "latitude" => params[:latitude].to_f, "radius" => params[:radius].to_f, "time" => Time.parse(params[:time]), "limit" => params[:limit].to_i }
     @result = FeedGenerator.initialize_feed(Job.all.as_json, my_args)
-    puts @result
-    # do your stuff with comments_from_form here
+    @my_args = my_args
+    puts "MY_ARGS === #{@my_args}"
   end
 
   # def start_search
