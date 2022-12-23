@@ -37,25 +37,31 @@ All notifications are sent using [SMTP](https://en.wikipedia.org/wiki/Simple_Mai
 The system receives a set of available jobs and filters them returning a sorted feed according to the user's parameters.
 
 ## How it works
-Simply start the server and go to http://localhost:3000 
+
+Simply start the server and go to http://localhost:3000
 Authetication:
 
-
 ## Config
+
 **EITHER** (*recommended*)
+
 - create a new schema called `jobdata` in your MySql Database
-- add a new user called `rm_user` with all access rights and the password ``` hô[ÕiÚéjÚ¢X*t/t¢ÕeR/ü¾nõ'g'ñ¢ß«Tíwàx²"¡jÛß´*PZÏmõ}ßX¨º*¤àÙ7ü'ÌJÌ=´Lh#M[NöèD`¿üåvã^àði®$4¦{·d3ZE~üMêr.7>þSrÖô(òúHÒDÊ]!Ä-¯.ï!òHúã¡```
-- run `$ ruby bin\rails db:migrate` or `$ bin/rails migrate` (depending on your OS)
+- add a new user called `rm_user` with all access rights and the
+  password ``` hô[ÕiÚéjÚ¢X*t/t¢ÕeR/ü¾nõ'g'ñ¢ß«Tíwàx²"¡jÛß´*PZÏmõ}ßX¨º*¤àÙ7ü'ÌJÌ=´Lh#M[NöèD`¿üåvã^àði®$4¦{·d3ZE~üMêr.7>þSrÖô(òúHÒDÊ]!Ä-¯.ï!òHúã¡```
+- run `$ ruby bin\rails db:setup` or `$ bin/rails db:setup` (depending on your OS)
 - run `$ ruby bin\rails server` or `$ bin/rails server` (depending on your OS)
 
 **OR**
+
 - modify the values for
     - `default: username`, ` default: password`,
     - `production: database`,
     - `production: database`, `deployment: username`
-- run `$ ruby bin\rails db:migrate` or `$ bin/rails migrate` (depending on your OS)
+- run `$ ruby bin\rails db:setup` or `$ bin/rails db:setup` (depending on your OS)
 - run `$ ruby bin\rails server` or `$ bin/rails server` (depending on your OS)
+
 ## Sources
+
 *(not yet added)*
 
 ---
