@@ -19,8 +19,9 @@ defined in the Apache-2.0 license, shall be dual licensed as above, without any 
 
 1. Install the necessary gem using `$ gem install yard`
 2. Write new code/comments
-3. Update the documentation using `$ yardoc 'lib/**/*.rb' 'src/**/*.rb' 'spec/**/*.rb'`
-
+3. Update the documentation
+   using `$ yardoc 'app/views/*.html.erb' 'app/controllers/*.rb' 'app/models/*.rb' 'app/helpers/*.rb' 'app/repository/*.rb' 'app/service/*.rb' 'app/controllers/*.rb' 'lib/**/*.rb'`
+4. View the documentation under: http://localhost:63342/<your-project-name>/doc/
 </details>
 
 ## Functionality
