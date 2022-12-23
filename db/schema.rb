@@ -14,21 +14,19 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_20_142335) do
   create_table "accounts", primary_key: "account_id", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "email", limit: 45, null: false
     t.string "password", limit: 45, null: false
-    t.datetime "registration_date", precision: nil, default: Time.now, null: false
+    t.datetime "registration_date", precision: nil, default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.integer "activity_status", limit: 1, default: 0, null: false
-    t.string "image_url", limit: 500, default: "<image_url>"
-    t.string "first_name", limit: 45, default: "<first_name>"
-    t.string "last_name", limit: 45, default: "<last_name>"
+    t.string "image_url", limit: 500
     t.index ["email"], name: "account_email_UNIQUE", unique: true
   end
 
   create_table "applications", primary_key: ["job_id", "applicant_id"], charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "job_id", null: false
     t.integer "applicant_id", null: false
-    t.datetime "applied_at", precision: nil, default: Time.now, null: false
+    t.datetime "applied_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.column "status", "enum('-1','0','1')", default: "0", null: false
     t.string "application_text", limit: 500
-    t.text "application_documents"
+    t.string "application_documents", limit: 100
     t.string "response", limit: 500
     t.index ["applicant_id"], name: "account_id_idx"
     t.index ["job_id", "applicant_id"], name: "index_applications_on_job_id_and_applicant_id", unique: true
@@ -38,11 +36,11 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_20_142335) do
     t.column "job_type", "enum('typa','typb','typc')"
     t.integer "job_status", limit: 1, default: 0
     t.string "status", default: "0"
-    t.datetime "created_at", precision: nil, default: Time.now, null: false
-    t.datetime "updated_at", precision: nil, default: Time.now, null: false
+    t.datetime "created_at", precision: nil, default: "2022-12-23 22:14:42", null: false
+    t.datetime "updated_at", precision: nil, default: "2022-12-23 22:14:42", null: false
     t.integer "account_id", default: 0
-    t.float "latitude", default: 0
-    t.float "longitude", default: 0
+    t.float "latitude", default: 0.0
+    t.float "longitude", default: 0.0
     t.integer "duration", default: 0
     t.string "code_lang", limit: 2
     t.string "title", limit: 45
@@ -69,7 +67,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_20_142335) do
     t.string "address", limit: 45, null: false
     t.string "postal_code", limit: 45, null: false
     t.string "premise", limit: 45
-    t.datetime "date_location_creation", default: Time.now, null: false
+    t.date "date_location_creation", null: false
   end
 
   create_table "notifications", primary_key: ["employer_id", "job_id"], charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -81,10 +79,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_20_142335) do
 
   create_table "users", primary_key: "user_id", id: :integer, default: nil, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "code_nationality", limit: 2, null: false
-    t.float "longitude", default: 0
-    t.float "latitude", default: 0
+    t.integer "location_id", default: 0
     t.column "user_type", "enum('private','company')", default: "private", null: false
-    t.index ["longitude", "latitude"], name: "location_id_idx"
+    t.index ["location_id"], name: "location_id_idx"
   end
 
 end

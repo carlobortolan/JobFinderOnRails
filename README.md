@@ -40,7 +40,7 @@ The system receives a set of available jobs and filters them returning a sorted 
 
 **EITHER** (*recommended*)
 - create a new schema called `jobdata` in your MySql Database
-- add a new user called `rm_user` with all access rights and the password `hô[ÕiÚéjÚ¢X*t/t¢ÕeR/ü¾nõ'g'ñ¢ß«Tíwàx²"¡jÛß´*PZÏmõ}ßX¨º*¤àÙ7ü'ÌJÌ=´Lh#M[NöèD`¿üåvã^àði®$4¦{·d3ZE~üMêr.7>þSrÖô(òúHÒDÊ]!Ä-¯.ï!òHúã¡`
+- add a new user called `rm_user` with all access rights and the password ``` hô[ÕiÚéjÚ¢X*t/t¢ÕeR/ü¾nõ'g'ñ¢ß«Tíwàx²"¡jÛß´*PZÏmõ}ßX¨º*¤àÙ7ü'ÌJÌ=´Lh#M[NöèD`¿üåvã^àði®$4¦{·d3ZE~üMêr.7>þSrÖô(òúHÒDÊ]!Ä-¯.ï!òHúã¡```
 - run `$ ruby bin\rails db:migrate` or `$ bin/rails migrate` (depending on your OS)
 - run `$ ruby bin\rails server` or `$ bin/rails server` (depending on your OS)
 
