@@ -6,21 +6,13 @@
 <h1>Your parameters </h1>
 <%= form_tag :action => 'find' do %>
   Your coordinates:
-  <%= number_field_tag :longitude %>
-  <%= number_field_tag :latitude %><br>
+  <%= number_field_tag :longitude, (0.0) %>
+  <%= number_field_tag :latitude, (0.0) %><br>
   Search within radius:
-  <%= number_field_tag :radius %><br>
+  <%= number_field_tag :radius, (50) %><br>
   Search within timeslot:
-  <%= datetime_local_field_tag :time, default = Time.now %><br>
+  <%= datetime_local_field_tag :time, (Time.now.strftime("%Y-%m-%dT%H:%M")) %><br>
   Set maximum number of jobs shown:
-  <%= number_field_tag :"" %><br>
-  <%= email_field_tag :"" %><br>
-  <%= image_submit_tag :"" %><br>
-  <%= password_field_tag :"" %><br>
-  <%= range_field_tag :"" %><br>
-  <%= search_field_tag :"" %><br>
-  <%= telephone_field_tag :"" %><br>
-  <%= telephone_field_tag :"" %><br>
   <%= submit_tag "Submit" %>
 <% end %>
 
