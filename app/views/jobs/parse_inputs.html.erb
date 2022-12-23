@@ -1,3 +1,6 @@
+<%= stylesheet_link_tag "style" %>
+<h1>Find jobs</h1>
+<h3><%= link_to "Do you want to create a new job instead?", new_job_path %></h3>
 <h1>Your parameters </h1>
 <%= form_tag :action => 'parse_inputs' do %>
   Your coordinates:
@@ -17,7 +20,7 @@
   <h3><%= "No job found for your search. Try again with different parameters!" %></h3>
   <ul>
 <% else %>
-  <h3><%= "#{@result.length} jobs found" %></h3>
+  <h3><%= "#{@result.length} #{@result.length >= 1 ? "jobs found" : "job found"}" %></h3>
   <% @result.each do |job| %>
     <li>
       <b><%= link_to "#{job["title"]} [##{job["job_id"]}]", job_path(job["job_id"]) %></b>

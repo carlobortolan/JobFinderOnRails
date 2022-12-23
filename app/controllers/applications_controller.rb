@@ -1,7 +1,7 @@
 class ApplicationsController < ApplicationController
+  layout 'standard'
   http_basic_authenticate_with name: "cb", password: "5503", only: :destroy
   attr_accessor(:application_service, :user_service)
-
   def initialize
     @application_service = ApplicationService.new(nil, nil)
     @user_service = UserService.new

@@ -1,6 +1,7 @@
+<%= stylesheet_link_tag "style" %>
 <h1><%= @job.title %></h1>
 <p><%= @job.description %></p>
-<p><%= @job.start_slot %></p>
+<p><%= @job.start_slot.localtime %></p>
 
 <ul>
   <li><%= link_to "Edit", edit_job_path(@job) %></li>

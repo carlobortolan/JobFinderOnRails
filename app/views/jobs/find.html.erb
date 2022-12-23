@@ -1,3 +1,4 @@
+<%= stylesheet_link_tag "style" %>
 <h1>Find jobs</h1>
 <h3><%= link_to "Do you want to create a new job instead?", new_job_path %></h3>
 
@@ -11,7 +12,7 @@
   Search within radius:
   <%= number_field_tag :radius, (50) %><br>
   Search within timeslot:
-  <%= datetime_local_field_tag :time, (Time.now.strftime("%Y-%m-%dT%H:%M")) %><br>
+  <%= datetime_local_field_tag :time, (Time.zone.now.strftime("%Y-%m-%dT%H:%M")) %><br>
   Set maximum number of jobs shown:
   <%= submit_tag "Submit" %>
 <% end %>

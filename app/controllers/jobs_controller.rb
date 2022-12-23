@@ -1,6 +1,7 @@
 require_relative '../../lib/feed_generator.rb'
 
 class JobsController < ApplicationController
+  layout 'standard'
   http_basic_authenticate_with name: "cb", password: "5503", except: [:index, :show]
 
   def initialize
@@ -25,8 +26,9 @@ class JobsController < ApplicationController
     if @job.save
       @job_service.set_notification(@job[:id].to_i, @job[:account_id].to_i, params[:job][:notify].eql?("1"))
       redirect_to @job
+    else
+      render :new, status: :unprocessable_entity
     end
-    render :new, status: :unprocessable_entity
   end
 
   def edit
