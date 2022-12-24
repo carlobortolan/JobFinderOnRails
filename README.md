@@ -66,8 +66,15 @@ Authentication:
 > **Optional:** Add example data by importing ``/db/importdata.sql`` into the schema jobdata.
 
 ## Sources
+*(TODO)*
 
-*(not yet added)*
+## TODO
+- Add remaining **job-attributes** in ``job_create`` and ``job_show``
+- Implement **account/user system**
+- Set **access rights** in account/user system
+- Implement **location system** (+ function from address to coordinates)
+- Add appropriate **HTML/CSS** to improve look of views 
+
 
 ---
 > Carlo Bortolan &nbsp;&middot;&nbsp;
