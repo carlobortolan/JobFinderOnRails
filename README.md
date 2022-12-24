@@ -51,7 +51,7 @@ Authentication:
 - create a new schema called `jobdata` in your MySql database
 - add a new user called `rm_user` with full access rights and the
   password ``` hô[ÕiÚéjÚ¢X*t/t¢ÕeR/ü¾nõ'g'ñ¢ß«Tíwàx²"¡jÛß´*PZÏmõ}ßX¨º*¤àÙ7ü'ÌJÌ=´Lh#M[NöèD`¿üåvã^àði®$4¦{·d3ZE~üMêr.7>þSrÖô(òúHÒDÊ]!Ä-¯.ï!òHúã¡```
-- run `$ ruby bin\rails db:setup` or `$ bin/rails db:setup` (depending on your OS)
+- run `$ ruby bin\rails db:migrate` or `$ bin/rails db:migrate` (depending on your OS)
 - run `$ ruby bin\rails server` or `$ bin/rails server` (depending on your OS)
 
 **OR**
@@ -60,8 +60,10 @@ Authentication:
     - `default: username`, ` default: password`,
     - `production: database`,
     - `production: database`, `deployment: username`
-- run `$ ruby bin\rails db:setup` or `$ bin/rails db:setup` (depending on your OS)
+- run `$ ruby bin\rails db:migrate` or `$ bin/rails db:migrate` (depending on your OS)
 - run `$ ruby bin\rails server` or `$ bin/rails server` (depending on your OS)
+
+> **Optional:** Add example data by importing ``/db/importdata.sql`` into the schema jobdata.
 
 ## Sources
 
