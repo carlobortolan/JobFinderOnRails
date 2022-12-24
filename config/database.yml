@@ -19,7 +19,7 @@ default: &default
 
 development:
   <<: *default
-  database: jobdata
+  database: jobdata_3
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -50,6 +50,6 @@ test:
 #
 production:
   <<: *default
-  database: jobdata
+  database: jobdata_3
   username: rm_user
   password: <%= ENV["TEST4_DATABASE_PASSWORD"] %>

@@ -16,6 +16,27 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `accounts`
+--
+
+DROP TABLE IF EXISTS `accounts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `accounts` (
+  `account_id` int NOT NULL AUTO_INCREMENT,
+  `email` varchar(45) NOT NULL,
+  `password` varchar(45) NOT NULL,
+  `registration_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `activity_status` tinyint NOT NULL DEFAULT '0',
+  `image_url` varchar(500) DEFAULT NULL,
+  `first_name` varchar(45) DEFAULT NULL,
+  `last_name` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`account_id`),
+  UNIQUE KEY `account_email_UNIQUE` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `accounts`
 --
 
@@ -24,6 +45,27 @@ LOCK TABLES `accounts` WRITE;
 INSERT INTO `accounts` VALUES (1,'carlobortolan@gmail.com','password','2022-12-23 23:28:59',0,NULL,'Carlo','Bortolan'),(2,'jan.hummel@tum.de','password','2022-12-23 23:28:59',0,NULL,'Jan','Hummel');
 /*!40000 ALTER TABLE `accounts` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `applications`
+--
+
+DROP TABLE IF EXISTS `applications`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `applications` (
+  `job_id` int NOT NULL,
+  `applicant_id` int NOT NULL,
+  `applied_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` enum('-1','0','1') NOT NULL DEFAULT '0',
+  `application_text` varchar(500) DEFAULT NULL,
+  `application_documents` varchar(100) DEFAULT NULL,
+  `response` varchar(500) DEFAULT NULL,
+  PRIMARY KEY (`job_id`,`applicant_id`),
+  UNIQUE KEY `index_applications_on_job_id_and_applicant_id` (`job_id`,`applicant_id`),
+  KEY `account_id_idx` (`applicant_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `applications`
@@ -36,6 +78,22 @@ INSERT INTO `applications` VALUES (1,1,'2022-12-24 00:11:29','0','testbewerbung'
 UNLOCK TABLES;
 
 --
+-- Table structure for table `ar_internal_metadata`
+--
+
+DROP TABLE IF EXISTS `ar_internal_metadata`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ar_internal_metadata` (
+  `key` varchar(255) NOT NULL,
+  `value` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `ar_internal_metadata`
 --
 
@@ -44,6 +102,41 @@ LOCK TABLES `ar_internal_metadata` WRITE;
 INSERT INTO `ar_internal_metadata` VALUES ('environment','development','2022-12-23 22:14:42.655576','2022-12-23 22:14:42.655576');
 /*!40000 ALTER TABLE `ar_internal_metadata` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `jobs`
+--
+
+DROP TABLE IF EXISTS `jobs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `jobs` (
+  `job_id` int NOT NULL AUTO_INCREMENT,
+  `job_type` enum('typa','typb','typc') DEFAULT NULL,
+  `job_status` tinyint DEFAULT '0',
+  `status` varchar(255) DEFAULT '0',
+  `created_at` datetime NOT NULL DEFAULT '2022-12-23 22:14:42',
+  `updated_at` datetime NOT NULL DEFAULT '2022-12-23 22:14:42',
+  `account_id` int DEFAULT '0',
+  `latitude` float DEFAULT '0',
+  `longitude` float DEFAULT '0',
+  `duration` int DEFAULT '0',
+  `code_lang` varchar(2) DEFAULT NULL,
+  `title` varchar(100) DEFAULT NULL,
+  `description` text,
+  `salary` int DEFAULT NULL,
+  `currency` enum('eur','usd','chf','gbp') DEFAULT NULL,
+  `image_url` varchar(500) DEFAULT NULL,
+  `start_slot` datetime DEFAULT NULL,
+  `time_zone` varchar(45) DEFAULT NULL,
+  `application_count` int DEFAULT '0',
+  `view_count` int DEFAULT '0',
+  `favorite_count` int DEFAULT '0',
+  PRIMARY KEY (`job_id`),
+  KEY `job_information_account_id_idx` (`account_id`),
+  KEY `job_information_location_id_idx` (`longitude`,`latitude`)
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `jobs`
@@ -56,6 +149,29 @@ INSERT INTO `jobs` VALUES (1,NULL,0,'public','2022-12-23 22:14:42','2022-12-23 2
 UNLOCK TABLES;
 
 --
+-- Table structure for table `locations`
+--
+
+DROP TABLE IF EXISTS `locations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `locations` (
+  `location_id` int NOT NULL AUTO_INCREMENT,
+  `latitude` float DEFAULT NULL,
+  `longitude` float DEFAULT NULL,
+  `code_country` varchar(2) NOT NULL,
+  `administrative_area` varchar(45) DEFAULT NULL,
+  `sub_administrative_area` varchar(45) DEFAULT NULL,
+  `locality` varchar(45) NOT NULL,
+  `address` varchar(45) NOT NULL,
+  `postal_code` varchar(45) NOT NULL,
+  `premise` varchar(45) DEFAULT NULL,
+  `date_location_creation` date NOT NULL,
+  PRIMARY KEY (`location_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `locations`
 --
 
@@ -63,6 +179,22 @@ LOCK TABLES `locations` WRITE;
 /*!40000 ALTER TABLE `locations` DISABLE KEYS */;
 /*!40000 ALTER TABLE `locations` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `notifications`
+--
+
+DROP TABLE IF EXISTS `notifications`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `notifications` (
+  `employer_id` int NOT NULL,
+  `job_id` int NOT NULL,
+  `notify` enum('0','1') DEFAULT NULL,
+  PRIMARY KEY (`employer_id`,`job_id`),
+  KEY `notification_job_id_idx` (`job_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `notifications`
@@ -75,6 +207,19 @@ INSERT INTO `notifications` VALUES (0,1,'0'),(0,3,'1'),(0,4,'1'),(0,5,'1'),(0,6,
 UNLOCK TABLES;
 
 --
+-- Table structure for table `schema_migrations`
+--
+
+DROP TABLE IF EXISTS `schema_migrations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `schema_migrations` (
+  `version` varchar(255) NOT NULL,
+  PRIMARY KEY (`version`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `schema_migrations`
 --
 
@@ -83,6 +228,23 @@ LOCK TABLES `schema_migrations` WRITE;
 INSERT INTO `schema_migrations` VALUES ('20221220141809'),('20221220142045'),('20221220142140'),('20221220142152'),('20221220142203'),('20221220142335');
 /*!40000 ALTER TABLE `schema_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `users` (
+  `user_id` int NOT NULL,
+  `code_nationality` varchar(2) NOT NULL,
+  `location_id` int DEFAULT '0',
+  `user_type` enum('private','company') NOT NULL DEFAULT 'private',
+  PRIMARY KEY (`user_id`),
+  KEY `location_id_idx` (`location_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `users`
@@ -102,4 +264,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-12-24  0:33:00
+-- Dump completed on 2022-12-24 16:47:03
