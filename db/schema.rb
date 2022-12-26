@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_26_161704) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_26_220845) do
   create_table "applications", primary_key: ["job_id", "applicant_id"], charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "job_id", null: false
     t.integer "applicant_id", null: false
@@ -49,8 +49,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_26_161704) do
     t.integer "application_count", default: 0
     t.integer "view_count", default: 0
     t.integer "favorite_count", default: 0
-    t.index ["user_id"], name: "job_information_account_id_idx"
     t.index ["longitude", "latitude"], name: "job_information_location_id_idx"
+    t.index ["user_id"], name: "job_information_account_id_idx"
   end
 
   create_table "locations", primary_key: "location_id", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -81,9 +81,14 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_26_161704) do
     t.datetime "registration_date", precision: nil, default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.integer "activity_status", limit: 1, default: 0, null: false
     t.string "image_url", limit: 500
-    t.string "first_name", null: false
-    t.string "last_name", null: false
+    t.string "first_name"
+    t.string "last_name"
     t.index ["email"], name: "account_email_UNIQUE", unique: true
   end
 
+  add_foreign_key "applications", "jobs", primary_key: "job_id"
+  add_foreign_key "applications", "users", column: "applicant_id"
+  add_foreign_key "jobs", "users"
+  add_foreign_key "notifications", "jobs", primary_key: "job_id"
+  add_foreign_key "notifications", "users", column: "employer_id"
 end

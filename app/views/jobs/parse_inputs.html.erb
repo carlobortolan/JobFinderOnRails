@@ -12,7 +12,8 @@
   Search within timeslot:
   <%= datetime_local_field_tag :time, (@my_args["time"].strftime("%Y-%m-%dT%H:%M")) %><br>
   Set maximum number of jobs shown:
-  <%= submit_tag "Submit" %>
+  <%= number_field_tag :limit, (100) %><br>
+  <%= submit_tag "START SEARCH" %>
 <% end %>
 
 <h2>Matched jobs</h2>

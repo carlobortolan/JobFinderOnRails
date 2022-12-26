@@ -4,6 +4,7 @@
     <file url="file://$PROJECT_DIR$/app/controllers/applications_controller.rb" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/app/repository/application_repository.rb" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/app/repository/job_repository.rb" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/db/migrate/20221226220845_foreign_keys1.rb" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/db/seeds.rb" dialect="MySQL" />
   </component>
 </project>

@@ -18,7 +18,7 @@ defined in the Apache-2.0 license, shall be dual licensed as above, without any 
 2. Write new code/comments
 3. Update the documentation
    using `$ yardoc 'app/views/*.html.erb' 'app/controllers/*.rb' 'app/models/*.rb' 'app/helpers/*.rb' 'app/repository/*.rb' 'app/service/*.rb' 'app/controllers/*.rb' 'lib/**/*.rb'`
-4. View the documentation under: http://localhost:63342/<your-project-name>/doc/
+4. View the documentation under: http://localhost:63342/insert-here-project-name/doc/
 
 </details>
 
@@ -35,6 +35,12 @@ All notifications are sent using [SMTP](https://en.wikipedia.org/wiki/Simple_Mai
 ### Filtering of available jobs
 
 The system receives a set of available jobs and filters them returning a sorted feed according to the user's parameters.
+_Default values for search_:
+
+- coordinates *0.0*, *0.0*
+- radius: *50.0*
+- timeslot: *Time.now*
+- limit (=maximum number of jobs shown): *100*
 
 ### User authentication
 
@@ -45,21 +51,18 @@ authentication.
 
 ## How it works
 
-Simply start the server and go to http://localhost:3000
-Authentication:
-> user: cb
->
-> password: 1
+Simply start the server and go to http://localhost:3000/ and create a new account or log in with an existing account
 
 ## Config
 
 **EITHER** (*recommended*)
 
 - create a new schema called `jobdata` in your MySql database
-- add a new user called `rm_user` with full access rights and the
+- add a new user called `rm_user` with full access to all administrative roles and the
   password ``` hô[ÕiÚéjÚ¢X*t/t¢ÕeR/ü¾nõ'g'ñ¢ß«Tíwàx²"¡jÛß´*PZÏmõ}ßX¨º*¤àÙ7ü'ÌJÌ=´Lh#M[NöèD`¿üåvã^àði®$4¦{·d3ZE~üMêr.7>þSrÖô(òúHÒDÊ]!Ä-¯.ï!òHúã¡```
-- run `$ rails db:migrate`
-- run `$ rails server`
+- run `$ rails db:migrate` to create all necessary
+  tables
+- run `$ rails server` to start the server
 
 **OR**
 
@@ -67,8 +70,8 @@ Authentication:
     - `default: username`, ` default: password`,
     - `production: database`,
     - `production: database`, `deployment: username`
-- run `$ rails db:migrate`
-- run `$ rails server`
+- run `$ rails db:migrate` to create all necessary
+- run `$ rails server` to start the server
 
 > **Optional:** Add example data by importing ``/db/importdata.sql`` into the schema jobdata.
 
@@ -79,7 +82,6 @@ Authentication:
 ## TODO
 
 - Add remaining **job-attributes** in ``job_create`` and ``job_show``
-- Re-add foreign keys
 - Implement **location system** (+ function from address to coordinates)
 - Add appropriate **HTML/CSS** to improve look of views
 
