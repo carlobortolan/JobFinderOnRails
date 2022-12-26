@@ -39,14 +39,6 @@
   </div>
 
   <div>
-    <%= form.label :account_id %><br>
-    <%= form.number_field :account_id %><br>
-    <% job.errors.full_messages_for(:account_id).each do |message| %>
-      <div><%= message %></div>
-    <% end %>
-  </div>
-
-  <div>
     <%= form.label "Do you want to receive a notification when a new application is submitted?" %><br>
     <%= form.check_box :notify %><br>
     <% job.errors.full_messages_for(:notify).each do |message| %>

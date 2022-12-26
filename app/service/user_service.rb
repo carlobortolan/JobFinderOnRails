@@ -25,8 +25,11 @@ class UserService
   def get_user(user_id)
     @user_repository.get_user(user_id)
   end
+
   def get_user_name(user_id)
-    @user_repository.get_user_name(user_id)
+    if !user_id.nil? && user_id.is_a?(Integer)
+      @user_repository.get_user_name(user_id)
+    end
   end
 
 end

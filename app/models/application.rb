@@ -6,6 +6,6 @@ class Application < ApplicationRecord
   validates :application_text, presence: true, length: { minimum: 10 }
 
   def get_name
-    AccountService.new.get_account_name(applicant_id.to_i)
+    UserService.new.get_user_name(applicant_id.to_i)
   end
 end

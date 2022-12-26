@@ -29,14 +29,14 @@ class ApplicationRepository
   end
 
   def find_employer_id (job_id)
-    query = "SELECT account_id FROM jobs WHERE job_id = #{job_id}"
+    query = "SELECT id FROM jobs WHERE job_id = #{job_id}"
     binds = [ActiveRecord::Relation::QueryAttribute.new('job_id', job_id, ActiveRecord::Type::Integer.new)]
     ApplicationRecord.connection.exec_query(query, 'SQL', binds, prepare: true).rows[0]
   end
 
-  def find_account(account_id)
-    query = "SELECT account_id, first_name, last_name, email FROM accounts WHERE account_id = #{account_id}"
-    binds = [ActiveRecord::Relation::QueryAttribute.new('account_id', account_id, ActiveRecord::Type::Integer.new)]
+  def find_user(id)
+    query = "SELECT id, first_name, last_name, email FROM users WHERE id = #{id}"
+    binds = [ActiveRecord::Relation::QueryAttribute.new('id', id, ActiveRecord::Type::Integer.new)]
     result = ApplicationRecord.connection.exec_query(query, 'SQL', binds, prepare: true).rows[0]
     { :name => result[1].to_s.concat(" #{result[2].to_s}"), :email => result[3].to_s }
   end
@@ -47,22 +47,22 @@ class ApplicationRepository
     # TODO:
   end
 
-  def create_application (job_id, account_id, text, documents)
-    # create new application as Application: {(job_id, user_id), text, status, response}
-    query = "INSERT INTO applications(job_id, applicant_id, application_text, application_documents) VALUES (#{job_id}, #{account_id}, '#{text}', '#{documents}')"
+  def create_application (job_id, id, text, documents)
+    # create new application as Application: {(job_id, id), text, status, response}
+    query = "INSERT INTO applications(job_id, applicant_id, application_text, application_documents) VALUES (#{job_id}, #{id}, '#{text}', '#{documents}')"
     binds = [ActiveRecord::Relation::QueryAttribute.new('job_id', job_id, ActiveRecord::Type::Integer.new),
-             ActiveRecord::Relation::QueryAttribute.new('account_id', account_id, ActiveRecord::Type::Integer.new),
+             ActiveRecord::Relation::QueryAttribute.new('id', id, ActiveRecord::Type::Integer.new),
              ActiveRecord::Relation::QueryAttribute.new('text', text, ActiveRecord::Type::Text.new),
              ActiveRecord::Relation::QueryAttribute.new('documents', documents, ActiveRecord::Type::String.new)]
     ApplicationRecord.connection.exec_query(query, 'SQL', binds, prepare: true).rows[0]
   end
 
-  def change_status (job_id, account_id, new_status, response)
+  def change_status (job_id, id, new_status, response)
     # change status to -1/0/1;
     # add response
-    query = "UPDATE applications SET status = '#{new_status}', response = '#{response}' WHERE job_id = #{job_id} AND applicant_id = #{account_id }"
+    query = "UPDATE applications SET status = '#{new_status}', response = '#{response}' WHERE job_id = #{job_id} AND applicant_id = #{id }"
     binds = [ActiveRecord::Relation::QueryAttribute.new('job_id', job_id, ActiveRecord::Type::Integer.new),
-             ActiveRecord::Relation::QueryAttribute.new('account_id', account_id, ActiveRecord::Type::Integer.new),
+             ActiveRecord::Relation::QueryAttribute.new('id', id, ActiveRecord::Type::Integer.new),
              ActiveRecord::Relation::QueryAttribute.new('new_status', new_status, ActiveRecord::Type::String.new),
              ActiveRecord::Relation::QueryAttribute.new('response', response, ActiveRecord::Type::String.new)]
     ApplicationRecord.connection.exec_query(query, 'SQL', binds, prepare: true).rows[0]
@@ -77,6 +77,12 @@ class ApplicationRepository
     ApplicationRecord.connection.exec_query(query, 'SQL', binds, prepare: true).rows[0]
 
     # ActiveRecord::Base.connection.execute("UPDATE applications SET status = '-1', response = '#{response}' WHERE job_id = #{job_id} AND status <> '1'")
+  end
+
+  def find_by_user(id)
+    query = "SELECT * FROM applications WHERE applicant_id = #{id} ORDER BY applied_at DESC"
+    binds = [ActiveRecord::Relation::QueryAttribute.new('id', id, ActiveRecord::Type::Integer.new)]
+    ApplicationRecord.connection.exec_query(query, 'SQL', binds, prepare: true).rows
   end
 
 end

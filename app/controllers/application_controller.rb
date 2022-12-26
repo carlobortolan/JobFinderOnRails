@@ -6,6 +6,18 @@ class ApplicationController < ActionController::Base
   end
 
   def require_user_logged_in!
-    redirect_to sign_in_path, alert: 'You must be signed in..' if Current.user.nil?
+    if Current.user.nil?
+      redirect_to sign_in_path, status: :unauthorized, alert: 'You must be signed in..'
+      return false
+    end
+    true
+  end
+
+  def require_user_be_owner!
+    if Current.user.nil? || @job.user_id != Current.user.id
+      redirect_to sign_in_path, status: :unauthorized, alert: 'Not allowed'
+      return false
+    end
+    true
   end
 end

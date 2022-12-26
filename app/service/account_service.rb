@@ -5,9 +5,9 @@ class AccountService
     @account_repository = AccountRepository.new
   end
 
-  def get_account_name(account_id)
-    if !account_id.nil? && account_id.is_a?(Integer)
-      @account_repository.get_account_name(account_id)
+  def get_account_name(user_id)
+    if !user_id.nil? && user_id.is_a?(Integer)
+      @account_repository.get_user_name(user_id)
     end
   end
 end

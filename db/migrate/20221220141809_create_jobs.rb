@@ -6,7 +6,7 @@ class CreateJobs < ActiveRecord::Migration[7.0]
       t.string "status", default: "0"
       t.datetime "created_at", precision: nil, default: Time.now, null: false
       t.datetime "updated_at", precision: nil, default: Time.now, null: false
-      t.integer "account_id", default: 0
+      t.integer "user_id", default: 0
       t.float "latitude", default: 0
       t.float "longitude", default: 0
       t.integer "duration", default: 0
@@ -21,7 +21,7 @@ class CreateJobs < ActiveRecord::Migration[7.0]
       t.integer "application_count", default: 0
       t.integer "view_count", default: 0
       t.integer "favorite_count", default: 0
-      t.index ["account_id"], name: "job_information_account_id_idx"
+      t.index ["user_id"], name: "job_information_account_id_idx"
       t.index ["longitude", "latitude"], name: "job_information_location_id_idx"
     end
     # add_foreign_key "jobs", "accounts", primary_key: "account_id", name: "job_account_id", on_update: :cascade, on_delete: :cascade

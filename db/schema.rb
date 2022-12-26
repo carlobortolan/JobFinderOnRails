@@ -34,7 +34,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_26_161704) do
     t.string "status", default: "0"
     t.datetime "created_at", precision: nil, default: "2022-12-26 16:10:05", null: false
     t.datetime "updated_at", precision: nil, default: "2022-12-26 16:10:05", null: false
-    t.integer "account_id", default: 0
+    t.integer "user_id", default: 0
     t.float "latitude", default: 0.0
     t.float "longitude", default: 0.0
     t.integer "duration", default: 0
@@ -49,7 +49,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_26_161704) do
     t.integer "application_count", default: 0
     t.integer "view_count", default: 0
     t.integer "favorite_count", default: 0
-    t.index ["account_id"], name: "job_information_account_id_idx"
+    t.index ["user_id"], name: "job_information_account_id_idx"
     t.index ["longitude", "latitude"], name: "job_information_location_id_idx"
   end
 

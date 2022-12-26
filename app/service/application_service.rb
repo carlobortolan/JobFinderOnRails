@@ -46,8 +46,8 @@ class ApplicationService
     end
     puts "T4"
     if [true].include? @application_repository.get_notification(job_id, employer_id)
-      employer = @application_repository.find_account(employer_id)
-      applicant = @application_repository.find_account(applicant_id)
+      employer = @application_repository.find_user(employer_id)
+      applicant = @application_repository.find_user(applicant_id)
       puts "T5"
       if employer.nil? || applicant.nil? || employer[:name].nil? || employer[:email].nil? || applicant[:name].nil? || applicant[:email].nil?
         return
@@ -66,21 +66,18 @@ class ApplicationService
     end
   end
 
-
-
   # Rejects single application and adds optional comment by employer.
   # @param [int] job_id Job
-  # @param [int] account_id Id des Bewerbers
+  # @param [int] user_id Id des Bewerbers
   # @param [String] comment Rückmeldung
-  def reject (job_id, account_id, comment)
-    if !account_id.nil? && !job_id.nil? && !comment.nil? && job_id.is_a?(Integer) && account_id.is_a?(Integer) && job_id > 0 && account_id > 0
-      @application_repository.change_status(job_id, account_id, -1, comment.to_s)
+  def reject (job_id, user_id, comment)
+    if !user_id.nil? && !job_id.nil? && !comment.nil? && job_id.is_a?(Integer) && user_id.is_a?(Integer) && job_id > 0 && user_id > 0
+      @application_repository.change_status(job_id, user_id, -1, comment.to_s)
     end
   end
 
   # Rejects single application and adds optional comment by employer.
   # @param [int] job_id Job
-  # @param [int] account_id Id des Bewerbers
   # @param [String] comment Rückmeldung
   def reject_all (job_id, comment)
     if !job_id.nil? && !comment.nil? && job_id.is_a?(Integer) && job_id > 0
@@ -92,16 +89,22 @@ class ApplicationService
   # Sends notification message to accepted applicant.
   # Rejects all other pending applications for this job.
   # @param [int] job_id Job
-  # @param [int] account_id Id des Bewerbers
+  # @param [int] user_id Id des Bewerbers
   # @param [String] comment Rückmeldung
-  def accept (job_id, account_id, comment)
-    if !account_id.nil? && !job_id.nil? && !comment.nil? && job_id.is_a?(Integer) && account_id.is_a?(Integer) && job_id != 0 && account_id != 0
-      applicant = @application_repository.find_account(account_id)
+  def accept (job_id, user_id, comment)
+    if !user_id.nil? && !job_id.nil? && !comment.nil? && job_id.is_a?(Integer) && user_id.is_a?(Integer) && job_id > 0 && user_id > 0
+      applicant = @application_repository.find_user(user_id)
       if !applicant.nil? && !applicant[:name].nil? && !applicant[:email].nil?
-        @application_repository.change_status(job_id, account_id, 1, comment.to_s)
+        @application_repository.change_status(job_id, user_id, 1, comment.to_s)
         #@application_repository.change_status_all(job_id, account_id, -1, "<STANDARD REJECTION TEXT>")
         @notification_generator.send_notification_applicant(applicant[:name], applicant[:email], job_id, comment)
       end
+    end
+  end
+
+  def find_by_user(user_id)
+    if !user_id.nil? && user_id.is_a?(Integer) && user_id > 0
+      @application_repository.find_by_user(user_id)
     end
   end
 end

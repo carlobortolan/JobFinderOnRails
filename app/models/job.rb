@@ -8,11 +8,4 @@ class Job < ApplicationRecord
   validates :longitude, presence: true
   validates :latitude, presence: true
 
-  def start_search(prefiltered, my_args)
-    puts "STARTIGN"
-  end
-
-  def to_s
-    "#{title  }"
-  end
 end
