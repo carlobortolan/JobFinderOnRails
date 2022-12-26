@@ -36,6 +36,13 @@ All notifications are sent using [SMTP](https://en.wikipedia.org/wiki/Simple_Mai
 
 The system receives a set of available jobs and filters them returning a sorted feed according to the user's parameters.
 
+### User authentication
+
+Users can set up an account with their email address and a password.
+The password is instantaneously encrypted using  [bcryt](https://en.wikipedia.org/wiki/Bcrypt) and stored in form of a
+encrypted hash in the database. In case the user forgets this password, it can be reset via standard email
+authentication.
+
 ## How it works
 
 Simply start the server and go to http://localhost:3000
@@ -51,8 +58,8 @@ Authentication:
 - create a new schema called `jobdata` in your MySql database
 - add a new user called `rm_user` with full access rights and the
   password ``` hô[ÕiÚéjÚ¢X*t/t¢ÕeR/ü¾nõ'g'ñ¢ß«Tíwàx²"¡jÛß´*PZÏmõ}ßX¨º*¤àÙ7ü'ÌJÌ=´Lh#M[NöèD`¿üåvã^àði®$4¦{·d3ZE~üMêr.7>þSrÖô(òúHÒDÊ]!Ä-¯.ï!òHúã¡```
-- run `$ ruby bin\rails db:migrate` or `$ bin/rails db:migrate` (depending on your OS)
-- run `$ ruby bin\rails server` or `$ bin/rails server` (depending on your OS)
+- run `$ rails db:migrate`
+- run `$ rails server`
 
 **OR**
 
@@ -60,21 +67,21 @@ Authentication:
     - `default: username`, ` default: password`,
     - `production: database`,
     - `production: database`, `deployment: username`
-- run `$ ruby bin\rails db:migrate` or `$ bin/rails db:migrate` (depending on your OS)
-- run `$ ruby bin\rails server` or `$ bin/rails server` (depending on your OS)
+- run `$ rails db:migrate`
+- run `$ rails server`
 
 > **Optional:** Add example data by importing ``/db/importdata.sql`` into the schema jobdata.
 
 ## Sources
+
 *(TODO)*
 
 ## TODO
-- Add remaining **job-attributes** in ``job_create`` and ``job_show``
-- Implement **account/user system**
-- Set **access rights** in account/user system
-- Implement **location system** (+ function from address to coordinates)
-- Add appropriate **HTML/CSS** to improve look of views 
 
+- Add remaining **job-attributes** in ``job_create`` and ``job_show``
+- Re-add foreign keys
+- Implement **location system** (+ function from address to coordinates)
+- Add appropriate **HTML/CSS** to improve look of views
 
 ---
 > Carlo Bortolan &nbsp;&middot;&nbsp;
