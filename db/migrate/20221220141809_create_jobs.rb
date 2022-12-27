@@ -4,8 +4,8 @@ class CreateJobs < ActiveRecord::Migration[7.0]
       t.column "job_type", "enum('typa','typb','typc')"
       t.integer "job_status", limit: 1, default: 0
       t.string "status", default: "0"
-      t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
-      t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+      t.datetime "created_at", default: DateTime.now, null: false
+      t.datetime "updated_at", default: DateTime.now, null: false
       t.integer "user_id", default: 0
       t.float "latitude", default: 0.0
       t.float "longitude", default: 0.0

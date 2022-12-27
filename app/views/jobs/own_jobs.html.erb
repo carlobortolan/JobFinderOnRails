@@ -1,9 +1,8 @@
 <%= stylesheet_link_tag "style" %>
 <h1>Your jobs</h1>
-<h2><%= @jobs %>></h2>
 <% if !@jobs.nil? %>
 
-  <h2>You have created <%= @jobs.count %> jobs! - <%= link_to "Create new job", "new_job_path" %></h2>
+  <h2>You have created <%= @jobs.count %> jobs! - <%= link_to "Create new job", new_job_path %></h2>
 
   <ul>
     <% @jobs.each do |job| %>
@@ -13,7 +12,7 @@
           <strong>Job ID:
             <%= job[:job_id] %></strong>
           ---
-          <%= Time.parse(job[:start_slot].to_s).localtime.asctime %>
+          <%= job[:start_slot].localtime.ctime %>
           ---
           <%= link_to "go to job", job_path(job) %>
         </p>

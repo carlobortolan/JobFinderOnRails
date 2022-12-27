@@ -10,9 +10,9 @@
         <strong>Job ID:
           <%= application[:job_id] %></strong>
         ---
-        <%= Time.parse(application[:applied_at].to_s).localtime.ctime %>
+        <%= application[:applied_at].localtime.ctime %>
         ---
-        <%= link_to "go to job", job_path(Job.find    (application[:job_id])) %>
+        <%= link_to "go to job", job_path(Job.find(application[:job_id])) %>
       </p>
 
       <p>

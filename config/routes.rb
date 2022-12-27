@@ -9,6 +9,8 @@ Rails.application.routes.draw do
   get 'jobs/(/:job_id)/applications/(/:application_id)/accept', :to => 'applications#accept', as: 'job_application_accept'
   get 'jobs/(/:job_id)/applications/(/:application_id)/reject', :to => 'applications#reject', as: 'job_application_reject'
   get 'jobs/(/:job_id)/applications_reject_all', :to => 'applications#reject_all', as: 'job_applications_reject_all'
+  delete 'jobs/(/:job_id)/applications/(/:application_id)' => 'applications#destroy'
+
   get 'user/applications', :to => 'applications#own_applications', as: 'own_applications'
   get 'user/jobs', :to => 'jobs#own_jobs', as: 'own_jobs'
 
