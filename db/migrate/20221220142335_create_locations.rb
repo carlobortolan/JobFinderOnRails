@@ -10,7 +10,7 @@ class CreateLocations < ActiveRecord::Migration[7.0]
       t.string "address", limit: 45, null: false
       t.string "postal_code", limit: 45, null: false
       t.string "premise", limit: 45
-      t.date "date_location_creation", null: false
+      t.datetime "date_location_creation", default: -> { "CURRENT_TIMESTAMP" }, null: false
     end
   end
 end

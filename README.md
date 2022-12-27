@@ -73,7 +73,7 @@ Simply start the server and go to http://localhost:3000/ and create a new accoun
 - run `$ rails db:migrate` to create all necessary
 - run `$ rails server` to start the server
 
-> **Optional:** Add example data by importing ``/db/importdata.sql`` into the schema jobdata.
+> **Optional:(ignore for now)** ~~Add example data by importing ``/db/importdata.sql`` into the schema jobdata.~~
 
 ## Sources
 
@@ -81,6 +81,7 @@ Simply start the server and go to http://localhost:3000/ and create a new accoun
 
 ## TODO
 
+- Fix seed / importdata
 - Add remaining **job-attributes** in ``job_create`` and ``job_show``
 - Implement **location system** (+ function from address to coordinates)
 - Add appropriate **HTML/CSS** to improve look of views
