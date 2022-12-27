@@ -2,11 +2,10 @@
 <p><%= @job.description %></p>
 <p><%= @job.start_slot.localtime.ctime %></p>
 
-<ul>
-  <li><%= link_to "Edit", edit_job_path(@job) %></li>
-  <li><%= link_to "Delete this job", job_path(@job), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %></li>
-  <li><%= link_to "Show all applications", job_applications_path(@job) %></li>
-</ul>
+<%= button_to "Edit", edit_job_path(@job), method: :get %>
+<%= button_to "Show all applications", job_applications_path(@job), method: :get %>
+<%= button_to "Delete this job", job_path(@job), form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete %>
+
 
 <h2>Applications</h2>
 <%= render @job.applications %>

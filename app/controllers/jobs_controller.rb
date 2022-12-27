@@ -51,14 +51,11 @@ class JobsController < ApplicationController
   end
 
   def destroy
-    puts "STARTING DESTROY"
     @job = Job.find(params[:id])
-    @job.destroy
-
-    redirect_to jobs_path, status: :see_other
-
-    # if require_user_be_owner!
-    # end
+    if require_user_be_owner!
+      @job.destroy
+      redirect_to jobs_path, status: :see_other
+    end
   end
 
   def find
