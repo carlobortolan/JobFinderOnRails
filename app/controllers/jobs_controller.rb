@@ -60,12 +60,18 @@ class JobsController < ApplicationController
   end
 
   def find
-    @jobs = Job.all
+    @jobs = Job.all.where("status = 'public'")
   end
 
   def parse_inputs
     @my_args = { "longitude" => params[:longitude].to_f, "latitude" => params[:latitude].to_f, "radius" => params[:radius].to_f, "time" => Time.parse(params[:time]), "limit" => params[:limit].to_i }
-    @result = FeedGenerator.initialize_feed(Job.all.as_json, @my_args)
+    @result = FeedGenerator.initialize_feed(Job.all.where("status = 'public'").as_json, @my_args)
+  end
+
+  def own_jobs
+    if require_user_logged_in!
+      @jobs = Job.all.where("user_id = #{Current.user.id}")
+    end
   end
 
   private

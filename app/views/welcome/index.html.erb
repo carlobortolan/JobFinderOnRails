@@ -4,8 +4,9 @@
   Logged in as: <%= Current.user.email %><br>
   <%= link_to 'Edit Password', edit_password_path %>
   <%= button_to 'Logout', logout_path, method: :delete %>
-  <%= button_to 'View jobs', jobs_path, method: :get %>
+  <%= button_to 'View all available jobs', jobs_path, method: :get %>
   <%= button_to 'View submitted applications', own_applications_path, method: :get %>
+  <%= button_to 'View your jobs', own_jobs_path, method: :get %>
 <% else %>
   <%= link_to 'Sign Up', sign_up_path %>
   or

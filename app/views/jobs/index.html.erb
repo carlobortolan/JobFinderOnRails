@@ -2,12 +2,11 @@
 <h1>Whats next?</h1>
 <h2><%= link_to "Search for jobs", jobs_find_path %></h2>
 <h2><%= link_to "New Job", new_job_path %></h2>
-<!--Our blog has <%#= Job.public_count %> jobs and counting!-->
 <h1>All available Jobs</h1>
 
 <ul>
   <% @jobs.each do |job| %>
-    <% unless job.archived? %>
+    <% if job.public? %>
       <li>
         <b><%= link_to job.title, job %></b>
         <%= link_to "(apply)", new_job_application_path(job) %>

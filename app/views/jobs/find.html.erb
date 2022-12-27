@@ -19,10 +19,10 @@
 <% end %>
 
 <h2>All available jobs</h2>
-<h3>We have <%= Job.count %> jobs and counting!</h3>
+<h3>We have <%= @jobs.all.count %> jobs and counting!</h3>
 <ul>
   <% @jobs.each do |job| %>
-    <% unless job.archived? %>
+    <% if job.public? %>
       <li>
         <b><%= link_to job.title, job %></b>
         <%= link_to "(apply)", new_job_application_path(job) %>

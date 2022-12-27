@@ -8,26 +8,26 @@
     <div style="padding: 10px; border: 1px solid lightgray; background-color: #333333">
       <p>
         <strong>Job ID:
-          <%= application[0] %></strong>
+          <%= application[:job_id] %></strong>
         ---
-        <%= Time.parse(application[2]).localtime.ctime %>
+        <%= Time.parse(application[:applied_at].to_s).localtime.ctime %>
         ---
-        <%= link_to "go to job", job_path(Job.find(application[0])) %>
+        <%= link_to "go to job", job_path(Job.find    (application[:job_id])) %>
       </p>
 
       <p>
         <strong>Application:</strong>
-        <%= application[4] %>
+        <%= application[:application_text] %>
       </p>
 
       <p>
         <strong>Documents:</strong>
-        <%= application[5] %>
+        <%= application[:application_documents] %>
       </p>
 
       <p>
         <strong>Status:</strong>
-        <%= case application[3]
+        <%= case application[:status]
             when '-1'
               "REJECTED"
             when '1'
@@ -38,12 +38,12 @@
       </p>
 
       <p>
-        <% if !application[6].nil? && !application[6].blank? %>
+        <% if !application[:response].nil? && !application[:response].blank? %>
           <strong>Response:</strong>
-          <%= application[6].nil? ? "No response yet ..." : application[6] %>
+          <%= application[:response].nil? ? "No response yet ..." : application[:response] %>
           </p>
-          </div>
         <% end %>
+        </div>
   <% end %>
 </ul>
 
