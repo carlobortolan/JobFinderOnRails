@@ -33,5 +33,12 @@ Rails.application.routes.draw do
   get 'password/reset/edit', to: 'password_resets#edit'
   patch 'password/reset/edit', to: 'password_resets#update'
 
+  namespace :api, defaults: {format: 'json'} do
+    namespace :v0 do
+      get 'user', to: 'registrations#index'
+      get 'job', to: 'jobs#index'
+    end
+  end
+
   # Defines the root path route ("/")
 end
