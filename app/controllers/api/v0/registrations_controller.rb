@@ -2,14 +2,13 @@ module Api
   module V0
     class RegistrationsController < ApplicationController
       protect_from_forgery with: :null_session
-      # def index
-      # render json: User.all
-      # end
+      #
 
       def index
         message = [{ statement: "Hello" }]
         render json: message
       end
+
 
       def create
         @user = User.new(user_params)
@@ -21,7 +20,7 @@ module Api
             render status: 422, json: { "error": @user.errors.details }
           end
         rescue
-          render status: 500, json: { "error": "This action is not permitted" }
+          render status: 500, json: { "error": "Please try again later. If this error persists, we recommend to contact our support team." }
         end
       end
 

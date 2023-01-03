@@ -106,10 +106,12 @@
     <orderEntry type="library" scope="PROVIDED" name="tzinfo-data (v1.2022.7, ruby-2.7.5-p203) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="web-console (v4.2.0, ruby-2.7.5-p203) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="webdrivers (v5.2.0, ruby-2.7.5-p203) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="webrick (v1.7.0, ruby-2.7.5-p203) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="websocket (v1.2.9, ruby-2.7.5-p203) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="websocket-driver (v0.7.5, ruby-2.7.5-p203) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="websocket-extensions (v0.1.5, ruby-2.7.5-p203) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="xpath (v3.2.0, ruby-2.7.5-p203) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="yard (v0.9.28, ruby-2.7.5-p203) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="zeitwerk (v2.6.6, ruby-2.7.5-p203) [gem]" level="application" />
   </component>
   <component name="RModuleSettingsStorage">

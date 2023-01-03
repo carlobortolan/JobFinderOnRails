@@ -48,6 +48,8 @@ gem "bootsnap", require: false
 
 gem "active_model_serializers"
 
+gem "yard"
+
 
 # Use Sass to process CSS
 # gem "sassc-rails"

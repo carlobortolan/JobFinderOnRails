@@ -36,7 +36,7 @@ Rails.application.routes.draw do
   namespace :api, defaults: {format: 'json'} do
     namespace :v0 do
       get 'user', to: 'registrations#index'
-      post 'user/sign_up', to: 'registrations#create'
+      post 'user', to: 'registrations#create'
       get 'job', to: 'jobs#index'
     end
   end
