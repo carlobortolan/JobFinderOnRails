@@ -6,7 +6,6 @@ module Api
       # render json: User.all
       # end
 
-
       def index
         message = [{ statement: "Hello" }]
         render json: message
@@ -14,11 +13,15 @@ module Api
 
       def create
         @user = User.new(user_params)
-        if @user.save
-          render status: 200, json: { message: "Account registered! Please activate your account at GET http://localhost:3000/api/v0/user/verify " }
+        begin
+          if @user.save
+            render status: 200, json: { "message": "Account registered! Please activate your account at GET http://localhost:3000/api/v0/user/verify " }
 
-        else
-          render status: 422, json: @user.errors.details
+          else
+            render status: 422, json: { "error": @user.errors.details }
+          end
+        rescue
+          render status: 500, json: { "error": "This action is not permitted" }
         end
       end
 
