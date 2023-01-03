@@ -66,7 +66,6 @@
     <orderEntry type="library" scope="PROVIDED" name="jsonapi-rb (v0.5.0, ruby-2.7.5-p203) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="jsonapi-renderer (v0.2.2, ruby-2.7.5-p203) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="jsonapi-serializable (v0.3.1, ruby-2.7.5-p203) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="jsonapi-serializer (v2.2.0, ruby-2.7.5-p203) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="loofah (v2.19.1, ruby-2.7.5-p203) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="mail (v2.8.0, ruby-2.7.5-p203) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="marcel (v1.0.2, ruby-2.7.5-p203) [gem]" level="application" />
