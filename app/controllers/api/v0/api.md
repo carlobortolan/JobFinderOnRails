@@ -67,6 +67,98 @@
             }
     ```
     ####
+***
+2. Verify user credentials
+    >  <span style="color:lawngreen"> GET </span> /user/verify_credentials
+   Test to make sure the Registration worked and to start the first session. (In future: See whether aut0 token works)
+   ####
+   ###### Data parameters
+    1. **email** *<span style="color:crimson">REQUIRED </span>*
+        + String
+        + The email address used for login
+    2. **password** *<span style="color:crimson">REQUIRED </span>*
+        + String
+        + The password used for login
+    ###### Response
+   **200: OK** (ACHTUNG: hier ist Konzept wg. unpassender db -> schema für jeden user typ (0: privat, 1: privat+arbeitgeber, 2: firma + arbeitgeber )+ 1 gesamt directory)
+    ```   
+            {
+                "id": 123,
+                "email": "john.doe@versuchundirrtum.com",
+                "created_at": "2023-01-01",
+                "updated_at": "2023-01-04",
+                "activity_status": 1,
+                "image_url": "https://storage.versuchundirrtum.com/img/user/dnliha3092jfon74839hf.jpg",
+                "user_type": 0,
+                "first_name": "John Robert",
+                "last_name": "Doe",
+                "birthdate": "2000-01-01",
+                "code_nationality": "US",
+                "location": {
+                                "code_country": "IT",
+                                "administrative_area": "VE",
+                                "sub_administrative_area": "",
+                                "locality": "Venezia",
+                                "postal_code": "30124",
+                                "address": "P.za San Marco, 57"
+                                "premise": "Caffè Florian",
+                                "latitude": 45.4337062,
+                                "longitude": 12.3353557
+                            },
+                "cv":         {
+                                "description": "",
+                                "rating_score": 0.0,
+                                "reviews": [],
+                                "last_activities": [],
+                                "tags": []
+                             }
+            }
+    ```
+   ####
+   **401: Unauthorized**
+    ```   
+            {
+                "error": "The submitted credentials are incorrect"
+            }
+    ```
+   ####
+   **403: Forbidden**
+    ```   
+            {
+                "error": {
+                    "login": [
+                        {
+                            "error": "ERR_DISABLED",
+                            "description": "Your login is disabled"
+                        }
+                    ],
+                    "email": [
+                        {
+                            "error": "ERR_PENDING",
+                            "description": "Your login is disabled because you didn't confirm your subitted email address"
+                        }
+                    ]   
+                }       
+            }
+    ```
+   ####
+   **422: Unprocessable entity**
+    ```   
+            {
+                "error": "You need to sign up first at POST http://localhost:3000/api/v0/user"
+            }
+    ```
+   ####
+   **500: Internal Server Error**
+    ```   
+            {
+                "error": "Please try again later. If this error persists, we recommend to contact our support team"
+            }
+    ```
+   ####
 
 ***
+
+
+
 
