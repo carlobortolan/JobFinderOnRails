@@ -40,25 +40,38 @@
             }
     ```
     ####
-   **422: Unprocessable entity**
+   **400: Bad request**
     ```   
             {
                 "error": {
                     "email": [
                         {
-                            "error": "ERR_INVALID",
-                            "description": "Attribute is malformed"
+                            "error": "ERR_INVALID"",
+                            "description": "Attribute is malformed or unknown
+                        }
+                    ] 
+                }       
+            }
+    ```
+   You may expect the following errors:
+    + ``ERR_BLANK``: When a required attribute is blank
+    + ``blank``: When the password attribute is blank
+    + ``confirmation``: When password != password_confirmation
+    + ``ERR_INVALID``: When a required attribute is malformed or unknown
+   ####   
+    **422: Unprocessable entity**
+    ```   
+            {
+                "error": {
+                    "email": [
+                        {
+                            "error": "ERR_TAKEN",
+                            "description": "Attribute is taken"
                         }
                     ]   
                 }       
             }
     ```
-   You may expect the following errors:
-     + ``ERR_BLANK``: When a required attribute is blank
-     + ``blank``: When the password attribute is blank
-     + ``confirmation``: When password != password_confirmation
-     + ``ERR_TAKEN``: When an unique attribute is already taken (e.g. Email)
-     + ``ERR_INVALID``: When an attribute is malformed (e.g. invalid format or wrong characters)
    ####
    **500: Internal Server Error**
     ```   
@@ -68,8 +81,8 @@
     ```
     ####
 ***
-2. Verify user credentials
-    >  <span style="color:lawngreen"> GET </span> /user/verify_credentials
+2. Verify user credentials <span style="color:yellow"> NOT IMPLEMENTED </span>
+    >  <span style="color:lawngreen"> GET </span> /user/verify
    Test to make sure the Registration worked and to start the first session. (In future: See whether aut0 token works)
    ####
    ###### Data parameters
@@ -80,7 +93,7 @@
         + String
         + The password used for login
     ###### Response
-   **200: OK** (ACHTUNG: hier ist Konzept wg. unpassender db -> schema für jeden user typ (0: privat, 1: privat+arbeitgeber, 2: firma + arbeitgeber )+ 1 gesamt directory)
+   **200: OK** <span style="color:yellow"> (NOT IMPLEMENTED - ACHTUNG: hier ist Konzept wg. unpassender db -> schema für jeden user typ (0: privat, 1: privat+arbeitgeber, 2: firma + arbeitgeber )+ 1 gesamt directory; man brraucht die db integrationen und va tabellenrelationen wi z.b. bei locations, und es muss ein vorbau bzw. test implementierung von dem cv zeugs geben) </span>
     ```   
             {
                 "id": 123,
@@ -115,37 +128,48 @@
             }
     ```
    ####
-   **401: Unauthorized**
-    ```   
-            {
-                "error": "The submitted credentials are incorrect"
-            }
-    ```
-   ####
-   **403: Forbidden**
+   **400: Bad request**
     ```   
             {
                 "error": {
-                    "login": [
-                        {
-                            "error": "ERR_DISABLED",
-                            "description": "Your login is disabled"
-                        }
-                    ],
                     "email": [
                         {
-                            "error": "ERR_PENDING",
-                            "description": "Your login is disabled because you didn't confirm your subitted email address"
+                            "error": "ERR_INVALID",
+                            "description": "Attribute is malformed or unknown"
+                        }
+                    ]   
+                }       
+            }
+    ```
+   You may expect the following errors:
+    + ``ERR_BLANK``: When a required attribute is blank
+    + ``ERR_DISABLED``: The login for the given credentials is disabled
+    + ``ERR_INVALID``: When the given attribute is malformed or unknown
+   ####
+   **401: Unauthorized**
+    ```   
+            {
+                    "password": [
+                        {
+                            "error": "ERR_INVALID",
+                            "description": "Attribute is malformed or unknown"
                         }
                     ]   
                 }       
             }
     ```
    ####
-   **422: Unprocessable entity**
+    **403: Forbidden**
     ```   
             {
-                "error": "You need to sign up first at POST http://localhost:3000/api/v0/user"
+                "error": {
+                    "system": [
+                        {
+                            "error": "ERR_BLOCKED",
+                            "description": "Proceeding is restricted"
+                        }
+                    ]
+                }       
             }
     ```
    ####
