@@ -10,14 +10,23 @@ module Api
       end
 
       def create
-        #TODO: KOMPLETTE METHODE MIT AKTUELLE FEHLERCODES UND BESCHREIBUNGEN DER DOC UPGRADEN
         @user = User.new(user_params)
         begin
           if @user.save
             render status: 200, json: { "message": "Account registered! Please activate your account at GET http://localhost:3000/api/v0/user/verify " }
 
           else
-            render status: 422, json: { "error": @user.errors.details }
+            taken = false
+            @user.errors.details[:email].each do |e|
+              if e[:error] == "ERR_TAKEN"
+                taken = true
+              end
+            end
+            if taken
+              render status: 422, json: {"error": @user.errors.details}
+            else
+              render status: 400, json: { "error": @user.errors.details }
+            end
           end
         rescue
           render status: 500, json: { "error": "Please try again later. If this error persists, we recommend to contact our support team." }
