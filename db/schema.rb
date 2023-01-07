@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_26_220845) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_07_143705) do
   create_table "applications", primary_key: ["job_id", "applicant_id"], charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "job_id", null: false
     t.integer "applicant_id", null: false
@@ -21,6 +21,16 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_26_220845) do
     t.string "response", limit: 500
     t.index ["applicant_id"], name: "account_id_idx"
     t.index ["job_id", "applicant_id"], name: "index_applications_on_job_id_and_applicant_id", unique: true
+  end
+
+  create_table "authentications", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "token", null: false
+    t.integer "scope", null: false
+    t.string "checksum", null: false
+    t.integer "user", null: false
+    t.datetime "expires_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "currents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|

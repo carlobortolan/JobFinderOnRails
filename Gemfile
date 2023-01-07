@@ -52,6 +52,7 @@ gem "yard"
 
 gem "time"
 
+gem "digest"
 # Use Sass to process CSS
 # gem "sassc-rails"
 

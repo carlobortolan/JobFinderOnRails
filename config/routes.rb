@@ -37,6 +37,7 @@ Rails.application.routes.draw do
     namespace :v0 do
       get 'user/verify', to: 'registrations#verify'
       post 'user', to: 'registrations#create'
+      post 'user/verify', to: 'authentications#create'
     end
   end
 
