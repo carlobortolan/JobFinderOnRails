@@ -6,12 +6,14 @@ module Api
       def create
         # Todo: Implement Error
         # Todo: Update Doc
+        # Todo: implement decoder
 
         if user.activity_status == 1 && user.authenticate(token_params["password"])
           expires_at = token_params["expires_at"]
-          token = AuthenticationTokenService.call(user.id, expires_at)
+          issuer = Socket.gethostname
+          token = AuthenticationTokenService.call(issuer, user.id, expires_at)
           scope = 0
-          @auth = Authentication.new(user: user.id, token: token, scope: scope, expires_at: expires_at)
+          @auth = Authentication.new(token: token, scope: scope, user: user.id, expires_at: expires_at, issuer: issuer )
           if @auth.save
             render status: 200, json: { "token": @auth.token }
           else

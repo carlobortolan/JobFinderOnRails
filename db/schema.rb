@@ -28,6 +28,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_07_143705) do
     t.integer "scope", null: false
     t.integer "user", null: false
     t.datetime "expires_at", null: false
+    t.string "issuer", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
