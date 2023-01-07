@@ -24,9 +24,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_07_143705) do
   end
 
   create_table "authentications", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "token", null: false
+    t.string "token", limit: 500, null: false
     t.integer "scope", null: false
-    t.string "checksum", null: false
     t.integer "user", null: false
     t.datetime "expires_at", null: false
     t.datetime "created_at", null: false

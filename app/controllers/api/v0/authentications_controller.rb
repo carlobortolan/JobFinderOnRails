@@ -4,38 +4,44 @@ module Api
       protect_from_forgery with: :null_session
 
       def create
-        #Todo: Implement Mistakes and Updte Doc
-        user = User.find_by(email: token_params["user"])
-        if user.activity_status == 1
-          token = ((0...50).map { ('a'..'z').to_a[rand(26)] }.join + (0...50).map { (0..9).to_a[rand(26)] }.join).split('').shuffle.join
-          scope = 0
-          checksum = Digest::SHA2.hexdigest token
-          expires_at = token_params["expires_at"]
-          puts "EA"
-          p expires_at
-          @auth = Authentication.new(user: user.id, token: token, scope: scope, checksum: checksum, expires_at: expires_at)
-          if @auth.save
-            render status: 200, json: {
-              "auth_key": {
-                "token": @auth.token,
-                "checksum": @auth.checksum
-              }
+        # Todo: Implement Error
+        # Todo: Update Doc
 
-            }
+        if user.activity_status == 1 && user.authenticate(token_params["password"])
+          expires_at = token_params["expires_at"]
+          token = AuthenticationTokenService.call(user.id, expires_at)
+          scope = 0
+          @auth = Authentication.new(user: user.id, token: token, scope: scope, expires_at: expires_at)
+          if @auth.save
+            render status: 200, json: { "token": @auth.token }
           else
-            puts "FALSE"
-            puts @auth.errors.details
+
           end
+
+        else
+          puts "FALS"
+          puts user.activity_status == 1
+          puts user.authenticate(token_params["password"])
+          # puts @auth.errors.details
         end
       end
 
       private
 
-      def token_params
-        params.require(:authentication).permit(:user, :expires_at)
+      def user
+        @user ||= User.find_by(email: token_params["email"])
       end
+
+      def token_params
+        params.require(:authentication).permit(:email, :password, :expires_at)
+      end
+
     end
+
   end
+
 end
+
+
 
 
