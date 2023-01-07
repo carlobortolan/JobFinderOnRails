@@ -50,6 +50,7 @@ gem "active_model_serializers"
 
 gem "yard"
 
+gem "time"
 
 # Use Sass to process CSS
 # gem "sassc-rails"

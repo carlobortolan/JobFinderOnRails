@@ -23,7 +23,7 @@ module Api
               end
             end
             if taken
-              render status: 422, json: {"error": @user.errors.details}
+              render status: 422, json: { "error": @user.errors.details }
             else
               render status: 400, json: { "error": @user.errors.details }
             end
@@ -52,18 +52,22 @@ module Api
           ]
           }
         elsif params[:email].nil? && params[:password].nil?
-          render status: 400, json: { "email": [
-            {
-              "error": "ERR_BLANK",
-              "description": "Attribute can't be blank"
+          if params[:test_token].nil? && params[:test_token] == "0" && params[:checksum].nil? && params[:id].nil?
+            render status: 400, json: { "email": [
+              {
+                "error": "ERR_BLANK",
+                "description": "Attribute can't be blank"
+              }
+            ], "password": [
+              {
+                "error": "ERR_BLANK",
+                "description": "Attribute can't be blank"
+              }
+            ]
             }
-          ], "password": [
-            {
-              "error": "ERR_BLANK",
-              "description": "Attribute can't be blank"
-            }
-          ]
-          }
+
+          end
+
         end
 
         if !params[:email].nil? && !params[:password].nil?
@@ -101,8 +105,8 @@ module Api
                   if !user.errors.empty?
                     raise
                   else
-                    #TODO: SOLL VOLLSTÄNDIGES USER PROFILE AUSGEBEN (SIEHE DOC) -> ERST MACHEN, WENN SYSTEM ANGEPASST WURDE (SIEHE DOC)
-                    render status: 200, json: { "we have": "success" }
+                    # TODO: SOLL VOLLSTÄNDIGES USER PROFILE AUSGEBEN (SIEHE DOC) -> ERST MACHEN, WENN SYSTEM ANGEPASST WURDE (SIEHE DOC)
+                    render status: 200, json: { "we have": "success", "test_token": { "checksum": checksum, "id": user.id } }
                   end
 
                 end
@@ -110,6 +114,44 @@ module Api
 
             rescue
               render status: 500, json: { "error": "Please try again later. If this error persists, we recommend to contact our support team." }
+            end
+          end
+        elsif params[:test_token] == "1"
+          cs = params[:checksum].to_i
+          ui = params[:id].to_i
+          user = User.find_by(id: params[:id])
+
+          if !user.present?
+            render status: 400, json: { "test_token": [
+              {
+                "error": "ERR_INVALID",
+                "description": "Attribute is malformed or unknown"
+              }
+            ]
+            }
+          else
+            if try_checksum(cs)
+              if user.activity_status == 1
+                render status: 200, json: { "we have": "success"}
+              else
+                render status: 403, json: { "system": [
+                  {
+                    "error": "ERR_BLOCKED",
+                    "description": "Proceeding is restricted"
+                  }
+                ]
+                }
+              end
+
+            else
+              user.update(activity_status: 0)
+              render status: 401, json: { "test_token": [
+                {
+                  "error": "ERR_EXPIRED",
+                  "description": "Attribute is expired"
+                }
+              ]
+              }
             end
           end
 
@@ -121,6 +163,18 @@ module Api
 
       def user_params
         params.require(:user).permit(:email, :first_name, :last_name, :password, :password_confirmation)
+      end
+
+      def checksum
+        return Time.now.to_i + 360
+      end
+
+      def try_checksum(args)
+        if (Time.now.to_i - args) > 0
+          return false
+        else
+          return true
+        end
       end
 
     end
