@@ -35,9 +35,11 @@ Rails.application.routes.draw do
 
   namespace :api, defaults: {format: 'json'} do
     namespace :v0 do
-      get 'user/verify', to: 'registrations#verify'
+      #get 'user/verify', to: 'registrations#verify'
       post 'user', to: 'registrations#create'
       post 'user/verify', to: 'authentications#create'
+      get 'user/verify', to: 'authentications#verify'
+
     end
   end
 
