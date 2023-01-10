@@ -34,7 +34,7 @@ Rails.application.routes.draw do
   patch 'password/reset/edit', to: 'password_resets#update'
 
   get 'reviews', :to => 'reviews#index', as: 'reviews_index'
-  get 'reviews/(/:user_id)', :to => 'reviews#for_user', as: 'reviews_for_user_index_path'
+  get 'reviews/(/:user_id)', :to => 'reviews#for_user', as: 'reviews_for_user_index'
 
   post 'reviews/', :to => 'reviews#index'
   # Defines the root path route ("/")

@@ -9,7 +9,7 @@
   <%= button_to 'View submitted applications', own_applications_path, method: :get %>
   <%= button_to 'View your jobs', own_jobs_path, method: :get %>
   <%= button_to 'View your reviews', reviews_index_path, method: :get %>
-  <%= button_to 'View review for specific user', reviews_for_user_index_path(), method: :get %>
+  <%= button_to 'View review for specific user', reviews_for_user_index_path, method: :get %>
 <% else %>
   <%= link_to 'Sign Up', sign_up_path %>
   or
