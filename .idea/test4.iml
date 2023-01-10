@@ -57,6 +57,7 @@
     <orderEntry type="library" scope="PROVIDED" name="io-console (v0.6.0, ruby-2.7.5-p203) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="irb (v1.6.1, ruby-2.7.5-p203) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="jbuilder (v2.11.5, ruby-2.7.5-p203) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="jquery-rails (v4.5.1, ruby-2.7.5-p203) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="loofah (v2.19.1, ruby-2.7.5-p203) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="mail (v2.8.0, ruby-2.7.5-p203) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="marcel (v1.0.2, ruby-2.7.5-p203) [gem]" level="application" />
