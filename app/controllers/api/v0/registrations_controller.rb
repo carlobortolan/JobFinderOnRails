@@ -110,6 +110,7 @@ module Api
               end
 
             rescue
+              puts
               render status: 500, json: { "error": "Please try again later. If this error persists, we recommend to contact our support team." }
             end
           end

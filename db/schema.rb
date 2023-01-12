@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_07_143705) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_12_113311) do
   create_table "applications", primary_key: ["job_id", "applicant_id"], charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "job_id", null: false
     t.integer "applicant_id", null: false
@@ -21,6 +21,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_07_143705) do
     t.string "response", limit: 500
     t.index ["applicant_id"], name: "account_id_idx"
     t.index ["job_id", "applicant_id"], name: "index_applications_on_job_id_and_applicant_id", unique: true
+  end
+
+  create_table "auth_blacklists", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "token", limit: 500, null: false
+    t.integer "reason"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["token"], name: "token_UNIQUE", unique: true
   end
 
   create_table "authentications", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -81,6 +89,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_07_143705) do
     t.integer "job_id", null: false
     t.column "notify", "enum('0','1')"
     t.index ["job_id"], name: "notification_job_id_idx"
+  end
+
+  create_table "user_blacklists", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "reason"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "user_id_UNIQUE", unique: true
   end
 
   create_table "users", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
