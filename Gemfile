@@ -55,6 +55,7 @@ gem "time"
 gem "digest"
 
 gem "jwt"
+gem "openssl" , "~> 2.1"
 # Use Sass to process CSS
 # gem "sassc-rails"
 
