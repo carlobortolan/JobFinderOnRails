@@ -1,10 +1,10 @@
 class AuthenticationTokenService
-
+  #Todo: make code decoding also a generic method, and then pull checksum? also up here to use the generic decoding
   def checksum(content)
     # creates checksum based of the contents of an input array. checksum is used to manually verify that token is transmitted completely
     bin = ""
-    content.each do |c|
-      bin = bin + c.to_s
+    content.each do |v,k|
+      bin = bin + k.to_s
     end
     Digest::SHA2.hexdigest(bin)
   end
@@ -12,6 +12,7 @@ class AuthenticationTokenService
   def call (secret, algorithm, issuer, payload)
     # creates a generic jwt
     payload["iss"] = issuer.to_s
+    payload["checksum"] = checksum(payload)
     return JWT.encode payload, secret, algorithm
   end
 
@@ -27,9 +28,8 @@ class AuthenticationTokenService
         sub = user_id.to_s
         exp = Time.now.to_i + 4 * 3600
         jti = jti(iat, ISSUER.to_s)
-        checksum = checksum([ISSUER.to_s, sub, exp, jti, iat])
-        if sub.present? && exp.present? && jti.present? && checksum.present? && iat.present? && (checksum == checksum([ISSUER.to_s, sub, exp, jti, iat]))
-          payload = { sub: sub, exp: exp, jti: jti, checksum: checksum, iat: iat }
+        if sub.present? && exp.present? && jti.present? && iat.present?
+          payload = { sub: sub, exp: exp, jti: jti, iat: iat }
           return super.call(HMAC_SECRET, ALGORITHM_TYPE, ISSUER, payload)
         else
           return false
@@ -167,9 +167,8 @@ class AuthenticationTokenService
           # aud = user type oder sowas
           sub = user_id.to_s
           exp = Time.now.to_i + 300
-          checksum = checksum([ISSUER.to_s, sub, exp])
-          if sub.present? && exp.present? && checksum.present? && (checksum == checksum([ISSUER.to_s, sub, exp]))
-            payload = { sub: sub, exp: exp, checksum: checksum }
+          if sub.present? && exp.present?
+            payload = { sub: sub, exp: exp }
             return {"status": 200, "access": super.call(HMAC_SECRET, ALGORITHM_TYPE, ISSUER, payload)}
           else
             return {"status": 500, "token": token}
