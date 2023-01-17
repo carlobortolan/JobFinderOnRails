@@ -37,69 +37,7 @@ module Api
       end
 
       def verify
-        begin
-          if AuthenticationTokenService::Refresh.checksum?(verify_params)
-            render status: 200, json: { "token": true, "user": User.find_by(id: AuthenticationTokenService::Refresh.read(verify_params)["sub"].to_i) }
-
-          else
-            render status: 401, json: { "token": [
-              {
-                "error": "ERR_INVALID",
-                "description": "Attribute is malformed or unknown"
-              }
-            ]
-            }
-          end
-        end
-      rescue JWT::ExpiredSignature
-        render status: 401, json: { "token": [
-          {
-            "error": "ERR_EXPIRED",
-            "description": "Attribute has expired"
-          }
-        ]
-        }
-      rescue JWT::InvalidIssuerError
-        render status: 401, json: { "token": [
-          {
-            "error": "ERR_INVALID",
-            "description": "Attribute is malformed or unknown"
-          }
-        ]
-        }
-      rescue JWT::InvalidJtiError
-        render status: 401, json: { "token": [
-          {
-            "error": "ERR_INVALID",
-            "description": "Attribute is malformed or unknown"
-          }
-        ]
-        }
-      rescue JWT::InvalidIatError
-        render status: 401, json: { "token": [
-          {
-            "error": "ERR_INVALID",
-            "description": "Attribute is malformed or unknown"
-          }
-        ]
-        }
-      rescue JWT::MissingRequiredClaim
-        render status: 400, json: { "token": [
-          {
-            "error": "ERR_INVALID",
-            "description": "Attribute is malformed or unknown"
-          }
-        ]
-        }
-      rescue JWT::DecodeError
-        render status: 400, json: { "token": [
-          {
-            "error": "ERR_INVALID",
-            "description": "Attribute is malformed or unknown"
-          }
-        ]
-        }
-
+        ##
       end
 
       private
