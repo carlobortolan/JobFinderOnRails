@@ -14,7 +14,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_12_113311) do
   create_table "applications", primary_key: ["job_id", "applicant_id"], charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "job_id", null: false
     t.integer "applicant_id", null: false
-    t.datetime "applied_at", precision: nil, default: "2022-12-27 18:22:29", null: false
+    t.datetime "applied_at", precision: nil, default: "2023-01-07 18:37:06", null: false
     t.column "status", "enum('-1','0','1')", default: "0", null: false
     t.string "application_text", limit: 500
     t.string "application_documents", limit: 100
@@ -32,26 +32,26 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_12_113311) do
   end
 
   create_table "authentications", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "token", limit: 500, null: false
+    t.string "token", null: false
     t.integer "scope", null: false
+    t.string "checksum", null: false
     t.integer "user", null: false
     t.datetime "expires_at", null: false
-    t.string "issuer", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "currents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.datetime "created_at", default: "2022-12-27 18:22:29", null: false
-    t.datetime "updated_at", default: "2022-12-27 18:22:29", null: false
+    t.datetime "created_at", default: "2023-01-07 18:37:06", null: false
+    t.datetime "updated_at", default: "2023-01-07 18:37:06", null: false
   end
 
   create_table "jobs", primary_key: "job_id", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.column "job_type", "enum('typa','typb','typc')"
     t.integer "job_status", limit: 1, default: 0
     t.string "status", default: "0"
-    t.datetime "created_at", default: "2022-12-27 18:22:29", null: false
-    t.datetime "updated_at", default: "2022-12-27 18:22:29", null: false
+    t.datetime "created_at", default: "2023-01-07 18:37:06", null: false
+    t.datetime "updated_at", default: "2023-01-07 18:37:06", null: false
     t.integer "user_id", default: 0
     t.float "latitude", default: 0.0
     t.float "longitude", default: 0.0
@@ -81,7 +81,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_12_113311) do
     t.string "address", limit: 45, null: false
     t.string "postal_code", limit: 45, null: false
     t.string "premise", limit: 45
-    t.datetime "date_location_creation", default: "2022-12-27 18:22:29", null: false
+    t.datetime "date_location_creation", default: "2023-01-07 18:37:06", null: false
   end
 
   create_table "notifications", primary_key: ["employer_id", "job_id"], charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -102,8 +102,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_12_113311) do
   create_table "users", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "email", null: false
     t.string "password_digest"
-    t.datetime "created_at", default: "2022-12-27 18:22:29", null: false
-    t.datetime "updated_at", default: "2022-12-27 18:22:29", null: false
+    t.datetime "created_at", default: "2023-01-07 18:37:06", null: false
+    t.datetime "updated_at", default: "2023-01-07 18:37:06", null: false
     t.integer "activity_status", limit: 1, default: 0, null: false
     t.string "image_url", limit: 500
     t.string "first_name", null: false
