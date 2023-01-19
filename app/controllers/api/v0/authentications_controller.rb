@@ -10,25 +10,23 @@ module Api
         # Todo: An Registraton verify anbinden (abhängig von user_type scope festlegen etc.)
         # Todo: implement refreshtoken & accesstoken approach
 
-        if user.activity_status == 1 && user.authenticate(token_params["password"]) && !(UserBlacklist.find_by(user_id: user.id).present?)
-          puts true
+        if user.authenticate(token_params["password"])
           token = AuthenticationTokenService::Refresh.call(user.id)
-          if token != false && !(AuthBlacklist.find_by(token: token).present?)
-            render status: 200, json: { "token": token }
+          if !token["token"].nil?
+            render status: 200, json: { "token": token["token"] }
+          elsif !token["error"].nil?
+            render status: token["error"]["status"].to_i, json: token["error"]["errors"]
           else
-            puts false
-            render status: 500, json: { "error": "Please try again later. If this error persists, we recommend to contact our support team." }
+            render status: 500, json: { "system": [
+              {
+                "error": "ERR_CRAZY",
+                "description": "Note exactly what you did before this error occurred and contact our support team."
+              }
+            ]
+            }
           end
 
-        elsif (user.activity_status == 0 && user.authenticate(token_params["password"])) || (UserBlacklist.find_by(user_id: user.id).present? && user.authenticate(token_params["password"]))
-          render status: 403, json: { "system": [
-            {
-              "error": "ERR_BLOCKED",
-              "description": "Proceeding is restricted"
-            }
-          ]
-          }
-        else
+        else !user.authenticate(token_params["password"])
           render status: 401, json: { "password": [
             {
               "error": "ERR_INVALID",

@@ -32,6 +32,21 @@ class AuthenticationTokenService
     return JWT.encode payload, secret, algorithm
   end
 
+  def self.user? (user_id)
+    #checks whether user exists is active or user is blacklisted (sense of user blacklist, is to enable more specifc regulation of user rights vs. 0 or 1)
+    if !User.find_by(id: user_id).present?
+      raise User::MrNobody
+    else
+      user = User.find_by(id: user_id)
+      if user.activity_status == 0
+        raise User::Inactive
+      elsif UserBlacklist.find_by(user_id: user.id).present?
+        raise User::Blocked
+      end
+    end
+
+  end
+
   # no generic encoding because of custom validations
 
   class Refresh
@@ -39,25 +54,62 @@ class AuthenticationTokenService
     ALGORITHM_TYPE = 'HS256'
     ISSUER = Socket.gethostname
 
+    def self.hi
+      "hi"
+    end
     def self.call(user_id)
+      bin = []
       begin
+        AuthenticationTokenService.user?(user_id)
         # aud = user type oder sowas
         iat = Time.now.to_i
         sub = user_id.to_s
         exp = Time.now.to_i + 4 * 3600
         jti = jti(iat, ISSUER.to_s)
-        if sub.present? && exp.present? && jti.present? && iat.present?
-          puts "present"
-          payload = { sub: sub, exp: exp, jti: jti, iat: iat }
-          return AuthenticationTokenService.call(HMAC_SECRET, ALGORITHM_TYPE, ISSUER, payload)
-        else
-          puts "not present"
-          return false
+        payload = { sub: sub, exp: exp, jti: jti, iat: iat }
+        encoded_token = AuthenticationTokenService.call(HMAC_SECRET, ALGORITHM_TYPE, ISSUER, payload)
+
+      rescue User::MrNobody
+        bin.push({
+                   "error": "ERR_UNKNOWN",
+                   "description": "Attribute does not exists"
+                 })
+      rescue User::Inactive
+        bin.push({
+                   "error": "ERR_INACTIVE",
+                   "description": "Attribute must be activated"
+                 })
+      rescue User::Blocked
+        bin.push({
+                   "error": "ERR_BLOCKED",
+                   "description": "Proceeding is restricted"
+                 })
         end
-        # rescue
-        # puts "desaster"
-        # return false
-      end
+        if bin.empty?
+          return { "token" => encoded_token }
+        else
+          errors = bin.uniq { |e| e.first }
+          err500 = false
+          err403 = false
+          err400 = false
+          errors.each do |e|
+            if e.to_s == "ERR_SERVER"
+              err500 = true
+            elsif e.to_s == "ERR_UNKNOWN"
+              err400 = true
+            elsif e.to_s == "ERR_BLOCKED" || "ERR_INACTIVE"
+              err403 = true
+            end
+            if err500 || (!err400 && !err403 && !err500)
+              status = 500
+            elsif !err500 && err400
+              status = 400
+            elsif !err500 && !err400 && err403
+              status = 403
+            end
+            return { "error" => { "status" => status, "errors" => {"user" => errors} } }
+          end
+        end
     end
 
     def self.content(token)
@@ -167,6 +219,7 @@ class AuthenticationTokenService
       end
     end
 
+    #TODO: Remove?
     def self.checksum?(token)
       # checks whether given checksum in a refresh token is correct. if so checksum? is true, else it is false
       token = content(token)[0]
@@ -184,6 +237,7 @@ class AuthenticationTokenService
         false
       end
     end
+
   end
 
   class Access
@@ -215,4 +269,5 @@ class AuthenticationTokenService
 
   class InvalidChecksum < StandardError
   end
+
 end
