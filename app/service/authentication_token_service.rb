@@ -55,6 +55,7 @@ class AuthenticationTokenService
     ISSUER = Socket.gethostname
 
     def self.encode(sub, exp, jti, iat)
+      #Todo: implement optiona paramaters, if not procided do automatic definintion like beneath
       payload = {sub: sub, exp:exp, jti:jti, iat:iat}
       return AuthenticationTokenService.call(HMAC_SECRET, ALGORITHM_TYPE, ISSUER, payload)
     end
