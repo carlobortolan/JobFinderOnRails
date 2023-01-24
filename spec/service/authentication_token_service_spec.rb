@@ -1,8 +1,8 @@
 require 'rails_helper'
 require_relative '../../app/service/authentication_token_service.rb'
 
-RSpec.describe AuthenticationTokenService::Refresh do
-  #todo: make specific test for method which dont chtch exceptions to check for exceptions
+RSpec.describe AuthenticationTokenService::Refresh::Encoder do
+  # todo: make specific test for method which dont chtch exceptions to check for exceptions
   before :all do
     # populate db
     User.delete_all
@@ -11,19 +11,14 @@ RSpec.describe AuthenticationTokenService::Refresh do
     lasts = ["Bortolan", "Hummel", "Meier", "Müller", "Franz", "Maurer", "Schmidt", "Kaiser", "Bauer", "Metzger"]
     domains = ["gmail.com", "gmx.de", "arcor.com", "web.de", "outlook.com"]
 
-    1000.times do
+    500.times do
       first = firsts.sample
       last = lasts.sample
       domain = domains.sample
       mail = "#{first}.#{last}@#{domain}"
       pw = "abc"
       params = { "first_name" => first, "last_name" => last, "email" => mail, "password" => pw, "password_confirmation" => pw }
-      user = User.new(params)
-      if !user.save
-        # puts user.errors.details
-        # puts [first, last, domain, mail, pw]
-        # puts "_____________________________________"
-      end
+      User.new(params).save
     end
     # adapt
     half = ((User.all.count) / 2).to_i
@@ -37,10 +32,12 @@ RSpec.describe AuthenticationTokenService::Refresh do
     end
 
     black_users = 0
+    @valid_blocked_users = []
     while (black_users < 5)
       user = User.all.where(activity_status: 1).sample
       black = UserBlacklist.new({ "user_id" => user.id })
       if black.save
+        @valid_blocked_users.push(user)
         black_users = black_users + 1
       end
     end
@@ -52,152 +49,127 @@ RSpec.describe AuthenticationTokenService::Refresh do
       end
     end
 
+    @valid_inactive_users = User.all.where(activity_status: 0).to_a
+
+    @valid_unknown_users = []
+    unknowns = (1..User.all.ids.to_a.min - 1).to_a
+
+    while (@valid_unknown_users.length != 100)
+      @valid_unknown_users.push(unknowns.sample)
+      @valid_unknown_users.uniq!
+    end
+
+    @invalid_user_ids = []
+    20.times do
+      @invalid_user_ids.push(User.all.sample)
+      @invalid_user_ids.push(nil)
+      @invalid_user_ids.push((-10000000..-1).to_a.sample)
+    end
+    [0, "1", "2", "3", "4", "test", "5", "test2482", "", [], {}].each do |e|
+      @invalid_user_ids.push(e)
+    end
+    len = @invalid_user_ids.length
+    while (@invalid_user_ids.length <= len + 50) do
+      @invalid_user_ids.push(@valid_normal_inputs.sample)
+      @invalid_user_ids.uniq!
+    end
+
+    50.times do
+      @invalid_user_ids.shuffle!
+    end
   end
-  # Todo: Write tests
-  context "generating token with valid normal inputs" do
+
+  context 'valid normal users' do
     describe '.call' do
-      it 'returns a hash with {"token" => ...}' do
+      it 'does not throw exceptions without a manual interval parameter given' do
         @valid_normal_inputs.each do |user|
-          token = described_class.call(user.id)
-          expect(token).not_to be_nil
-          expect(token.has_key?("token")).to be_truthy
+          expect {
+            described_class.call(user.id)
+          }.not_to raise_error
+        end
+      end
+      it 'does not throw exceptions with a manual interval parameter given' do
+        @valid_normal_inputs.each do |user|
+          man_interval = (1800..86400).to_a.sample
+          expect {
+            described_class.call(user.id, man_interval)
+          }.not_to raise_error
+        end
+      end
+
+      it 'returns a string without a manual interval parameter given' do
+        @valid_normal_inputs.each do |user|
+          expect(described_class.call(user.id)).to be_a String
+        end
+      end
+      it 'returns a string with a manual interval parameter given' do
+        @valid_normal_inputs.each do |user|
+          man_interval = (1800..86400).to_a.sample
+          expect(described_class.call(user.id, man_interval)).to be_a String
         end
       end
     end
 
-    describe '.content' do
-      it 'returns a hash with{"token" => {...} ' do
-        @valid_normal_inputs.each do |user|
-          encoded_token = described_class.call(user.id)["token"]
-          decoded_token = described_class.content(encoded_token)
-          expect(decoded_token).not_to be_nil
-          expect(decoded_token["token"]).to include("sub", "iat", "checksum", "jti", "exp", "iss")
-          expect(decoded_token["token"]["sub"].to_i).to eq(user.id)
-        end
-      end
-    end
   end
 
-  context "generating token with valid abnormal inputs" do
+  context 'valid abnormal users' do
     describe '.call' do
-      it 'returns error message for inactivated user' do
-        User.all.where(activity_status: 0).each do |c|
-          token = described_class.call(c.id)
-          expect(token).not_to be_nil
-          expect(token.has_key?("error")).to be_truthy
-          expect(token["error"]["errors"]["user"][0]["error"]).to eq("ERR_INACTIVE")
+      it 'throws exception for an user id not represented in the db' do
+        @valid_unknown_users.each do |id|
+          expect {
+            described_class.call(id)
+          }.to raise_error(AuthenticationTokenService::InvalidUser::Unknown)
         end
       end
-
-      it 'returns error message for activated blacklisted users' do
-        cases = []
-        User.all.where(activity_status: 1).each do |c|
-          if UserBlacklist.find_by(user_id: c.id).present?
-            cases.push(User.find_by(id: c.id))
+      it 'throws exception for an existing user who\'s activity status is 0/inactive' do
+        @valid_inactive_users.each do |user|
+          expect {
+            described_class.call(user.id)
+          }.to raise_error(AuthenticationTokenService::InvalidUser::Inactive::NotVerified)
+        end
+      end
+      it 'throws exception for an existing active user who is listed on the user blacklist (and so is blocked)' do
+        @valid_blocked_users.each do |user|
+          expect {
+            described_class.call(user.id)
+          }.to raise_error(AuthenticationTokenService::InvalidUser::Inactive::Blocked)
+        end
+      end
+      it 'does not throw exceptions for a to large or to small valid manual interval parameter given' do
+        alt = -1
+        @valid_normal_inputs.each do |user|
+          if alt.negative?
+            man_interval = (1..1799).to_a.sample
+          else
+            man_interval = (86401..88000).to_a.sample
           end
+          puts man_interval
+          alt = alt * (-1)
+          expect(described_class.call(user.id, man_interval)).to be_a String
         end
-        cases.each do |user|
-          token = described_class.call(user.id)
-          expect(token).not_to be_nil
-          expect(token.has_key?("error")).to be_truthy
-          expect(token["error"]["errors"]["user"][0]["error"]).to eq("ERR_BLOCKED")
-        end
-      end
-
-      it 'returns error message for unknown users' do
-        cases = []
-        while (cases.length < 10)
-          c = (1..((User.all.ids).to_a.min() - 1)).to_a.sample()
-          if !User.find_by(id: c).present?
-            cases.push(c)
-          end
-        end
-        cases.each do |fake_user_id|
-          token = described_class.call(fake_user_id)
-          expect(token).not_to be_nil
-          expect(token).to include("error")
-          expect(token["error"]["errors"]["user"][0]["error"]).to eq("ERR_UNKNOWN")
-        end
-      end
-    end
-
-    describe '.content' do
-      it 'returns error message for expired token' do
-        2.times do
-          # may be lifted to 10 or more if the tests get run not ever 10 secs XD
-          encoded_token = described_class.call(@valid_normal_inputs.sample.id, 1)["token"]
-          sleep(2)
-          decoded_token = described_class.content(encoded_token)
-          expect(decoded_token).not_to be_nil
-          expect(decoded_token).to include("error")
-          expect(decoded_token["error"]["errors"]["token"][0]["error"]).to eq("ERR_EXPIRED")
-        end
-      end
-      it 'returns error message for invalid issuer' do
-
-      end
-      it 'returns error message if a token is blacklisted (if possible)' do
-
-      end
-      it 'returns error message for an invalid issued at timestamp' do
-
-      end
-      it 'returns error message if any required claim is missing' do
-
-      end
-      it 'returns error message for malformed token' do
-
-      end
-      it 'returns error message for checksum mismatches' do
-
-      end
-      it 'returns an array of messages for multiple errors' do
 
       end
     end
+  end
 
-    describe '.decode' do
-      it 'raises exception for expired token' do
-
+  context 'invalid users' do
+    describe '.call' do
+      it 'throws exception for non-Integers and non-positive-Integers as the user_id parameter' do
+        @invalid_user_ids.each do |id|
+          expect {
+            described_class.call(id)
+          }.to raise_error(AuthenticationTokenService::InvalidInput)
+        end
       end
-      it 'raises exception for invalid issuer' do
 
-      end
-      it 'raises exception for an invalid issued at timestamp' do
-
-      end
-      it 'raises exception if any required claim is missing' do
-
-      end
-      it 'raises exception for malformed token' do
-
-      end
-      it 'raises exception for checksum mismatches' do
-
+      it 'throws exceptions for non-Integers and non positive-Integers as the manual interval parameter for valid normal users' do
+        @invalid_user_ids.each do |man_interval|
+          expect {
+            described_class.call(@valid_normal_inputs.sample,man_interval)
+          }.to raise_error(AuthenticationTokenService::InvalidInput)
+        end
       end
 
     end
   end
-
-  context "generating token with invalid inputs" do
-    it "drops exception if input either negative, nil or not an Integer" do
-      cases = []
-      10.times do
-        cases.push(User.all.sample)
-        cases.push(nil)
-        cases.push((-10000000..-1).to_a.sample)
-      end
-      ["1", "2", "3", "4", "test", "5", "test2482", ""].each do |e|
-        cases.push(e)
-      end
-      10.times do
-        cases.shuffle!
-      end
-      cases.each do |malformed_input|
-        expect { described_class.call(malformed_input) }.to raise_error(AuthenticationTokenService::InvalidInput)
-      end
-    end
-
-  end
-
 end

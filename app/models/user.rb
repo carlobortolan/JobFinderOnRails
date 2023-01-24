@@ -9,6 +9,7 @@ class User < ApplicationRecord
 
 
   has_many :jobs
+=begin
   class Blocked < StandardError
   end
 
@@ -17,5 +18,6 @@ class User < ApplicationRecord
 
   class MrNobody < StandardError
   end
+=end
 
 end
