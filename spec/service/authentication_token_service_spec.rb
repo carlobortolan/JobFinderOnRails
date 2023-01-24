@@ -143,7 +143,6 @@ RSpec.describe AuthenticationTokenService::Refresh::Encoder do
           else
             man_interval = (86401..88000).to_a.sample
           end
-          puts man_interval
           alt = alt * (-1)
           expect(described_class.call(user.id, man_interval)).to be_a String
         end
