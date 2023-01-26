@@ -390,6 +390,32 @@ RSpec.describe AuthenticationTokenService::Refresh::Decoder do
           expect { described_class.call(token) }.to raise_error(JWT::InvalidIatError)
         end
       end
+      it 'throws exceptions for wrong secret' do
+        @valid_normal_inputs.each do |user|
+          sub = user.id
+          exp = Time.now.to_i + 1000
+          iat = Time.now.to_i
+          jti = iat + iat + sub
+          payload = { "sub" => sub, "exp" => exp, "iat" => iat, "jti" => jti }
+          token = AuthenticationTokenService.call('wrong_secret', algorithm, issuer, payload)
+          expect { described_class.call(token) }.to raise_error(JWT::VerificationError)
+        end
+      end
+      it 'throws exceptions for incompatible algorithm' do
+        @valid_normal_inputs.each do |user|
+          sub = user.id
+          exp = Time.now.to_i + 1000
+          iat = Time.now.to_i
+          jti = iat + iat + sub
+          payload = { "sub" => sub, "exp" => exp, "iat" => iat, "jti" => jti }
+
+          ['HS384','HS512'].each do |algo|
+            token = AuthenticationTokenService.call(secret, algo, issuer, payload)
+            expect { described_class.call(token) }.to raise_error(JWT::IncorrectAlgorithm)
+          end
+        end
+      end
+
     end
   end
 end
