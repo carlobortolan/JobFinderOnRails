@@ -248,7 +248,6 @@ RSpec.describe AuthenticationTokenService::Refresh::Decoder do
     end
   end
 
-
   context "claim and content integrity" do
     describe '.call' do
       let(:secret) { 'yTcW3y9&t<=2cYn=Qt*nYyj!+aFv^LMw&o`@' }
@@ -256,7 +255,8 @@ RSpec.describe AuthenticationTokenService::Refresh::Decoder do
 
       let(:issuer) { "#{Socket.gethostname}" }
 
-      it 'does not throw exceptions' do #checksum is checked by ::Decode.call method
+      it 'does not throw exceptions' do
+        # checksum is checked by ::Decode.call method
         @valid_normal_inputs.each do |user|
           sub = user.id
           exp = Time.now.to_i + ((100..10000).to_a.sample)
@@ -264,7 +264,7 @@ RSpec.describe AuthenticationTokenService::Refresh::Decoder do
           jti = iat + iat + sub
           payload = { "sub" => sub, "exp" => exp, "iat" => iat, "jti" => jti }
           token = AuthenticationTokenService.call(secret, algorithm, issuer, payload)
-          expect{described_class.call(token)}.not_to raise_error
+          expect { described_class.call(token) }.not_to raise_error
         end
       end
 
@@ -333,7 +333,36 @@ RSpec.describe AuthenticationTokenService::Refresh::Decoder do
         end
       end
 
+    end
+  end
 
+  context 'token validity' do
+    describe '.call' do
+      let(:secret) { 'yTcW3y9&t<=2cYn=Qt*nYyj!+aFv^LMw&o`@' }
+      let(:algorithm) { 'HS256' }
+      let(:issuer) { "#{Socket.gethostname}" }
+      it 'throws exception for expired token' do
+        @valid_normal_inputs.each do |user|
+          sub = user.id
+          exp = Time.now.to_i - (0..1000).to_a.sample
+          iat = Time.now.to_i
+          jti = iat + iat + sub
+          payload = { "sub" => sub, "exp" => exp, "iat" => iat, "jti" => jti }
+          token = AuthenticationTokenService.call(secret, algorithm, issuer, payload)
+          expect { described_class.call(token) }.to raise_error(JWT::ExpiredSignature)
+        end
+      end
+      it 'throws exception for unkown issuer' do
+        @valid_normal_inputs.each do |user|
+          sub = user.id
+          exp = Time.now.to_i + 1
+          iat = Time.now.to_i
+          jti = iat + iat + sub
+          payload = { "sub" => sub, "exp" => exp, "iat" => iat, "jti" => jti }
+          token = AuthenticationTokenService.call(secret, algorithm, "wrong_test_issuer", payload)
+          expect { described_class.call(token) }.to raise_error(JWT::InvalidIssuerError)
+        end
+      end
     end
   end
 end
