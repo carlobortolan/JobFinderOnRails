@@ -6,6 +6,7 @@ RSpec.describe AuthenticationTokenService::Refresh::Encoder do
     # populate db
     User.delete_all
     UserBlacklist.delete_all
+    AuthBlacklist.delete_all
     firsts = ["Carlo", "Jan", "Johannes", "Maximilian", "Xaver", "Fabian", "Simon", "Malte", "Lukas", "Moritz"]
     lasts = ["Bortolan", "Hummel", "Meier", "Müller", "Franz", "Maurer", "Schmidt", "Kaiser", "Bauer", "Metzger"]
     domains = ["gmail.com", "gmx.de", "arcor.com", "web.de", "outlook.com"]
@@ -176,6 +177,7 @@ RSpec.describe AuthenticationTokenService::Refresh::Decoder do
     # populate db
     User.delete_all
     UserBlacklist.delete_all
+    AuthBlacklist.delete_all
     firsts = ["Carlo", "Jan", "Johannes", "Maximilian", "Xaver", "Fabian", "Simon", "Malte", "Lukas", "Moritz"]
     lasts = ["Bortolan", "Hummel", "Meier", "Müller", "Franz", "Maurer", "Schmidt", "Kaiser", "Bauer", "Metzger"]
     domains = ["gmail.com", "gmx.de", "arcor.com", "web.de", "outlook.com"]
@@ -352,10 +354,10 @@ RSpec.describe AuthenticationTokenService::Refresh::Decoder do
           expect { described_class.call(token) }.to raise_error(JWT::ExpiredSignature)
         end
       end
-      it 'throws exception for unkown issuer' do
+      it 'throws exception for unknown issuer' do
         @valid_normal_inputs.each do |user|
           sub = user.id
-          exp = Time.now.to_i + 1
+          exp = Time.now.to_i + 1000
           iat = Time.now.to_i
           jti = iat + iat + sub
           payload = { "sub" => sub, "exp" => exp, "iat" => iat, "jti" => jti }
@@ -363,7 +365,31 @@ RSpec.describe AuthenticationTokenService::Refresh::Decoder do
           expect { described_class.call(token) }.to raise_error(JWT::InvalidIssuerError)
         end
       end
+      it 'throws exception for blacklisted token(id)' do
+        @valid_normal_inputs.each do |user|
+          sub = user.id
+          exp = Time.now.to_i + 1000
+          iat = Time.now.to_i
+          jti = iat + iat + sub
+          payload = { "sub" => sub, "exp" => exp, "iat" => iat, "jti" => jti }
+          token = AuthenticationTokenService.call(secret, algorithm, issuer, payload)
+          black = AuthBlacklist.new({"token" => jti.to_s})
+          black.save
+          expect { described_class.call(token) }.to raise_error(JWT::InvalidJtiError)
+        end
+        AuthBlacklist.delete_all
+      end
+      it 'throws exception for issuing timestamp in the future' do
+        @valid_normal_inputs.each do |user|
+          sub = user.id
+          exp = Time.now.to_i + 1000
+          iat = Time.now.to_i + 200000
+          jti = iat + iat + sub
+          payload = { "sub" => sub, "exp" => exp, "iat" => iat, "jti" => jti }
+          token = AuthenticationTokenService.call(secret, algorithm, issuer, payload)
+          expect { described_class.call(token) }.to raise_error(JWT::InvalidIatError)
+        end
+      end
     end
   end
 end
-
