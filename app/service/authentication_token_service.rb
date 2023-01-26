@@ -112,7 +112,7 @@ class AuthenticationTokenService
 
     class Encoder
       MAX_INTERVAL = 86400 # == 24 hours
-      MIN_INTERVAL = 1800  # == 0.5 hours == 30 min
+      MIN_INTERVAL = 1800 # == 0.5 hours == 30 min
       def self.call(user_id, man_interval = nil)
         if user_id.class != Integer || !user_id.positive? # is user_id parameter not an integer?
           raise AuthenticationTokenService::InvalidInput
@@ -126,14 +126,16 @@ class AuthenticationTokenService
         elsif UserBlacklist.find_by(user_id: user_id).present? # is the user for the given id blacklisted/actively blocked?
           raise AuthenticationTokenService::InvalidUser::Inactive::Blocked
 
-        else # the given id references an existing user, who is active and not blacklisted
+        else
+          # the given id references an existing user, who is active and not blacklisted
           iat = Time.now.to_i # timestamp
           sub = user_id # who "owns" the token
 
           if man_interval.nil? # the man_interval parameter is not given/used
             bin_exp = iat + 14400 # standard validity interval (4 hours == 240 min == 14400 sec)
 
-          else # the man_interval parameter is given/user -> a manual token expiration time is required
+          else
+            # the man_interval parameter is given/user -> a manual token expiration time is required
             if man_interval.class == Integer && man_interval.positive? # is man_interval a positive integer?
 
               if man_interval <= MAX_INTERVAL && man_interval >= MIN_INTERVAL # is the given required validity interval not longer than MAX_INTERVAL and not shorter than MIN_INTERVAL?
@@ -146,14 +148,15 @@ class AuthenticationTokenService
                 bin_exp = MIN_INTERVAL
               end
 
-            else # man_interval is no integer or either negative or 0
+            else
+              # man_interval is no integer or either negative or 0
               raise AuthenticationTokenService::InvalidInput
 
             end
           end
           exp = bin_exp # placeholder for a standard value or a manually set value
           jti = AuthenticationTokenService::Refresh.jti(iat) # unique token identifier based on the issuing time and the issuer (more info above)
-          return  AuthenticationTokenService::Refresh.encode(sub, exp, jti, iat) # make a refresh token
+          return AuthenticationTokenService::Refresh.encode(sub, exp, jti, iat) # make a refresh token
 
         end
       end
@@ -232,6 +235,71 @@ class AuthenticationTokenService
 
     end
 =end
+    class Decoder
+      def self.call(token, ignore = nil)
+
+        if token.class != String || token.blank?
+          raise AuthenticationTokenService::InvalidInput
+
+        else
+
+          if ignore.nil?
+            return AuthenticationTokenService::Refresh.decode(token)
+
+          else
+
+            if ignore.class != Array || ignore.blank?
+              raise AuthenticationTokenService::InvalidInput
+
+            else
+
+              begin
+                decoded_token = AuthenticationTokenService::Refresh.decode(token)
+
+              rescue JWT::ExpiredSignature
+                if ignore.include?(exp)
+                  #do nothing
+                else
+                  raise JWT::ExpiredSignature
+                end
+
+              rescue JWT::InvalidIssuerError
+                if ignore.include?(iss)
+                  #do nothing
+                else
+                  raise JWT::InvalidIssuerError
+                end
+
+              rescue JWT::InvalidJtiError
+                if ignore.include?(jti)
+                  #do nothing
+                else
+                  raise JWT::InvalidJtiError
+                end
+
+              rescue JWT::InvalidIatError
+                if ignore.include?(iat)
+                  #do nothing
+                else
+                  raise JWT::InvalidIatError
+                end
+
+              rescue AuthenticationTokenService::InvalidChecksum
+                if ignore.include?(checksum)
+                  #do nothing
+                else
+                  raise AuthenticationTokenService::InvalidChecksum
+                end
+
+              end
+              return decoded_token
+
+            end
+          end
+        end
+      end
+    end
+
 =begin
 
        def self.content(token) # this method decodes a jwt token and catches exceptions
