@@ -116,61 +116,18 @@ class AuthenticationTokenService
 
     end
 
-
     class Decoder
-      def self.call(token, ignore = nil)
+      def self.call(token)
 
         if token.class != String || token.blank?
           raise AuthenticationTokenService::InvalidInput
 
         else
 
-          if ignore.nil?
-            return AuthenticationTokenService::Refresh.decode(token)
+          return AuthenticationTokenService::Refresh.decode(token)
 
-          else
-
-            if ignore.class != Array || ignore.blank?
-              raise AuthenticationTokenService::InvalidInput
-
-            else
-
-              begin
-                decoded_token = AuthenticationTokenService::Refresh.decode(token)
-
-              rescue JWT::ExpiredSignature
-                if ignore.include?(exp)
-                  # do nothing
-                else
-                  raise JWT::ExpiredSignature
-                end
-
-              rescue JWT::InvalidIssuerError
-                if ignore.include?(iss)
-                  # do nothing
-                else
-                  raise JWT::InvalidIssuerError
-                end
-
-              rescue JWT::InvalidJtiError
-                if ignore.include?(jti)
-                  # do nothing
-                else
-                  raise JWT::InvalidJtiError
-                end
-
-              rescue JWT::InvalidIatError
-                if ignore.include?(iat)
-                  # do nothing
-                else
-                  raise JWT::InvalidIatError
-                end
-              end
-              return decoded_token
-
-            end
-          end
         end
+
       end
     end
   end
@@ -219,4 +176,60 @@ class AuthenticationTokenService
 
   end
 
+=begin
+  def self.call(token, ignore = nil)
+
+    if token.class != String || token.blank?
+      raise AuthenticationTokenService::InvalidInput
+
+    else
+
+      if ignore.nil?
+        return AuthenticationTokenService::Refresh.decode(token)
+
+      else
+
+        if ignore.class != Array || ignore.blank?
+          raise AuthenticationTokenService::InvalidInput
+
+        else
+
+          begin
+            decoded_token = AuthenticationTokenService::Refresh.decode(token)
+
+          rescue JWT::ExpiredSignature
+            if ignore.include?(exp)
+              # do nothing
+            else
+              raise JWT::ExpiredSignature
+            end
+
+          rescue JWT::InvalidIssuerError
+            if ignore.include?(iss)
+              # do nothing
+            else
+              raise JWT::InvalidIssuerError
+            end
+
+          rescue JWT::InvalidJtiError
+            if ignore.include?(jti)
+              # do nothing
+            else
+              raise JWT::InvalidJtiError
+            end
+
+          rescue JWT::InvalidIatError
+            if ignore.include?(iat)
+              # do nothing
+            else
+              raise JWT::InvalidIatError
+            end
+          end
+          return decoded_token
+
+        end
+      end
+    end
+  end
+=end
 end

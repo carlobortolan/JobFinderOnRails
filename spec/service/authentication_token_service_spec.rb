@@ -247,6 +247,8 @@ RSpec.describe AuthenticationTokenService::Refresh::Decoder do
     50.times do
       @invalid_user_ids.shuffle!
     end
+
+    @invalid_token = [nil, -1, 1, ["aibufgbsligproigrlegh"], { "token" => "noinlsgnibrkguahsö" }, :ogjnljkgrdnognl, ""]
     @secret = AuthenticationTokenService::Refresh::HMAC_SECRET
     @algorithm = AuthenticationTokenService::Refresh::ALGORITHM_TYPE
     @issuer = AuthenticationTokenService::Refresh::ISSUER
@@ -456,8 +458,15 @@ RSpec.describe AuthenticationTokenService::Refresh::Decoder do
         end
       end
     end
-    #todo: test for invalid inputs
+    # todo: test for invalid inputs and ignorer
 
+    context 'invalid input' do
+      it 'throws exception' do
+        @invalid_token.each do |fake_token|
+          expect{described_class.call(fake_token)}.to raise_error(AuthenticationTokenService::InvalidInput)
+        end
+      end
+    end
 
   end
 end
