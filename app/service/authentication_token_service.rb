@@ -1,4 +1,6 @@
 class AuthenticationTokenService
+
+  #Todo: include some scope variable for handlesing different waccess rights
   def self.call (secret, algorithm, issuer, payload)
     # creates a generic jwt
     payload["iss"] = issuer.to_s
