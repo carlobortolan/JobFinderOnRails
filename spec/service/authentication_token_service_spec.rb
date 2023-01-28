@@ -144,7 +144,6 @@ RSpec.describe AuthenticationTokenService::Refresh::Encoder do
           alt = alt * (-1)
           expect(described_class.call(user.id, man_interval)).to be_a String
         end
-
       end
     end
   end
@@ -248,24 +247,22 @@ RSpec.describe AuthenticationTokenService::Refresh::Decoder do
     50.times do
       @invalid_user_ids.shuffle!
     end
+    @secret = AuthenticationTokenService::Refresh::HMAC_SECRET
+    @algorithm = AuthenticationTokenService::Refresh::ALGORITHM_TYPE
+    @issuer = AuthenticationTokenService::Refresh::ISSUER
   end
 
-  context "claim and content integrity" do
-    describe '.call' do
-      let(:secret) { 'yTcW3y9&t<=2cYn=Qt*nYyj!+aFv^LMw&o`@' }
-      let(:algorithm) { 'HS256' }
-
-      let(:issuer) { "#{Socket.gethostname}" }
+  describe '.call' do
+    context "claim and content integrity" do
 
       it 'does not throw exceptions' do
-        # checksum is checked by ::Decode.call method
         @valid_normal_inputs.each do |user|
           sub = user.id
           exp = Time.now.to_i + ((100..10000).to_a.sample)
           iat = Time.now.to_i
           jti = iat + iat + sub
           payload = { "sub" => sub, "exp" => exp, "iat" => iat, "jti" => jti }
-          token = AuthenticationTokenService.call(secret, algorithm, issuer, payload)
+          token = AuthenticationTokenService.call(@secret, @algorithm, @issuer, payload)
           expect { described_class.call(token) }.not_to raise_error
         end
       end
@@ -277,9 +274,9 @@ RSpec.describe AuthenticationTokenService::Refresh::Decoder do
           iat = Time.now.to_i
           jti = iat + iat + sub
           payload = { "sub" => sub, "exp" => exp, "iat" => iat, "jti" => jti }
-          token = AuthenticationTokenService.call(secret, algorithm, issuer, payload)
+          token = AuthenticationTokenService.call(@secret, @algorithm, @issuer, payload)
           decode = described_class.call(token)
-          expect(decode[0]).to include("sub", "iat", "jti", "checksum", "exp")
+          expect(decode[0]).to include("sub", "iat", "jti", "exp")
         end
       end
 
@@ -290,7 +287,7 @@ RSpec.describe AuthenticationTokenService::Refresh::Decoder do
           iat = Time.now.to_i
           jti = iat + iat + sub
           payload = { "sub" => sub, "exp" => exp, "iat" => iat, "jti" => jti }
-          token = AuthenticationTokenService.call(secret, algorithm, issuer, payload)
+          token = AuthenticationTokenService.call(@secret, @algorithm, @issuer, payload)
           decode = described_class.call(token)
           expect(decode[0]["sub"].to_i).to eq(user.id)
         end
@@ -303,7 +300,7 @@ RSpec.describe AuthenticationTokenService::Refresh::Decoder do
           iat = Time.now.to_i
           jti = iat + iat + sub
           payload = { "sub" => sub, "exp" => exp, "iat" => iat, "jti" => jti }
-          token = AuthenticationTokenService.call(secret, algorithm, issuer, payload)
+          token = AuthenticationTokenService.call(@secret, @algorithm, @issuer, payload)
           decode = described_class.call(token)
           expect(decode[0]["exp"].to_i).to eq(exp)
         end
@@ -316,7 +313,7 @@ RSpec.describe AuthenticationTokenService::Refresh::Decoder do
           iat = Time.now.to_i
           jti = iat + iat + sub
           payload = { "sub" => sub, "exp" => exp, "iat" => iat, "jti" => jti }
-          token = AuthenticationTokenService.call(secret, algorithm, issuer, payload)
+          token = AuthenticationTokenService.call(@secret, @algorithm, @issuer, payload)
           decode = described_class.call(token)
           expect(decode[0]["iat"].to_i).to eq(iat)
         end
@@ -329,79 +326,122 @@ RSpec.describe AuthenticationTokenService::Refresh::Decoder do
           iat = Time.now.to_i
           jti = iat + iat + sub
           payload = { "sub" => sub, "exp" => exp, "iat" => iat, "jti" => jti }
-          token = AuthenticationTokenService.call(secret, algorithm, issuer, payload)
+          token = AuthenticationTokenService.call(@secret, @algorithm, @issuer, payload)
           decode = described_class.call(token)
           expect(decode[0]["jti"].to_i).to eq(jti)
         end
       end
-
     end
-  end
 
-  context 'token validity' do
-    describe '.call' do
-      let(:secret) { 'yTcW3y9&t<=2cYn=Qt*nYyj!+aFv^LMw&o`@' }
-      let(:algorithm) { 'HS256' }
-      let(:issuer) { "#{Socket.gethostname}" }
-      it 'throws exception for expired token' do
+    context 'when man_interval is greater than MAX_INTERVAL' do
+      it 'sets man_interval to the highest possible value' do
+        @valid_normal_inputs.each do |user|
+          # the requested exp expiration interval is to long; it should set the token exp to the highest possible value (MIN_INTERVAL)
+          man_interval = (86401..88000).to_a.sample
+          token = AuthenticationTokenService::Refresh::Encoder.call(user.id, man_interval)
+          decode = described_class.call(token)
+          expect(decode[0]["exp"].to_i - decode[0]["iat"].to_i).to eq(AuthenticationTokenService::Refresh::Encoder::MAX_INTERVAL)
+        end
+      end
+    end
+
+    context 'when man_interval is lower than MIN_INTERVAL' do
+      it 'sets to low/high manual exp intervals to the lowes/highest possible value' do
+        @valid_normal_inputs.each do |user|
+          man_interval = (1..1799).to_a.sample
+          token = AuthenticationTokenService::Refresh::Encoder.call(user.id, man_interval)
+          decode = described_class.call(token)
+          expect(decode[0]["exp"].to_i - decode[0]["iat"].to_i).to eq(AuthenticationTokenService::Refresh::Encoder::MIN_INTERVAL)
+        end
+      end
+    end
+
+    context 'when man_interval is between MIN_INTERVAL and MAX_INTERVAL' do
+      it 'has correct exp' do
+        @valid_normal_inputs.each do |user|
+          man_interval = (AuthenticationTokenService::Refresh::Encoder::MIN_INTERVAL..AuthenticationTokenService::Refresh::Encoder::MAX_INTERVAL).to_a.sample
+          token = AuthenticationTokenService::Refresh::Encoder.call(user.id, man_interval)
+          decode = described_class.call(token)
+          expect(decode[0]["exp"].to_i - decode[0]["iat"].to_i).to eq(man_interval)
+        end
+      end
+    end
+
+    context 'token is expired' do
+      it 'throws exception' do
         @valid_normal_inputs.each do |user|
           sub = user.id
           exp = Time.now.to_i - (0..1000).to_a.sample
           iat = Time.now.to_i
           jti = iat + iat + sub
           payload = { "sub" => sub, "exp" => exp, "iat" => iat, "jti" => jti }
-          token = AuthenticationTokenService.call(secret, algorithm, issuer, payload)
+          token = AuthenticationTokenService.call(@secret, @algorithm, @issuer, payload)
           expect { described_class.call(token) }.to raise_error(JWT::ExpiredSignature)
         end
       end
-      it 'throws exception for unknown issuer' do
+    end
+
+    context 'was issued by an unknown issuer' do
+      it 'throws exception' do
         @valid_normal_inputs.each do |user|
           sub = user.id
           exp = Time.now.to_i + 1000
           iat = Time.now.to_i
           jti = iat + iat + sub
           payload = { "sub" => sub, "exp" => exp, "iat" => iat, "jti" => jti }
-          token = AuthenticationTokenService.call(secret, algorithm, "wrong_test_issuer", payload)
+          token = AuthenticationTokenService.call(@secret, @algorithm, "wrong_test_issuer", payload)
           expect { described_class.call(token) }.to raise_error(JWT::InvalidIssuerError)
         end
       end
-      it 'throws exception for blacklisted token(id)' do
+    end
+
+    context 'token is blacklisted' do
+      it 'throws exception' do
         @valid_normal_inputs.each do |user|
           sub = user.id
           exp = Time.now.to_i + 1000
           iat = Time.now.to_i
           jti = iat + iat + sub
           payload = { "sub" => sub, "exp" => exp, "iat" => iat, "jti" => jti }
-          token = AuthenticationTokenService.call(secret, algorithm, issuer, payload)
-          black = AuthBlacklist.new({"token" => jti.to_s})
+          token = AuthenticationTokenService.call(@secret, @algorithm, @issuer, payload)
+          black = AuthBlacklist.new({ "token" => jti.to_s })
           black.save
           expect { described_class.call(token) }.to raise_error(JWT::InvalidJtiError)
         end
         AuthBlacklist.delete_all
       end
-      it 'throws exception for issuing timestamp in the future' do
+    end
+
+    context 'token was issued in the future' do
+      it 'throws exception' do
         @valid_normal_inputs.each do |user|
           sub = user.id
           exp = Time.now.to_i + 1000
           iat = Time.now.to_i + 200000
           jti = iat + iat + sub
           payload = { "sub" => sub, "exp" => exp, "iat" => iat, "jti" => jti }
-          token = AuthenticationTokenService.call(secret, algorithm, issuer, payload)
+          token = AuthenticationTokenService.call(@secret, @algorithm, @issuer, payload)
           expect { described_class.call(token) }.to raise_error(JWT::InvalidIatError)
         end
       end
-      it 'throws exceptions for wrong secret' do
+    end
+
+    context 'token was encoded with another secret' do
+      it 'throws exceptions' do
         @valid_normal_inputs.each do |user|
           sub = user.id
           exp = Time.now.to_i + 1000
           iat = Time.now.to_i
           jti = iat + iat + sub
           payload = { "sub" => sub, "exp" => exp, "iat" => iat, "jti" => jti }
-          token = AuthenticationTokenService.call('wrong_secret', algorithm, issuer, payload)
+          token = AuthenticationTokenService.call('wrong_secret', @algorithm, @issuer, payload)
           expect { described_class.call(token) }.to raise_error(JWT::VerificationError)
         end
       end
-      it 'throws exceptions for incompatible algorithm' do
+    end
+
+    context 'token was encoded by a different algorithm' do
+      it 'throws exceptions' do
         @valid_normal_inputs.each do |user|
           sub = user.id
           exp = Time.now.to_i + 1000
@@ -409,13 +449,14 @@ RSpec.describe AuthenticationTokenService::Refresh::Decoder do
           jti = iat + iat + sub
           payload = { "sub" => sub, "exp" => exp, "iat" => iat, "jti" => jti }
 
-          ['HS384','HS512'].each do |algo|
-            token = AuthenticationTokenService.call(secret, algo, issuer, payload)
+          ['HS384', 'HS512'].each do |algo|
+            token = AuthenticationTokenService.call(@secret, algo, @issuer, payload)
             expect { described_class.call(token) }.to raise_error(JWT::IncorrectAlgorithm)
           end
         end
       end
-
     end
+
+
   end
 end

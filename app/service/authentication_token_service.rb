@@ -1,34 +1,7 @@
 class AuthenticationTokenService
-  def self.checksum(content)
-    # creates checksum based of the contents of an input array. checksum is used to manually verify that token is transmitted completely
-    bin = ""
-    content.each do |v, k|
-      bin = bin + k.to_s
-    end
-    Digest::SHA2.hexdigest(bin)
-  end
-
-  def self.checksum?(decoded_token)
-    # checks whether given checksum in a refresh token is correct. if so checksum? is true, else it is false
-    checksum = decoded_token[0]["checksum"]
-    bin = {}
-    decoded_token[0].each do |k, v|
-      if k != "checksum"
-        bin[k] = v
-      end
-    end
-    testsum = checksum(bin)
-    if testsum == checksum
-      return true
-    else
-      raise AuthenticationTokenService::InvalidChecksum
-    end
-  end
-
   def self.call (secret, algorithm, issuer, payload)
     # creates a generic jwt
     payload["iss"] = issuer.to_s
-    payload["checksum"] = checksum(payload)
     return JWT.encode payload, secret, algorithm
   end
 
@@ -61,8 +34,7 @@ class AuthenticationTokenService
 
     def self.decode(token)
       # this method decodes a jwt token
-      decoded_token = JWT.decode(token, HMAC_SECRET, true, { verify_jti: proc { |jti| jti?(jti) }, iss: ISSUER, verify_iss: true, verify_iat: true, required_claims: ['iss', 'sub', 'exp', 'jti', 'checksum', 'iat'], algorithm: ALGORITHM_TYPE })
-      chsm = AuthenticationTokenService.checksum?(decoded_token)
+      decoded_token = JWT.decode(token, HMAC_SECRET, true, { verify_jti: proc { |jti| jti?(jti) }, iss: ISSUER, verify_iss: true, verify_iat: true, required_claims: ['iss', 'sub', 'exp', 'jti', 'iat'], algorithm: ALGORITHM_TYPE })
       return decoded_token
     end
 
@@ -88,25 +60,6 @@ class AuthenticationTokenService
         false # user is blacklisted
       else
         true # user isn't blacklisted
-      end
-    end
-
-    # TODO: Remove?
-    def self.checksum?(token)
-      # checks whether given checksum in a refresh token is correct. if so checksum? is true, else it is false
-      token = content(token)[0]
-      checksum = token["checksum"]
-      bin = []
-      token.each do |k, v|
-        if k != "checksum"
-          bin.push(v)
-        end
-      end
-      testsum = checksum(bin)
-      if testsum == checksum
-        true
-      else
-        false
       end
     end
 
@@ -139,13 +92,13 @@ class AuthenticationTokenService
             if man_interval.class == Integer && man_interval.positive? # is man_interval a positive integer?
 
               if man_interval <= MAX_INTERVAL && man_interval >= MIN_INTERVAL # is the given required validity interval not longer than MAX_INTERVAL and not shorter than MIN_INTERVAL?
-                bin_exp = man_interval # the given required validity interval is sufficient
+                bin_exp = iat + man_interval # the given required validity interval is sufficient
 
               elsif man_interval > MAX_INTERVAL # the given required validity interval is too long, so the token validity interval gets set to MAX_INTERVAL
-                bin_exp = MAX_INTERVAL
+                bin_exp = iat + MAX_INTERVAL
 
               elsif man_interval < MIN_INTERVAL # the given required validity interval is too short, so the token validity interval gets set to MIN_INTERVAL
-                bin_exp = MIN_INTERVAL
+                bin_exp = iat + MIN_INTERVAL
               end
 
             else
@@ -258,39 +211,31 @@ class AuthenticationTokenService
 
               rescue JWT::ExpiredSignature
                 if ignore.include?(exp)
-                  #do nothing
+                  # do nothing
                 else
                   raise JWT::ExpiredSignature
                 end
 
               rescue JWT::InvalidIssuerError
                 if ignore.include?(iss)
-                  #do nothing
+                  # do nothing
                 else
                   raise JWT::InvalidIssuerError
                 end
 
               rescue JWT::InvalidJtiError
                 if ignore.include?(jti)
-                  #do nothing
+                  # do nothing
                 else
                   raise JWT::InvalidJtiError
                 end
 
               rescue JWT::InvalidIatError
                 if ignore.include?(iat)
-                  #do nothing
+                  # do nothing
                 else
                   raise JWT::InvalidIatError
                 end
-
-              rescue AuthenticationTokenService::InvalidChecksum
-                if ignore.include?(checksum)
-                  #do nothing
-                else
-                  raise AuthenticationTokenService::InvalidChecksum
-                end
-
               end
               return decoded_token
 
@@ -411,9 +356,6 @@ class AuthenticationTokenService
         return { "status": 403, "token": token }
       end
     end
-  end
-
-  class InvalidChecksum < StandardError
   end
 
   class InvalidInput < StandardError
