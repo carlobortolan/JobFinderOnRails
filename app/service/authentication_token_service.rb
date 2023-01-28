@@ -123,9 +123,7 @@ class AuthenticationTokenService
           raise AuthenticationTokenService::InvalidInput
 
         else
-
           return AuthenticationTokenService::Refresh.decode(token)
-
         end
 
       end

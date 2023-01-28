@@ -458,7 +458,6 @@ RSpec.describe AuthenticationTokenService::Refresh::Decoder do
         end
       end
     end
-    # todo: test for invalid inputs and ignorer
 
     context 'invalid input' do
       it 'throws exception' do
