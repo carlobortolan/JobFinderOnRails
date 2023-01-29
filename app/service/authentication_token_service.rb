@@ -156,6 +156,8 @@ class AuthenticationTokenService
     end
 
     class Encoder
+      #Todo: Add Roles & Scope to the db (adapt from cb)
+      #Todo: Write Specs (To understand whether the exception handling from the refresh token and the build in wt except. handling is sufficient)
       def self.call(token)
         decoded_token = AuthenticationTokenService::Refresh::Decoder.call(token)[0]
         sub = decoded_token["sub"] # who "owns" the token
