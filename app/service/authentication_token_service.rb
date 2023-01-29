@@ -25,7 +25,6 @@ class AuthenticationTokenService
     def self.decode(token)
       # token decoding for a refresh token
       # this method decodes a jwt token
-      # todo: write verification for sub
       decoded_token = JWT.decode(token, HMAC_SECRET, true, { verify_jti: Proc.new { |jti| jti?(jti) }, iss: ISSUER, verify_iss: true, verify_iat: true, required_claims: ['iss', 'sub', 'exp', 'jti', 'iat'], algorithm: ALGORITHM_TYPE })
       if User.find_by(id:decoded_token[0]["sub"]).blank?
         raise JWT::InvalidSubError
