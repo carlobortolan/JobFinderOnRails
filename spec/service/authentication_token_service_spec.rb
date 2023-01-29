@@ -170,6 +170,7 @@ RSpec.describe AuthenticationTokenService::Refresh::Encoder do
   end
 end
 
+
 RSpec.describe AuthenticationTokenService::Refresh::Decoder do
 
   before :all do
@@ -428,6 +429,20 @@ RSpec.describe AuthenticationTokenService::Refresh::Decoder do
       end
     end
 
+    context 'token was (falsely) issued to a unknown user' do
+      it 'throws exception' do
+        @valid_unknown_users.each do |id|
+          sub = id
+          exp = Time.now.to_i + 1000
+          iat = Time.now.to_i
+          jti = iat + iat + sub
+          payload = { "sub" => sub, "exp" => exp, "iat" => iat, "jti" => jti }
+          token = AuthenticationTokenService.call(@secret, @algorithm, @issuer, payload)
+          expect { described_class.call(token) }.to raise_error(JWT::InvalidSubError)
+        end
+      end
+    end
+
     context 'token was encoded with another secret' do
       it 'throws exceptions' do
         @valid_normal_inputs.each do |user|
@@ -462,7 +477,7 @@ RSpec.describe AuthenticationTokenService::Refresh::Decoder do
     context 'invalid input' do
       it 'throws exception' do
         @invalid_token.each do |fake_token|
-          expect{described_class.call(fake_token)}.to raise_error(AuthenticationTokenService::InvalidInput)
+          expect { described_class.call(fake_token) }.to raise_error(AuthenticationTokenService::InvalidInput)
         end
       end
     end

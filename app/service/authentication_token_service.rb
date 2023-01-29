@@ -1,42 +1,35 @@
 class AuthenticationTokenService
 
-  #Todo: include some scope variable for handlesing different waccess rights
+  # Todo: include some scope variable for handlesing different waccess rights in access token
   def self.call (secret, algorithm, issuer, payload)
-    # creates a generic jwt
+    # generates a generic token (=> is used to generate refresh and access token)
+    # CAUTION: NO INPUT VERIFICATION ETC. PROVIDED BY THIS METHOD
     payload["iss"] = issuer.to_s
     return JWT.encode payload, secret, algorithm
   end
 
-  def self.user? (user_id)
-    # checks whether user exists is active or user is blacklisted (sense of user blacklist, is to enable more specifc regulation of user rights vs. 0 or 1)
-    if !User.find_by(id: user_id).present?
-      raise User::MrNobody
-    else
-      user = User.find_by(id: user_id)
-      if user.activity_status == 0
-        raise User::Inactive
-      elsif UserBlacklist.find_by(user_id: user.id).present?
-        raise User::Blocked
-      end
-    end
-
-  end
-
-  # no generic encoding because of custom validations
-
+  #########################################################
+  ############### En-/Decoding Refresh token ##############
+  #########################################################
   class Refresh
     HMAC_SECRET = 'yTcW3y9&t<=2cYn=Qt*nYyj!+aFv^LMw&o`@'
     ALGORITHM_TYPE = 'HS256'
     ISSUER = Socket.gethostname
 
     def self.encode(sub, exp, jti, iat)
+      # serializes token generation for a refresh token
       payload = { sub: sub, exp: exp, jti: jti, iat: iat }
       return AuthenticationTokenService.call(HMAC_SECRET, ALGORITHM_TYPE, ISSUER, payload)
     end
 
     def self.decode(token)
+      # token decoding for a refresh token
       # this method decodes a jwt token
-      decoded_token = JWT.decode(token, HMAC_SECRET, true, { verify_jti: proc { |jti| jti?(jti) }, iss: ISSUER, verify_iss: true, verify_iat: true, required_claims: ['iss', 'sub', 'exp', 'jti', 'iat'], algorithm: ALGORITHM_TYPE })
+      # todo: write verification for sub
+      decoded_token = JWT.decode(token, HMAC_SECRET, true, { verify_jti: Proc.new { |jti| jti?(jti) }, iss: ISSUER, verify_iss: true, verify_iat: true, required_claims: ['iss', 'sub', 'exp', 'jti', 'iat'], algorithm: ALGORITHM_TYPE })
+      if User.find_by(id:decoded_token[0]["sub"]).blank?
+        raise JWT::InvalidSubError
+      end
       return decoded_token
     end
 
@@ -64,8 +57,18 @@ class AuthenticationTokenService
         true # user isn't blacklisted
       end
     end
-
-    class Encoder
+#TODO: ISSUE #25
+=begin
+    def self.sub?(sub)
+      # checks whether a user exists in the database
+      if User.find_by(id: sub.to_i).present?
+        true # user is known
+      else
+        false # user is unknown
+      end
+    end
+=end
+    class Encoder # helper class for token generation
       MAX_INTERVAL = 86400 # == 24 hours
       MIN_INTERVAL = 1800 # == 0.5 hours == 30 min
       def self.call(user_id, man_interval = nil)
@@ -115,49 +118,35 @@ class AuthenticationTokenService
 
         end
       end
-
     end
 
     class Decoder
       def self.call(token)
-
-        if token.class != String || token.blank?
+        if token.class != String || token.blank? # rhough check wether
           raise AuthenticationTokenService::InvalidInput
 
         else
           return AuthenticationTokenService::Refresh.decode(token)
-        end
 
+        end
       end
     end
   end
+
+  #########################################################
+  ############### En-/Decoding Access token ###############
+  #########################################################
 
   class Access
     HMAC_SECRET = 'e&iZY9=k!D'
     ALGORITHM_TYPE = 'HS256'
     ISSUER = Socket.gethostname
 
-    def self.call(token)
-      # aud = user type oder sowas
-      unless AuthBlacklist.forbidden?(token)
-        begin
-          # aud = user type oder sowas
-          sub = user_id.to_s
-          exp = Time.now.to_i + 300
-          if sub.present? && exp.present?
-            payload = { sub: sub, exp: exp }
-            return { "status": 200, "access": AuthenticationTokenService.call(HMAC_SECRET, ALGORITHM_TYPE, ISSUER, payload) }
-          else
-            return { "status": 500, "token": token }
-          end
-        rescue
-          return { "status": 500, "token": token }
-        end
-      else
-        return { "status": 403, "token": token }
-      end
-    end
   end
+
+  #########################################################
+  ################# CUSTOM EXCEPTIONS #####################
+  #########################################################
 
   class InvalidInput < StandardError
   end
@@ -176,60 +165,4 @@ class AuthenticationTokenService
 
   end
 
-=begin
-  def self.call(token, ignore = nil)
-
-    if token.class != String || token.blank?
-      raise AuthenticationTokenService::InvalidInput
-
-    else
-
-      if ignore.nil?
-        return AuthenticationTokenService::Refresh.decode(token)
-
-      else
-
-        if ignore.class != Array || ignore.blank?
-          raise AuthenticationTokenService::InvalidInput
-
-        else
-
-          begin
-            decoded_token = AuthenticationTokenService::Refresh.decode(token)
-
-          rescue JWT::ExpiredSignature
-            if ignore.include?(exp)
-              # do nothing
-            else
-              raise JWT::ExpiredSignature
-            end
-
-          rescue JWT::InvalidIssuerError
-            if ignore.include?(iss)
-              # do nothing
-            else
-              raise JWT::InvalidIssuerError
-            end
-
-          rescue JWT::InvalidJtiError
-            if ignore.include?(jti)
-              # do nothing
-            else
-              raise JWT::InvalidJtiError
-            end
-
-          rescue JWT::InvalidIatError
-            if ignore.include?(iat)
-              # do nothing
-            else
-              raise JWT::InvalidIatError
-            end
-          end
-          return decoded_token
-
-        end
-      end
-    end
-  end
-=end
 end
