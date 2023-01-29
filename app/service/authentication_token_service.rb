@@ -26,7 +26,7 @@ class AuthenticationTokenService
       # token decoding for a refresh token
       # this method decodes a jwt token
       decoded_token = JWT.decode(token, HMAC_SECRET, true, { verify_jti: Proc.new { |jti| jti?(jti) }, iss: ISSUER, verify_iss: true, verify_iat: true, required_claims: ['iss', 'sub', 'exp', 'jti', 'iat'], algorithm: ALGORITHM_TYPE })
-      if User.find_by(id:decoded_token[0]["sub"]).blank?
+      if User.find_by(id: decoded_token[0]["sub"]).blank?
         raise JWT::InvalidSubError
       end
       return decoded_token
@@ -56,7 +56,8 @@ class AuthenticationTokenService
         true # user isn't blacklisted
       end
     end
-#TODO: ISSUE #25
+
+    # TODO: ISSUE #25
 =begin
     def self.sub?(sub)
       # checks whether a user exists in the database
@@ -121,7 +122,7 @@ class AuthenticationTokenService
 
     class Decoder
       def self.call(token)
-        if token.class != String || token.blank? # rhough check wether
+        if token.class != String || token.blank? # rough check whether
           raise AuthenticationTokenService::InvalidInput
 
         else
@@ -129,6 +130,7 @@ class AuthenticationTokenService
 
         end
       end
+
     end
   end
 
@@ -140,6 +142,41 @@ class AuthenticationTokenService
     HMAC_SECRET = 'e&iZY9=k!D'
     ALGORITHM_TYPE = 'HS256'
     ISSUER = Socket.gethostname
+
+    def self.encode(sub, exp, roles = nil, scope = nil)
+      payload = { sub: sub, exp: exp }
+      return AuthenticationTokenService.call(HMAC_SECRET, ALGORITHM_TYPE, ISSUER, payload)
+    end
+
+    def self.decode(token)
+      # token decoding for an access token
+      # this method decodes a jwt token
+      decoded_token = JWT.decode(token, HMAC_SECRET, true, { iss: ISSUER, verify_iss: true, required_claims: ['iss', 'sub', 'exp'], algorithm: ALGORITHM_TYPE })
+      return decoded_token
+    end
+
+    class Encoder
+      def self.call(token)
+        decoded_token = AuthenticationTokenService::Refresh::Decoder.call(token)[0]
+        sub = decoded_token["sub"] # who "owns" the token
+        # ADD roles and scope after db mitigation
+        # roles = ...
+        # scope = ...
+        exp = Time.now.to_i + 1200 # 1200 sec == 20 min
+        return AuthenticationTokenService::Access.encode(sub, exp)
+      end
+    end
+
+    class Decoder
+      def self.call(token)
+        if token.class != String || token.blank? # rough check whether
+          raise AuthenticationTokenService::InvalidInput
+
+        else
+          return AuthenticationTokenService::Access.decode(token)
+        end
+      end
+    end
 
   end
 
