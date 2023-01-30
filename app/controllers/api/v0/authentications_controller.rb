@@ -4,6 +4,57 @@ module Api
       # Controller for refresh token
       protect_from_forgery with: :null_session
 
+      class Refresh
+        def create
+          if user.authenticate(token_params["password"])
+            begin
+              token = AuthenticationTokenService::Refresh::Encoder.call(user.id)[0]
+              render status: 200, json: { "refresh_token" => token }
+            rescue AuthenticationTokenService::InvalidUser::Unknown
+              # Todo: make central storadge unit for errorcodes
+              render status: 500, json: { "system": [
+                {
+                  "error": "ERR_SERVER",
+                  "code": "SYX-1",
+                  "description": "Please try again later. If this error persists please contact the support team."
+                }
+              ]
+              }
+              #todo: extend rescues
+            end
+          else
+            render status: 401, json: { "password": [
+              {
+                "error": "ERR_INVALID",
+                "description": "Attribute is malformed or unknown"
+              }
+            ]
+            }
+          end
+        end
+
+        private
+
+        def token_params
+          params.require(:token).permit(:email, :password)
+        end
+
+        def user
+          # enables to not explicitly define user by just calling this method
+          @user ||= User.find_by(email: token_params["email"])
+        end
+      end
+
+      class Access
+
+      end
+
+    end
+
+  end
+end
+
+=begin
       def create
         # Todo: Implement Error handling for errors dropped while call
         # Todo: Update Doc
@@ -80,12 +131,4 @@ module Api
       def verify_params
         params.require(:token)
       end
-
-    end
-
-  end
-end
-
-
-
-
+=end
