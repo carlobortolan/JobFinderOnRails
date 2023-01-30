@@ -163,14 +163,14 @@ class AuthenticationTokenService
         # ADD roles and scope after db mitigation
         # roles = ...
         # scope = ...
-        exp = Time.now.to_i + 1200 # 1200 sec == 20 min
+        exp = Time.now.to_i + 1200 # standard validity interval;: 1200 sec == 20 min
         return AuthenticationTokenService::Access.encode(sub, exp)
       end
     end
 
     class Decoder
       def self.call(token)
-        if token.class != String || token.blank? # rough check whether
+        if token.class != String || token.blank? # rough check whether input is malformed
           raise AuthenticationTokenService::InvalidInput
         else
           return AuthenticationTokenService::Access.decode(token)
