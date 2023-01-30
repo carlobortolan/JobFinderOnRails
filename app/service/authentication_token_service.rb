@@ -173,7 +173,6 @@ class AuthenticationTokenService
       def self.call(token)
         if token.class != String || token.blank? # rough check whether
           raise AuthenticationTokenService::InvalidInput
-
         else
           return AuthenticationTokenService::Access.decode(token)
         end
