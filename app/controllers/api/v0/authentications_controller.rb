@@ -12,21 +12,49 @@ module Api
               render status: 200, json: { "refresh_token" => token }
             rescue AuthenticationTokenService::InvalidUser::Unknown
               # Todo: make central storadge unit for errorcodes
-              render status: 500, json: { "system": [
+              render status: 500, json: { "user": [
                 {
                   "error": "ERR_SERVER",
-                  "code": "SYX-1",
+                  "code": "XJH-1", # The requested token subject (User) doesn't exists BUT user.authenticate(token_params["password"]) says true
                   "description": "Please try again later. If this error persists please contact the support team."
                 }
               ]
               }
-              #todo: extend rescues
+            rescue AuthenticationTokenService::InvalidUser::Inactive::NotVerified
+              render status: 403, json: { "user": [
+                {
+                  "error": "ERR_INACTIVE",
+                  "code": "XJH-2", # The requested token subject (User) is unverified.
+                  "description": "Attribute is not verified."
+                }
+              ]
+              }
+            rescue AuthenticationTokenService::InvalidUser::Inactive::Blocked
+              render status: 403, json: { "user": [
+                {
+                  "error": "ERR_INACTIVE",
+                  "code": "XJH-3", # The requested token subject (User) is blocked (blacklisted).
+                  "description": "Attribute is blocked."
+                }
+              ]
+              }
+            rescue AuthenticationTokenService::InvalidInput
+              render status: 500, json: { "user": [
+                {
+                  "error": "ERR_SERVER",
+                  "code": "XJH-5", # Invalid Input (User Attribute is malformed) BUT user.authenticate(token_params["password"]) says true
+                  "description": "Please try again later. If this error persists please contact the support team."
+                }
+              ]
+              }
+              #Todo: Go on
             end
           else
             render status: 401, json: { "password": [
               {
                 "error": "ERR_INVALID",
-                "description": "Attribute is malformed or unknown"
+                "code": "XJH-4", # Given credentials are wrong
+                "description": "Attribute is malformed or unknown."
               }
             ]
             }
