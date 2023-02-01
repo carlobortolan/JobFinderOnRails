@@ -158,14 +158,20 @@ RSpec.describe AuthenticationTokenService::Refresh::Encoder do
         end
       end
 
+
+
       it 'throws exceptions for non-Integers and non positive-Integers as the manual interval parameter for valid normal users' do
         # user id and man_interval share the same form requirements. so in this case an invalid user id can be used as invalid man interval.
+        # note: nil explicitly as input must be prohibitid in this case, because then the method works as no custom validity/man_interval was requested (and so no exception will be raised)
         @invalid_user_ids.each do |man_interval|
-          expect {
-            described_class.call(@valid_normal_inputs.sample.id, man_interval)
-          }.to raise_error(AuthenticationTokenService::InvalidInput::CustomEXP)
+          unless man_interval.nil?
+            expect {
+              described_class.call(@valid_normal_inputs.sample.id, man_interval)
+            }.to raise_error(AuthenticationTokenService::InvalidInput::CustomEXP)
+          end
         end
       end
+
 
     end
   end
@@ -814,7 +820,7 @@ RSpec.describe AuthenticationTokenService::Access::Decoder do
         @valid_normal_inputs.each do |user|
           sub = user.id
           exp = Time.now.to_i + ((100..10000).to_a.sample)
-          payload = { "sub" => sub, "exp" => exp}
+          payload = { "sub" => sub, "exp" => exp }
           access = AuthenticationTokenService.call(@access_secret, @access_algorithm, @access_issuer, payload)
           decode = described_class.call(access)
           expect(decode[0]["sub"].to_i).to eq(user.id)
@@ -856,7 +862,6 @@ RSpec.describe AuthenticationTokenService::Access::Decoder do
         end
       end
     end
-
 
     context 'access token was encoded with another secret' do
       it 'throws exceptions' do

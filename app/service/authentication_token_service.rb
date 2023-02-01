@@ -94,10 +94,8 @@ class AuthenticationTokenService
 
           else
             # the man_interval parameter is given/user -> a manual token expiration time is required
-            puts "NOT NIL"
             if man_interval.class == Integer && man_interval.positive? # is man_interval a positive integer?
-              puts "INTEGER && POSITIVE"
-              puts man_interval
+
               if man_interval <= MAX_INTERVAL && man_interval >= MIN_INTERVAL # is the given required validity interval not longer than MAX_INTERVAL and not shorter than MIN_INTERVAL?
                 bin_exp = iat + man_interval # the given required validity interval is sufficient
 
@@ -109,13 +107,10 @@ class AuthenticationTokenService
               end
 
             else
-              #Todo: WHY ISNT THIS EXCEPTION RAISED???
-              puts "FALSE"
-              puts man_interval
               # man_interval is no integer or either negative or 0
               raise AuthenticationTokenService::InvalidInput::CustomEXP
-
             end
+
           end
           exp = bin_exp # placeholder for a standard value or a manually set value
           jti = AuthenticationTokenService::Refresh.jti(iat) # unique token identifier based on the issuing time and the issuer (more info above)
@@ -161,7 +156,7 @@ class AuthenticationTokenService
     end
 
     class Encoder
-      #Todo: Add Roles & Scope to the db (adapt from cb) & Update Specs accordingly
+      # Todo: Add Roles & Scope to the db (adapt from cb) & Update Specs accordingly
       def self.call(token)
         decoded_token = AuthenticationTokenService::Refresh::Decoder.call(token)[0]
         sub = decoded_token["sub"] # who "owns" the token
@@ -192,6 +187,7 @@ class AuthenticationTokenService
   class InvalidInput < StandardError
     class SUB < StandardError
     end
+
     class CustomEXP < StandardError
     end
 
