@@ -94,8 +94,10 @@ class AuthenticationTokenService
 
           else
             # the man_interval parameter is given/user -> a manual token expiration time is required
+            puts "NOT NIL"
             if man_interval.class == Integer && man_interval.positive? # is man_interval a positive integer?
-
+              puts "INTEGER && POSITIVE"
+              puts man_interval
               if man_interval <= MAX_INTERVAL && man_interval >= MIN_INTERVAL # is the given required validity interval not longer than MAX_INTERVAL and not shorter than MIN_INTERVAL?
                 bin_exp = iat + man_interval # the given required validity interval is sufficient
 
@@ -107,6 +109,9 @@ class AuthenticationTokenService
               end
 
             else
+              #Todo: WHY ISNT THIS EXCEPTION RAISED???
+              puts "FALSE"
+              puts man_interval
               # man_interval is no integer or either negative or 0
               raise AuthenticationTokenService::InvalidInput::CustomEXP
 
@@ -185,9 +190,9 @@ class AuthenticationTokenService
   #########################################################
 
   class InvalidInput < StandardError
-    class SUB
+    class SUB < StandardError
     end
-    class CustomEXP
+    class CustomEXP < StandardError
     end
 
   end

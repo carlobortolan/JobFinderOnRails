@@ -162,7 +162,7 @@ RSpec.describe AuthenticationTokenService::Refresh::Encoder do
         # user id and man_interval share the same form requirements. so in this case an invalid user id can be used as invalid man interval.
         @invalid_user_ids.each do |man_interval|
           expect {
-            described_class.call(@valid_normal_inputs.sample, man_interval)
+            described_class.call(@valid_normal_inputs.sample.id, man_interval)
           }.to raise_error(AuthenticationTokenService::InvalidInput::CustomEXP)
         end
       end
