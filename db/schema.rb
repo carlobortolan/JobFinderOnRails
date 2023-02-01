@@ -11,7 +11,7 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.0].define(version: 202301100105555) do
-  create_table "applications", primary_key: ["job_id", "applicant_id"], charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "applications", primary_key: %w[job_id applicant_id], charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "job_id", null: false
     t.integer "applicant_id", null: false
     t.datetime "applied_at", null: false
@@ -20,7 +20,7 @@ ActiveRecord::Schema[7.0].define(version: 202301100105555) do
     t.string "application_documents", limit: 100
     t.string "response", limit: 500
     t.index ["applicant_id"], name: "account_id_idx"
-    t.index ["job_id", "applicant_id"], name: "index_applications_on_job_id_and_applicant_id", unique: true
+    t.index %w[job_id applicant_id], name: "index_applications_on_job_id_and_applicant_id", unique: true
   end
 
   create_table "company_users", primary_key: "user_id", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -69,7 +69,7 @@ ActiveRecord::Schema[7.0].define(version: 202301100105555) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "notifications", primary_key: ["employer_id", "job_id"], charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "notifications", primary_key: %w[employer_id job_id], charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "employer_id", null: false
     t.integer "job_id", null: false
     t.column "notify", "enum(' 0',' 1')"
@@ -88,7 +88,7 @@ ActiveRecord::Schema[7.0].define(version: 202301100105555) do
     t.integer "created_by", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    # t.references :user, null: false, foreign_key: true
+    t.references :user, null: false, foreign_key: true
     t.index ["created_by"], name: "fk_rails_50d2809d9b"
   end
 
