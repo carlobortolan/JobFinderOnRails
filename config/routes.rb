@@ -39,6 +39,7 @@ Rails.application.routes.draw do
       post 'user', to: 'registrations#create'
       post 'user/verify', to: 'authentications#create'
       get 'user/verify', to: 'authentications#verify'
+      post `user/auth/token`, to: 'authentications#create'
 
     end
   end
