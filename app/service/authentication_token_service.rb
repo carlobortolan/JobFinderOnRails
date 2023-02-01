@@ -114,6 +114,10 @@ class AuthenticationTokenService
           end
           exp = bin_exp # placeholder for a standard value or a manually set value
           jti = AuthenticationTokenService::Refresh.jti(iat) # unique token identifier based on the issuing time and the issuer (more info above)
+          puts exp
+          puts jti
+          puts sub
+          puts iat
           return AuthenticationTokenService::Refresh.encode(sub, exp, jti, iat) # make a refresh token
 
         end
