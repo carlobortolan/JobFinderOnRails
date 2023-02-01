@@ -1,4 +1,4 @@
-<h1>Versuch und Irrtum on RAILS</h1>
+<h1>JobFinder on RAILS</h1>
 
 ## License
 
