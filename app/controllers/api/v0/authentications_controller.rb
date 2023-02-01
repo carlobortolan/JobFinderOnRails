@@ -6,54 +6,84 @@ module Api
 
       class Refresh
         def create
-          if user.authenticate(token_params["password"])
-            begin
-              token = AuthenticationTokenService::Refresh::Encoder.call(user.id)[0]
-              render status: 200, json: { "refresh_token" => token }
-            rescue AuthenticationTokenService::InvalidUser::Unknown
-              # Todo: make central storadge unit for errorcodes
-              render status: 500, json: { "user": [
+          if user.present?
+
+            if user.authenticate(token_params["password"])
+              begin
+                # ============ Token gets claimed ==============
+                if token_params["validity"].present? # is a custom token validity interval requested
+                  token = AuthenticationTokenService::Refresh::Encoder.call(user.id, token_params["validity"])
+                else
+                  token = AuthenticationTokenService::Refresh::Encoder.call(user.id)[0]
+                end
+                render status: 200, json: { "refresh_token" => token }
+
+                # ========== Rescue normal Exceptions ==========
+              rescue AuthenticationTokenService::InvalidUser::Inactive::Blocked
+                # The requested token subject (User) is blocked (blacklisted).
+                render status: 403, json: { "user": [
+                  {
+                    "error": "ERR_INACTIVE",
+                    "description": "Attribute is blocked."
+                  }
+                ]
+                }
+
+              rescue AuthenticationTokenService::InvalidUser::Inactive::NotVerified
+                # The requested token subject (User) is unverified.
+                render status: 403, json: { "user": [
+                  {
+                    "error": "ERR_INACTIVE",
+                    "description": "Attribute is not verified."
+                  }
+                ]
+                }
+
+              rescue AuthenticationTokenService::InvalidInput::CustomEXP
+                # Invalid Input (Validity [man_interval] attribute is malformed)
+                render status: 400, json: { "validity": [
+                  {
+                    "error": "ERR_INVALID",
+                    "description": "Attribute is malformed or unknown."
+                  }
+                ]
+                }
+
+                # ========== Rescue severe Exceptions ==========
+              rescue AuthenticationTokenService::InvalidUser::Unknown
+                # The requested token subject (User) doesn't exists BUT user.authenticate(token_params["password"]) says true
+                render status: 500, json: { "user": [
+                  {
+                    "error": "ERR_SERVER",
+                    "description": "Please try again later. If this error persists please contact the support team."
+                  }
+                ]
+                }
+
+              rescue AuthenticationTokenService::InvalidInput::SUB
+                # Invalid Input (User Attribute is malformed) BUT user.authenticate(token_params["password"]) says true
+                render status: 500, json: { "user": [
+                  {
+                    "error": "ERR_SERVER",
+                    "description": "Please try again later. If this error persists please contact the support team."
+                  }
+                ]
+                }
+
+              end
+            else # user.authenticate(token_params["password"]) fails
+              render status: 401, json: { "password": [
                 {
-                  "error": "ERR_SERVER",
-                  "code": "XJH-1", # The requested token subject (User) doesn't exists BUT user.authenticate(token_params["password"]) says true
-                  "description": "Please try again later. If this error persists please contact the support team."
+                  "error": "ERR_INVALID",
+                  "description": "Attribute is malformed or unknown."
                 }
               ]
               }
-            rescue AuthenticationTokenService::InvalidUser::Inactive::NotVerified
-              render status: 403, json: { "user": [
-                {
-                  "error": "ERR_INACTIVE",
-                  "code": "XJH-2", # The requested token subject (User) is unverified.
-                  "description": "Attribute is not verified."
-                }
-              ]
-              }
-            rescue AuthenticationTokenService::InvalidUser::Inactive::Blocked
-              render status: 403, json: { "user": [
-                {
-                  "error": "ERR_INACTIVE",
-                  "code": "XJH-3", # The requested token subject (User) is blocked (blacklisted).
-                  "description": "Attribute is blocked."
-                }
-              ]
-              }
-            rescue AuthenticationTokenService::InvalidInput
-              render status: 500, json: { "user": [
-                {
-                  "error": "ERR_SERVER",
-                  "code": "XJH-5", # Invalid Input (User Attribute is malformed) BUT user.authenticate(token_params["password"]) says true
-                  "description": "Please try again later. If this error persists please contact the support team."
-                }
-              ]
-              }
-              #Todo: Go on
             end
-          else
-            render status: 401, json: { "password": [
+          else # User.find_by(email: token_params["email"]) fails
+            render status: 400, json: { "user": [
               {
                 "error": "ERR_INVALID",
-                "code": "XJH-4", # Given credentials are wrong
                 "description": "Attribute is malformed or unknown."
               }
             ]
@@ -64,7 +94,8 @@ module Api
         private
 
         def token_params
-          params.require(:token).permit(:email, :password)
+          #params.require(:token).permit(:email, :password)
+          params.fetch(:refresh_token).permit(:email, :password, :validity)
         end
 
         def user

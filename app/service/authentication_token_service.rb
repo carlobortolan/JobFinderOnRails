@@ -73,7 +73,7 @@ class AuthenticationTokenService
       MIN_INTERVAL = 1800 # == 0.5 hours == 30 min
       def self.call(user_id, man_interval = nil)
         if user_id.class != Integer || !user_id.positive? # is user_id parameter not an integer?
-          raise AuthenticationTokenService::InvalidInput
+          raise AuthenticationTokenService::InvalidInput::SUB
 
         elsif User.find_by(id: user_id).blank? # is the given id referencing an non-existing user?
           raise AuthenticationTokenService::InvalidUser::Unknown
@@ -108,7 +108,7 @@ class AuthenticationTokenService
 
             else
               # man_interval is no integer or either negative or 0
-              raise AuthenticationTokenService::InvalidInput
+              raise AuthenticationTokenService::InvalidInput::CustomEXP
 
             end
           end
@@ -185,6 +185,11 @@ class AuthenticationTokenService
   #########################################################
 
   class InvalidInput < StandardError
+    class SUB
+    end
+    class CustomEXP
+    end
+
   end
 
   class InvalidUser < StandardError

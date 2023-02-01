@@ -154,15 +154,16 @@ RSpec.describe AuthenticationTokenService::Refresh::Encoder do
         @invalid_user_ids.each do |id|
           expect {
             described_class.call(id)
-          }.to raise_error(AuthenticationTokenService::InvalidInput)
+          }.to raise_error(AuthenticationTokenService::InvalidInput::SUB)
         end
       end
 
       it 'throws exceptions for non-Integers and non positive-Integers as the manual interval parameter for valid normal users' do
+        # user id and man_interval share the same form requirements. so in this case an invalid user id can be used as invalid man interval.
         @invalid_user_ids.each do |man_interval|
           expect {
             described_class.call(@valid_normal_inputs.sample, man_interval)
-          }.to raise_error(AuthenticationTokenService::InvalidInput)
+          }.to raise_error(AuthenticationTokenService::InvalidInput::CustomEXP)
         end
       end
 
