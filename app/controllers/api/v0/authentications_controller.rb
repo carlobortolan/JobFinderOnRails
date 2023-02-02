@@ -92,11 +92,19 @@ module Api
         end
       end
 
+      def create_access
+        puts p
+      end
+
       private
 
+
       def refresh_token_params
-        # params.require(:token).permit(:email, :password)
         params.fetch(:refresh_token).permit(:email, :password, :validity)
+      end
+
+      def access_token_params
+        #TOdo
       end
 
       def user

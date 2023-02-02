@@ -38,6 +38,7 @@ Rails.application.routes.draw do
       #get 'user/verify', to: 'registrations#verify'
       post 'user', to: 'registrations#create'
       post 'user/auth/token', to: 'authentications#create_refresh'
+      get 'user/auth/token', to: 'authentications#create_access'
       get 'user/verify', to: 'authentications#verify'
 
     end
