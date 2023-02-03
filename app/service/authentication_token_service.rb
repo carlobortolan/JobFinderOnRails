@@ -1,6 +1,6 @@
 class AuthenticationTokenService
 
-  # Todo: include some scope variable for handlesing different waccess rights in access token
+  # Todo: include some scope variable for handeling different waccess rights in access token
   def self.call (secret, algorithm, issuer, payload)
     # generates a generic token (=> is used to generate refresh and access token)
     # CAUTION: NO INPUT VERIFICATION ETC. PROVIDED BY THIS METHOD
@@ -130,7 +130,14 @@ class AuthenticationTokenService
 
         end
       end
-
+      def self.valid?(token)
+        begin
+          self.call(token)
+          return true
+        rescue
+          return false
+        end
+      end
     end
   end
 
@@ -174,6 +181,15 @@ class AuthenticationTokenService
           raise AuthenticationTokenService::InvalidInput
         else
           return AuthenticationTokenService::Access.decode(token)
+        end
+      end
+
+      def self.valid?(token)
+        begin
+          self.call(token)
+          return true
+        rescue
+          return false
         end
       end
     end

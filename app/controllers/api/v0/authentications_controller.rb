@@ -93,18 +93,89 @@ module Api
       end
 
       def create_access
-        puts "test"
+        # ============ Token gets claimed ==============
+        begin
+          token = AuthenticationTokenService::Access::Encoder.call(access_token_params["refresh_token"])
+          render status: 200, json: { "access_token" => token }
+          # ========== Rescue normal Exceptions ==========
+        rescue JWT::ExpiredSignature
+          render status: 401, json: { "refresh_token": [
+            {
+              "error": "ERR_INVALID",
+              "description": "Attribute has expired."
+            }
+          ]
+          }
+        rescue JWT::InvalidJtiError
+          render status: 403, json: { "refresh_token": [
+            {
+              "error": "ERR_INACTIVE",
+              "description": "Attribute is blocked."
+            }
+          ]
+          }
+        rescue AuthenticationTokenService::InvalidInput
+          render status: 400, json: { "refresh_token": [
+            {
+              "error": "ERR_INVALID",
+              "description": "Attribute is malformed or unknown."
+            }
+          ]
+          }
+          # ========== Rescue severe Exceptions ==========
+        rescue JWT::InvalidIssuerError
+          render status: 401, json: { "refresh_token": [
+            {
+              "error": "ERR_INVALID",
+              "description": "Attribute was signed by an unknown issuer."
+            }
+          ]
+          }
+        rescue JWT::InvalidIatError
+          render status: 401, json: { "refresh_token": [
+            {
+              "error": "ERR_INVALID",
+              "description": "Attribute was timestamped incorrectly."
+            }
+          ]
+          }
+        rescue JWT::InvalidSubError
+          render status: 401, json: { "refresh_token": [
+            {
+              "error": "ERR_INVALID",
+              "description": "Attribute can't be allocated to an existing user."
+            }
+          ]
+          }
+        rescue JWT::VerificationError
+          render status: 401, json: { "refresh_token": [
+            {
+              "error": "ERR_INVALID",
+              "description": "Token can't be verified."
+            }
+          ]
+          }
+        rescue JWT::IncorrectAlgorithm
+          render status: 401, json: { "refresh_token": [
+            {
+              "error": "ERR_INVALID",
+              "description": "Token was encoded with an unknown algorithm."
+            }
+          ]
+          }
+
+
+        end
       end
 
       private
-
 
       def refresh_token_params
         params.fetch(:refresh_token).permit(:email, :password, :validity)
       end
 
       def access_token_params
-        #TOdo
+        params.fetch(:access_token).permit(:refresh_token)
       end
 
       def user
