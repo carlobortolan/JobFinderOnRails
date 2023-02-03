@@ -102,15 +102,18 @@ module Api
                   if !user.errors.empty?
                     raise
                   else
-                    # TODO: SOLL VOLLSTÄNDIGES USER PROFILE AUSGEBEN (SIEHE DOC) -> ERST MACHEN, WENN SYSTEM ANGEPASST WURDE (SIEHE DOC)
-                    render status: 200, json: { "we have": "success", "test_token": { "checksum": checksum, "id": user.id } }
+                    begin
+                      token = AuthenticationTokenService::Refresh::Encoder.call(user.id)
+                      render status: 200, json: { "refresh_token": token }
+                    rescue
+                      render status: 500, json: { "error": "Something went wrong while issuing your initial refresh token. Please try again later. If this error persists, we recommend to contact our support team." }
+                    end
                   end
 
                 end
               end
 
             rescue
-              puts
               render status: 500, json: { "error": "Please try again later. If this error persists, we recommend to contact our support team." }
             end
           end
