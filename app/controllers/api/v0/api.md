@@ -35,7 +35,7 @@
    **200: OK**
     ```   
             {
-                "message": "Account registered! Please activate your account and claim your refresh token via GET http://localhost:3000/api/v0/user/verify "
+                "message": "Account registered! Please activate your user account and claim your initial refresh token via GET http://localhost:3000/api/v0/user/verify."
             }
     ```
    ####
@@ -45,8 +45,8 @@
                 "error": {
                     "email": [
                         {
-                            "error": "ERR_INVALID"",
-                            "description": "Attribute is malformed or unknown
+                            "error": "ERR_INVALID",
+                            "description": "Attribute is malformed or unknown."
                         }
                     ] 
                 }       
@@ -65,7 +65,7 @@
                     "email": [
                         {
                             "error": "ERR_TAKEN",
-                            "description": "Attribute is taken"
+                            "description": "Attribute is taken."
                         }
                     ]   
                 }       
@@ -84,7 +84,7 @@
 
 2. Verify user credentials
    >  <span style="color:lawngreen"> GET </span> /user/verify
-   Test to make sure the Registration worked and to claim the initial refresh token.
+   Test to make sure the registration worked and to claim the initial refresh token.
    ####
    ###### Data parameters
     1. **email** *<span style="color:crimson">REQUIRED </span>*
@@ -107,15 +107,14 @@
                 "email": [
                     {
                         "error": "ERR_INVALID",
-                        "description": "Attribute is malformed or unknown"
+                        "description": "Attribute is malformed or unknown."
                     }
                 ]
             }
     ```
    You may expect the following errors:
-    + ``ERR_BLANK``: When a required attribute is blank
-    + ``ERR_DISABLED``: The login for the given credentials is disabled
-    + ``ERR_INVALID``: When the given attribute is malformed or unknown
+    + ``ERR_BLANK``: When a required attribute is blank or not given by the client.
+    + ``ERR_INVALID``: When a given attribute is malformed or unknown. Check for spelling and/or other formatting errors.
    ####
    **401: Unauthorized**
     ```   
@@ -123,32 +122,37 @@
                     "password": [
                         {
                             "error": "ERR_INVALID",
-                            "description": "Attribute is malformed or unknown"
+                            "description": "Attribute is malformed or unknown."
                         }
                     ]   
                 }       
             }
     ```
+   You may expect the following errors:
+    + ``ERR_INVALID``: When a given attribute is malformed or unknown. Check for spelling and/or other formatting errors.
    ####
    **403: Forbidden**
     ```   
          {
             "user": [
                 {
-                    "error": "ERR_INACTIVE",
-                    "description": "Attribute is blocked."
+                    "error": "ERR_UNNECESSARY",
+                    "description": "Attribute is already verified."
                 }
             ]
                        
         }
     ```
+   You may expect the following errors:
+    + ``ERR_UNNECESSARY``: When a requested task is unnecessary, the will system refuses to do the task. Often it helps to ask yourself what you wanted the system to do, and whether this method is the standard method for this specific task.  
    ####
    **500: Internal Server Error**
     ```   
             {
-                "error": "Please try again later. If this error persists, we recommend to contact our support team"
+                "error": "Something went wrong while issuing your initial refresh token. Please try again later. If this error persists, we recommend to contact our support team."
             }
     ```
+   In this case this error occurs whenever the API Authentication Service raises an exception.
    ####
 
 ***

@@ -123,17 +123,6 @@ module Api
         params.require(:user).permit(:email, :first_name, :last_name, :password, :password_confirmation)
       end
 
-      def checksum
-        return Time.now.to_i + 360
-      end
-
-      def try_checksum(args)
-        if (Time.now.to_i - args) > 0
-          return false
-        else
-          return true
-        end
-      end
 
     end
   end
