@@ -16,9 +16,9 @@ The Authentication approach combines the benefits of long-term but weak refresh 
 **Note:** The API ist still in a very early alpha version, so changes to the general approach and this document will happen.
 ***
 
-### 2. User
+### 2. Refresh token
 
-1. Register an user
+1. Claim a refresh token
    >  <span style="color:lawngreen"> POST </span> /user
    This creates user and account records. The created account is unverified an needs to be confirmed by the user.
    ####
