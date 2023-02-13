@@ -1,6 +1,6 @@
 #### <div style="text-align:right">C-XJH-0005 </div>
 ####
-# <div style="text-align: center"><span style="color:crimson">## CONFIDENTIAL ## CONFIDENTIAL ##</span> </div>
+# <div style="text-align: center"><span style="color:crimson"> < CONFIDENTIAL >   < CONFIDENTIAL >  < CONFIDENTIAL ></span> </div>
 ####
 # API Authentication Service INTERNAL Documentation
 
