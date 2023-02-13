@@ -1,6 +1,8 @@
 require 'rails_helper'
 require_relative '../../app/service/authentication_token_service.rb'
 
+# Note: If a duplication error occures, just restart the spec (if necessary multiple times) -> the db gets cleared before all but somehow there are strange circumstances
+
 RSpec.describe AuthenticationTokenService::Refresh::Encoder do
   before :all do
     # populate db
