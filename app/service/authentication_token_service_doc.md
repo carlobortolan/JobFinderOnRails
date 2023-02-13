@@ -19,25 +19,21 @@ The Authentication approach combines the benefits of long-term but weak refresh 
 ### 2. Refresh token
 
 1. Claim a refresh token
-   >  <span style="color:lawngreen"> POST </span> /user
-   This creates user and account records. The created account is unverified an needs to be confirmed by the user.
+    ```   
+    AuthenticationTokenService::Refresh::Encoder.call(<user_id>,[<man_interval>])
+    ```
+   This creates a refresh token.
    ####
    ###### Data parameters
-    1. **email** *<span style="color:crimson">REQUIRED </span>*
-        + String
-        + The email address to be used for login and the username for the account
-    2. **first_name** *<span style="color:crimson">REQUIRED </span>*
-        + String
-        + The user's given names ( first name + middle name *[if any]* ) as stated on their identity card
-    3. **last_name** *<span style="color:crimson">REQUIRED </span>*
-        + String
-        + The user's surname as stated on their identity card
-    4. **password** *<span style="color:crimson">REQUIRED </span>*
-        + String
-        + The password to be used for login
-    5. **password_confirmation** *<span style="color:crimson">REQUIRED </span>*
-        + String
-        + The password to be used for login (Verification point)
+    1. **user_id** *<span style="color:crimson">REQUIRED </span>*
+        + Integer
+        + The user id of the subject of the required token
+    2. **man_interval** *<span style="color:grey">OPTIONAL </span>*
+        + Integer
+        + Validity time interval of the token in seconds after the issuing of the token
+        + ```(0.5 hours ==) 1800 <= <man_interval> <= 86400 (== 24 hours)```
+        + If ```<man_interval>``` is blank, or ```<man_interval>``` is too big/small, the token will expire after 4 hours
+
    ####
    ###### Response
    **200: OK**
