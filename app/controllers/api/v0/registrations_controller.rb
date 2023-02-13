@@ -99,7 +99,7 @@ module Api
                     render status: 500, json: { "error": "Something went wrong while issuing your initial refresh token. Please try again later. If this error persists, we recommend to contact our support team." }
                   end
                 else # isis user already listed as active?
-                  render status: 403, json: { "account": [
+                  render status: 403, json: { "user": [
                     {
                       "error": "ERR_UNNECESSARY",
                       "description": "Attribute is already verified."
