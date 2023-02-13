@@ -753,6 +753,7 @@ RSpec.describe AuthenticationTokenService::Access::Decoder do
       end
     end
 
+
     @valid_inactive_users = User.all.where(activity_status: 0).to_a
 
     @valid_unknown_users = []

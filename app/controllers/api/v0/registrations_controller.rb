@@ -13,7 +13,7 @@ module Api
         @user = User.new(user_params)
         begin
           if @user.save
-            render status: 200, json: { "message": "Account registered! Please activate your account at GET http://localhost:3000/api/v0/user/verify " }
+            render status: 200, json: { "message": "Account registered! Please activate your account and claim your refresh token via GET http://localhost:3000/api/v0/user/verify " }
 
           else
             taken = false
@@ -89,32 +89,20 @@ module Api
                 ]
                 }
               else
-                if user.activity_status == 1
-                  render status: 403, json: { "system": [
-                    {
-                      "error": "ERR_BLOCKED",
-                      "description": "Proceeding is restricted"
-                    }
-                  ]
-                  }
-                elsif user.activity_status == 0
-                  user.update(activity_status: 1)
-                  if !user.errors.empty?
-                    raise
-                  else
-                    begin
-                      token = AuthenticationTokenService::Refresh::Encoder.call(user.id)
-                      render status: 200, json: { "refresh_token": token }
-                    rescue
-                      render status: 500, json: { "error": "Something went wrong while issuing your initial refresh token. Please try again later. If this error persists, we recommend to contact our support team." }
-                    end
+                user.update(activity_status: 1)
+                if !user.errors.empty?
+                  raise
+                else
+                  begin
+                    token = AuthenticationTokenService::Refresh::Encoder.call(user.id)
+                    render status: 200, json: { "refresh_token": token }
+                  rescue # because the code above checked all attributes, there should not be any exceptions. if there are something strange happened (or a bug)
+                    render status: 500, json: { "error": "Something went wrong while issuing your initial refresh token. Please try again later. If this error persists, we recommend to contact our support team." }
                   end
-
                 end
+
               end
 
-            rescue
-              render status: 500, json: { "error": "Please try again later. If this error persists, we recommend to contact our support team." }
             end
           end
 

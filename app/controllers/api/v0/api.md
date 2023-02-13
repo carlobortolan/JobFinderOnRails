@@ -1,4 +1,3 @@
-
 # Basic API documentation
 
 ***
@@ -14,8 +13,8 @@
 1. Register an user
    >  <span style="color:lawngreen"> POST </span> /user
    This creates user and account records. The created account is unverified an needs to be confirmed by the user.
-    ####
-    ###### Data parameters
+   ####
+   ###### Data parameters
     1. **email** *<span style="color:crimson">REQUIRED </span>*
         + String
         + The email address to be used for login and the username for the account
@@ -29,17 +28,17 @@
         + String
         + The password to be used for login
     5. **password_confirmation** *<span style="color:crimson">REQUIRED </span>*
-       + String
-       + The password to be used for login (Verification point)
-    ####
-    ###### Response
+        + String
+        + The password to be used for login (Verification point)
+   ####
+   ###### Response
    **200: OK**
     ```   
             {
-                "message": "Account registered! Please activate your account at GET http://localhost:3000/api/v0/user/verify "
+                "message": "Account registered! Please activate your account and claim your refresh token via GET http://localhost:3000/api/v0/user/verify "
             }
     ```
-    ####
+   ####
    **400: Bad request**
     ```   
             {
@@ -58,8 +57,8 @@
     + ``blank``: When the password attribute is blank
     + ``confirmation``: When password != password_confirmation
     + ``ERR_INVALID``: When a required attribute is malformed or unknown
-   ####   
-    **422: Unprocessable entity**
+   ####    
+   **422: Unprocessable entity**
     ```   
             {
                 "error": {
@@ -79,11 +78,13 @@
                 "error": "Please try again later. If this error persists, we recommend to contact our support team."
             }
     ```
-    ####
+   ####
+
 ***
-2. Verify user credentials <span style="color:yellow"> NOT IMPLEMENTED </span>
-    >  <span style="color:lawngreen"> GET </span> /user/verify
-   Test to make sure the Registration worked and to start the first session. (In future: See whether aut0 token works)
+
+2. Verify user credentials
+   >  <span style="color:lawngreen"> GET </span> /user/verify
+   Test to make sure the Registration worked and to claim the initial refresh token.
    ####
    ###### Data parameters
     1. **email** *<span style="color:crimson">REQUIRED </span>*
@@ -92,53 +93,23 @@
     2. **password** *<span style="color:crimson">REQUIRED </span>*
         + String
         + The password used for login
-    ###### Response
-   **200: OK** <span style="color:yellow"> (NOT IMPLEMENTED - ACHTUNG: hier ist Konzept wg. unpassender db -> schema für jeden user typ (0: privat, 1: privat+arbeitgeber, 2: firma + arbeitgeber )+ 1 gesamt directory; man brraucht die db integrationen und va tabellenrelationen wi z.b. bei locations, und es muss ein vorbau bzw. test implementierung von dem cv zeugs geben) </span>
+   ###### Response
+   **200: OK**
     ```   
             {
-                "id": 123,
-                "email": "john.doe@versuchundirrtum.com",
-                "created_at": "2023-01-01",
-                "updated_at": "2023-01-04",
-                "activity_status": 1,
-                "image_url": "https://storage.versuchundirrtum.com/img/user/dnliha3092jfon74839hf.jpg",
-                "user_type": 0,
-                "first_name": "John Robert",
-                "last_name": "Doe",
-                "birthdate": "2000-01-01",
-                "code_nationality": "US",
-                "location": {
-                                "code_country": "IT",
-                                "administrative_area": "VE",
-                                "sub_administrative_area": "",
-                                "locality": "Venezia",
-                                "postal_code": "30124",
-                                "address": "P.za San Marco, 57"
-                                "premise": "Caffè Florian",
-                                "latitude": 45.4337062,
-                                "longitude": 12.3353557
-                            },
-                "cv":         {
-                                "description": "",
-                                "rating_score": 0.0,
-                                "reviews": [],
-                                "last_activities": [],
-                                "tags": []
-                             }
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5"
             }
     ```
    ####
    **400: Bad request**
     ```   
             {
-                "error": {
-                    "email": [
-                        {
-                            "error": "ERR_INVALID",
-                            "description": "Attribute is malformed or unknown"
-                        }
-                    ]   
-                }       
+                "email": [
+                    {
+                        "error": "ERR_INVALID",
+                        "description": "Attribute is malformed or unknown"
+                    }
+                ]
             }
     ```
    You may expect the following errors:
@@ -159,18 +130,17 @@
             }
     ```
    ####
-    **403: Forbidden**
+   **403: Forbidden**
     ```   
-            {
-                "error": {
-                    "system": [
-                        {
-                            "error": "ERR_BLOCKED",
-                            "description": "Proceeding is restricted"
-                        }
-                    ]
-                }       
-            }
+         {
+            "user": [
+                {
+                    "error": "ERR_INACTIVE",
+                    "description": "Attribute is blocked."
+                }
+            ]
+                       
+        }
     ```
    ####
    **500: Internal Server Error**
