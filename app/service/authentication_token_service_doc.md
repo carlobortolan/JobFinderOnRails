@@ -2,7 +2,7 @@
 ####
 # <div style="text-align: center"><span style="color:crimson"> < CONFIDENTIAL >   < CONFIDENTIAL >  < CONFIDENTIAL ></span> </div>
 ####
-# Authentication Service INTERNAL Documentation
+# AuthenticationTokenService INTERNAL Documentation
 
 ***
 
@@ -49,8 +49,8 @@ The Authentication approach combines the benefits of long-term but weak refresh 
    ####
    ###### Return
     ```   
-    <refresh_token>
-    ``` 
+    "<refresh_token>"
+    ```
    ####
    ###### Exceptions
    ```
@@ -83,15 +83,13 @@ The Authentication approach combines the benefits of long-term but weak refresh 
 
    ####
    ###### Pipeline
-   First, the inputs are checked for correct formatting. Then the token gets decoded.:
-   Third, the token and its claims get verified.
+   First, the inputs are checked for correct formatting. Then ``<refresh_token>`` gets decoded.
+   Third, ``<refresh_token>`` and its claims get verified.
    ####
    ###### Return
     ```   
     [{<refresh_token_claims>}]
     ```
-    + Array
-
    ####
    ###### Exceptions
    ```
@@ -111,6 +109,92 @@ The Authentication approach combines the benefits of long-term but weak refresh 
     + ``::InvalidSubError``: When the owner of ``<refresh_token>`` is unknown
     + ``::VerificationError``: When ``<refresh_token>`` was encoded with an unknown secret key and/or was tampered with
     + ``::IncorrectAlgorithm``: When ``<refresh_token>`` was encoded using a unknown/incompatible algorithm
+   ####
+***
+### 3. Access token
+
+1. Claim an access token
+    ```   
+    AuthenticationTokenService::Access::Encoder.call(<refresh_token>)
+    ```
+   This creates an access token if a given refresh token is valid.
+   ####
+   ###### Data parameters
+    1. ``<refresh_token>`` *<span style="color:crimson">REQUIRED </span>*
+        + String
+        + ``<refresh_token>`` must be a JWT, solely issued by the ``AuthenticationTokenService::Refresh::Encoder`` class
+        + ``<refresh_token>`` must not be blocked (listed on ``AuthBlacklist``)
+
+   ####
+   ###### Pipeline
+   First, the inputs are checked for correct formatting. Then ``<refresh_token>`` gets decoded.
+   Third, ``<refresh_token>`` and its claims get verified. Finally an access token is generated based on the claims of ``<refresh_token>``:
+   + ``sub`` - who owns the token?:``<user_id>``
+   + ``exp`` - when does the token expire?: An access token is valid for 0.3333 hours (20 min)
+   + ``scp``*<span style="color:yellow">- specifies the access rights of the token:  </span>* 
+   + ``iss`` - who issued the token?: The name of the machine that issues this token
+   ####
+   ###### Return
+    ```   
+    "<access_token>"
+    ``` 
+   ####
+   ###### Exceptions
+   ```
+   AuthenticationTokenService::InvalidInput
+   ```
+   You should only expect the following subclasses:
+    + ``::Token``: When ``<refresh_token>`` is malformed
+   ####   
+     ```
+   JWT
+   ```
+   You should only expect the following subclasses:
+    + ``::ExpiredSignature``: When ``<refresh_token>`` has expired
+    + ``::InvalidIssuerError``: When ``<refresh_token>`` was issued by an unknown issuer
+    + ``::InvalidJtiError``: When ``<refresh_token>`` has a record on ``AuthBlacklist`` (the token is blocked)
+    + ``::InvalidIatError``: When ``<refresh_token>`` was timestamped incorrectly
+    + ``::InvalidSubError``: When the owner of ``<refresh_token>`` is unknown
+    + ``::VerificationError``: When ``<refresh_token>`` was encoded with an unknown secret key and/or was tampered with
+    + ``::IncorrectAlgorithm``: When ``<refresh_token>`` was encoded using a unknown/incompatible algorithm
+   ####
+***
+2. Decipher an access token
+    ```   
+    AuthenticationTokenService::Access::Decoder.call(<refresh_token>)
+    ```
+   This decodes an access token and returns its claims.
+   ####
+   ###### Data parameters
+    1. ``<access_token>`` *<span style="color:crimson">REQUIRED </span>*
+        + String
+        + ``<access_token>`` must be a JWT, solely issued by the ``AuthenticationTokenService::Access::Encoder`` class
+
+   ####
+   ###### Pipeline
+   First, the inputs are checked for correct formatting. Then ``<access_token>`` gets decoded.
+   Neither ``<access_token>`` nor its claimed get further verified.
+   ####
+   ###### Return
+    ```   
+    [{<access_token_claims>}]
+    ``` 
+   ####
+   ###### Exceptions
+   ```
+   AuthenticationTokenService::InvalidInput
+   ```
+   You should only expect the following subclasses:
+    + ``::Token``: When ``<access_token>`` is malformed
+   ####   
+     ```
+   JWT
+   ```
+   You should only expect the following subclasses:
+    + ``::ExpiredSignature``: When ``<access_token>`` has expired
+    + ``::InvalidIssuerError``: When ``<access_token>`` was issued by an unknown issuer
+    + ``::VerificationError``: When ``<access_token>`` was encoded with an unknown secret key and/or was tampered with
+    + ``::IncorrectAlgorithm``: When ``<access_token>`` was encoded using a unknown/incompatible algorithm
    ####
 ***
 ####

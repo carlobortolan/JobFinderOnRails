@@ -156,8 +156,8 @@ class AuthenticationTokenService
 
     class Encoder
       # Todo: Add Roles & Scope to the db (adapt from cb) & Update Specs accordingly
-      def self.call(token)
-        decoded_token = AuthenticationTokenService::Refresh::Decoder.call(token)[0]
+      def self.call(refresh_token)
+        decoded_token = AuthenticationTokenService::Refresh::Decoder.call(refresh_token)[0]
         sub = decoded_token["sub"] # who "owns" the token
         # ADD roles and scope after db mitigation
         # roles = ...
