@@ -485,7 +485,7 @@ RSpec.describe AuthenticationTokenService::Refresh::Decoder do
     context 'invalid input' do
       it 'throws exception' do
         @invalid_token.each do |fake_token|
-          expect { described_class.call(fake_token) }.to raise_error(AuthenticationTokenService::InvalidInput)
+          expect { described_class.call(fake_token) }.to raise_error(AuthenticationTokenService::InvalidInput::Token)
         end
       end
     end
@@ -699,7 +699,7 @@ RSpec.describe AuthenticationTokenService::Access::Encoder do
     context 'invalid input' do
       it 'throws exceptions' do
         @invalid_refresh_token.each do |fake_refresh_token|
-          expect { described_class.call(fake_refresh_token) }.to raise_error(AuthenticationTokenService::InvalidInput)
+          expect { described_class.call(fake_refresh_token) }.to raise_error(AuthenticationTokenService::InvalidInput::Token)
         end
       end
     end
@@ -895,7 +895,7 @@ RSpec.describe AuthenticationTokenService::Access::Decoder do
     context 'invalid input' do
       it 'throws exception' do
         @invalid_access_token.each do |fake_access_token|
-          expect { described_class.call(fake_access_token) }.to raise_error(AuthenticationTokenService::InvalidInput)
+          expect { described_class.call(fake_access_token) }.to raise_error(AuthenticationTokenService::InvalidInput::Token)
         end
       end
     end

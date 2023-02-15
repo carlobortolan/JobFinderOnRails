@@ -123,7 +123,7 @@ class AuthenticationTokenService
     class Decoder
       def self.call(token)
         if token.class != String || token.blank? # rough check whether
-          raise AuthenticationTokenService::InvalidInput
+          raise AuthenticationTokenService::InvalidInput::Token
 
         else
           return AuthenticationTokenService::Refresh.decode(token)
@@ -178,7 +178,7 @@ class AuthenticationTokenService
     class Decoder
       def self.call(token)
         if token.class != String || token.blank? # rough check whether input is malformed
-          raise AuthenticationTokenService::InvalidInput
+          raise AuthenticationTokenService::InvalidInput::Token
         else
           return AuthenticationTokenService::Access.decode(token)
         end
@@ -205,6 +205,9 @@ class AuthenticationTokenService
     end
 
     class CustomEXP < StandardError
+    end
+
+    class Token <StandardError
     end
 
   end

@@ -2,7 +2,7 @@
 ####
 # <div style="text-align: center"><span style="color:crimson"> < CONFIDENTIAL >   < CONFIDENTIAL >  < CONFIDENTIAL ></span> </div>
 ####
-# API Authentication Service INTERNAL Documentation
+# Authentication Service INTERNAL Documentation
 
 ***
 
@@ -22,168 +22,91 @@ The Authentication approach combines the benefits of long-term but weak refresh 
     ```   
     AuthenticationTokenService::Refresh::Encoder.call(<user_id>,[<man_interval>])
     ```
-   This creates a refresh token.
+   This creates a refresh token for a given user.
    ####
    ###### Data parameters
-    1. **user_id** *<span style="color:crimson">REQUIRED </span>*
+    1. ``<user_id>`` *<span style="color:crimson">REQUIRED </span>*
         + Integer
-        + The user id of the subject of the required token
-    2. **man_interval** *<span style="color:grey">OPTIONAL </span>*
+        + The user ``id`` of the subject of the token (``sub`` claim)
+        + A user to this ``id`` must exist
+        + The user to this ``id`` must be verified (``activity_status`` == 1)
+        + The user to this ``id`` must not be blocked (listed on ``UserBlacklist``)
+    2. ``<man_interval>`` *<span style="color:grey">OPTIONAL </span>*
         + Integer
-        + Validity time interval of the token in seconds after the issuing of the token
-        + ```(0.5 hours ==) 1800 <= <man_interval> <= 86400 (== 24 hours)```
+        + Validity time interval of the token in seconds after the issuing time of the token
+        + (0.5 hours ==) 1800 <= ``<man_interval>`` <= 86400 (== 24 hours)
         + If ```<man_interval>``` is blank, or ```<man_interval>``` is too big/small, the token will expire after 4 hours
 
    ####
-   ###### Response
-   **200: OK**
+   ###### Return
     ```   
-            {
-                "message": "Account registered! Please activate your account at GET http://localhost:3000/api/v0/user/verify "
-            }
+    <refresh_token>
     ```
+   First, the inputs are checked for correct formatting. Then the token claims are populated:
+   + ``sub`` - who owns the token?:``<user_id>``
+   + ``iat`` - when was the token issued?: An exact timestamp in seconds after 1am of the 01 01 1970
+   + ``exp`` - when does the token expire?: If ``<man_interval>`` is not given/blank => 4 hours from now; If ``<man_interval>`` is given: => (``<man_interval>`` divided by 3600) hours from now. If ``<man_interval>`` is in the required format, but ``<man_interval>`` is either smaller that 1800 or greater than 86400, ``exp`` is either set to the 0.5 hours or the 24 hours - what ever is closer to ``<man_interval>``
+   + ``jti`` - a unique identifier: A MD5 encoded, unique String
+   + ``iss`` - who issued the token?: The name of the machine that issues this token
+   
    ####
-   **400: Bad request**
-    ```   
-            {
-                "error": {
-                    "email": [
-                        {
-                            "error": "ERR_INVALID"",
-                            "description": "Attribute is malformed or unknown
-                        }
-                    ] 
-                }       
-            }
-    ```
-   You may expect the following errors:
-    + ``ERR_BLANK``: When a required attribute is blank
-    + ``blank``: When the password attribute is blank
-    + ``confirmation``: When password != password_confirmation
-    + ``ERR_INVALID``: When a required attribute is malformed or unknown
+   ###### Pipeline
+   + String
+
+   ####
+   ###### Exceptions
+   ```
+   AuthenticationTokenService::InvalidInput
+   ```
+   You should only expect the following subclasses:
+    + ``::SUB``: When ``<user_id>`` is malformed 
+    + ``::CustomEXP``: When ``<man_interval>`` is malformed
    ####   
-   **422: Unprocessable entity**
-    ```   
-            {
-                "error": {
-                    "email": [
-                        {
-                            "error": "ERR_TAKEN",
-                            "description": "Attribute is taken"
-                        }
-                    ]   
-                }       
-            }
-    ```
-   ####
-   **500: Internal Server Error**
-    ```   
-            {
-                "error": "Please try again later. If this error persists, we recommend to contact our support team."
-            }
-    ```
+     ```
+   AuthenticationTokenService::InvalidUser
+   ```
+   You should only expect the following subclasses:
+    + ``::Unkown``: When there is no user for ``<user_id>`` 
+    + ``::Inactive::NotVerified``: When the user for ``<user_id>`` is not verified (``activity_status`` == 0)
+    + ``::Inactive::Blocked``: When the user for ``<user_id>`` has a record on ``UserBlacklist``
    ####
 ***
-2. Verify user credentials <span style="color:yellow"> NOT IMPLEMENTED </span>
-   >  <span style="color:lawngreen"> GET </span> /user/verify
-   Test to make sure the Registration worked and to start the first session. (In future: See whether aut0 token works)
+2. Decipher a refresh token
+   ```   
+    AuthenticationTokenService::Refresh::Decoder.call(<token>)
+    ```
+   This decodes a refresh token and returns its claims.
    ####
    ###### Data parameters
-    1. **email** *<span style="color:crimson">REQUIRED </span>*
+    1. ``<token>`` *<span style="color:crimson">REQUIRED </span>*
         + String
-        + The email address used for login
-    2. **password** *<span style="color:crimson">REQUIRED </span>*
-        + String
-        + The password used for login
-   ###### Response
-   **200: OK** <span style="color:yellow"> (NOT IMPLEMENTED - ACHTUNG: hier ist Konzept wg. unpassender db -> schema für jeden user typ (0: privat, 1: privat+arbeitgeber, 2: firma + arbeitgeber )+ 1 gesamt directory; man brraucht die db integrationen und va tabellenrelationen wi z.b. bei locations, und es muss ein vorbau bzw. test implementierung von dem cv zeugs geben) </span>
-    ```   
-            {
-                "id": 123,
-                "email": "john.doe@versuchundirrtum.com",
-                "created_at": "2023-01-01",
-                "updated_at": "2023-01-04",
-                "activity_status": 1,
-                "image_url": "https://storage.versuchundirrtum.com/img/user/dnliha3092jfon74839hf.jpg",
-                "user_type": 0,
-                "first_name": "John Robert",
-                "last_name": "Doe",
-                "birthdate": "2000-01-01",
-                "code_nationality": "US",
-                "location": {
-                                "code_country": "IT",
-                                "administrative_area": "VE",
-                                "sub_administrative_area": "",
-                                "locality": "Venezia",
-                                "postal_code": "30124",
-                                "address": "P.za San Marco, 57"
-                                "premise": "Caffè Florian",
-                                "latitude": 45.4337062,
-                                "longitude": 12.3353557
-                            },
-                "cv":         {
-                                "description": "",
-                                "rating_score": 0.0,
-                                "reviews": [],
-                                "last_activities": [],
-                                "tags": []
-                             }
-            }
-    ```
-   ####
-   **400: Bad request**
-    ```   
-            {
-                "error": {
-                    "email": [
-                        {
-                            "error": "ERR_INVALID",
-                            "description": "Attribute is malformed or unknown"
-                        }
-                    ]   
-                }       
-            }
-    ```
-   You may expect the following errors:
-    + ``ERR_BLANK``: When a required attribute is blank
-    + ``ERR_DISABLED``: The login for the given credentials is disabled
-    + ``ERR_INVALID``: When the given attribute is malformed or unknown
-   ####
-   **401: Unauthorized**
-    ```   
-            {
-                    "password": [
-                        {
-                            "error": "ERR_INVALID",
-                            "description": "Attribute is malformed or unknown"
-                        }
-                    ]   
-                }       
-            }
-    ```
-   ####
-   **403: Forbidden**
-    ```   
-            {
-                "error": {
-                    "system": [
-                        {
-                            "error": "ERR_BLOCKED",
-                            "description": "Proceeding is restricted"
-                        }
-                    ]
-                }       
-            }
-    ```
-   ####
-   **500: Internal Server Error**
-    ```   
-            {
-                "error": "Please try again later. If this error persists, we recommend to contact our support team"
-            }
-    ```
-   ####
+        + ``<refresh_token>`` must be a JWT, solely issued by the ``AuthenticationTokenService::Refresh::Encoder`` class
+        + ``<refresh_token>`` must not be blocked (listed on ``AuthBlacklist``)
 
+   ####
+   ###### Return
+    ```   
+    <refresh_token_claims>
+    ```
+    + //?//
+
+   ####
+   ###### Exceptions
+   ```
+   AuthenticationTokenService::InvalidInput
+   ```
+   You should only expect the following subclasses:
+    + ``::SUB``: When ``<user_id>`` is malformed
+    + ``::CustomEXP``: When ``<man_interval>`` is malformed
+   ####   
+     ```
+   AuthenticationTokenService::InvalidUser
+   ```
+   You should only expect the following subclasses:
+    + ``::Unkown``: When there is no user for ``<user_id>``
+    + ``::Inactive::NotVerified``: When the user for ``<user_id>`` is not verified (``activity_status`` == 0)
+    + ``::Inactive::Blocked``: When the user for ``<user_id>`` has a record on ``UserBlacklist``
+   ####
 ***
 ####
 
