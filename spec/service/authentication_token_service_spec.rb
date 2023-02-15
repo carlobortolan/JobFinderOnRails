@@ -91,7 +91,7 @@ RSpec.describe AuthenticationTokenService::Refresh::Encoder do
       end
       it 'does not throw exceptions with a manual interval parameter given' do
         @valid_normal_inputs.each do |user|
-          man_interval = (1800..86400).to_a.sample
+          man_interval = (1800..1209600).to_a.sample
           expect {
             described_class.call(user.id, man_interval)
           }.not_to raise_error
@@ -105,7 +105,7 @@ RSpec.describe AuthenticationTokenService::Refresh::Encoder do
       end
       it 'returns a string with a manual interval parameter given' do
         @valid_normal_inputs.each do |user|
-          man_interval = (1800..86400).to_a.sample
+          man_interval = (1800..1209600).to_a.sample
           expect(described_class.call(user.id, man_interval)).to be_a String
         end
       end
@@ -141,7 +141,7 @@ RSpec.describe AuthenticationTokenService::Refresh::Encoder do
           if alt.negative?
             man_interval = (1..1799).to_a.sample
           else
-            man_interval = (86401..88000).to_a.sample
+            man_interval = (1209601..3000000).to_a.sample
           end
           alt = alt * (-1)
           expect(described_class.call(user.id, man_interval)).to be_a String
@@ -348,7 +348,7 @@ RSpec.describe AuthenticationTokenService::Refresh::Decoder do
       it 'sets man_interval to the highest possible value' do
         @valid_normal_inputs.each do |user|
           # the requested exp expiration interval is to long; it should set the token exp to the highest possible value (MIN_INTERVAL)
-          man_interval = (86401..88000).to_a.sample
+          man_interval = (1209601..3000000).to_a.sample
           token = AuthenticationTokenService::Refresh::Encoder.call(user.id, man_interval)
           decode = described_class.call(token)
           expect(decode[0]["exp"].to_i - decode[0]["iat"].to_i).to eq(AuthenticationTokenService::Refresh::Encoder::MAX_INTERVAL)

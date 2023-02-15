@@ -34,7 +34,7 @@ The Authentication approach combines the benefits of long-term but weak refresh 
     2. ``<man_interval>`` *<span style="color:grey">OPTIONAL </span>*
         + Integer
         + Validity time interval of the token in seconds after the issuing time of the token
-        + (0.5 hours ==) 1800 <= ``<man_interval>`` <= 86400 (== 24 hours)
+        + (0.5 hours ==) 1800 <= ``<man_interval>`` <= 1209600 (== 336 hours == 2 weeks)
         + If ```<man_interval>``` is blank, or ```<man_interval>``` is too big/small, the token will expire after 4 hours
 
    ####
@@ -42,7 +42,7 @@ The Authentication approach combines the benefits of long-term but weak refresh 
    First, the inputs are checked for correct formatting. Then the token claims are populated:
    + ``sub`` - who owns the token?:``<user_id>``
    + ``iat`` - when was the token issued?: An exact timestamp in seconds after 1am of the 01 01 1970
-   + ``exp`` - when does the token expire?: If ``<man_interval>`` is not given/blank => 4 hours from now; If ``<man_interval>`` is given: => (``<man_interval>`` divided by 3600) hours from now. If ``<man_interval>`` is in the required format, but ``<man_interval>`` is either smaller that 1800 or greater than 86400, ``exp`` is either set to the 0.5 hours or the 24 hours - what ever is closer to ``<man_interval>``
+   + ``exp`` - when does the token expire?: If ``<man_interval>`` is not given/blank => 4 hours from now; If ``<man_interval>`` is given: => (``<man_interval>`` divided by 3600) hours from now. If ``<man_interval>`` is in the required format, but ``<man_interval>`` is either smaller that 1800 or greater than 1209600, ``exp`` is either set to the 0.5 hours or the 336 hours/2 weeks - what ever is closer to ``<man_interval>``
    + ``jti`` - a unique identifier: A MD5 encoded, unique String
    + ``iss`` - who issued the token?: The name of the machine that issues this token
    The claims get wrapped in a hash (payload) and this hash is given to teh JWT.encode method, which encodes the claims ito a JWT token using the HS256 algorithm and a secret key.

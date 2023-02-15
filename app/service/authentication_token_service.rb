@@ -69,7 +69,7 @@ class AuthenticationTokenService
     end
 =end
     class Encoder # helper class for token generation
-      MAX_INTERVAL = 86400 # == 24 hours
+      MAX_INTERVAL = 1209600 # == 336 hours == 2 weeks
       MIN_INTERVAL = 1800 # == 0.5 hours == 30 min
       def self.call(user_id, man_interval = nil)
         if user_id.class != Integer || !user_id.positive? # is user_id parameter not an integer?
