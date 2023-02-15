@@ -37,8 +37,8 @@ Rails.application.routes.draw do
     namespace :v0 do
       post 'user', to: 'registrations#create'
       get 'user/verify', to: 'registrations#verify'
-      post 'user/auth/token', to: 'authentications#create_refresh'
-      get 'user/auth/token', to: 'authentications#create_access'
+      post 'user/auth/token/refresh', to: 'authentications#create_refresh'
+      post 'user/auth/token/access', to: 'authentications#create_access'
 
 
     end
