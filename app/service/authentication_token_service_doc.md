@@ -161,7 +161,7 @@ The Authentication approach combines the benefits of long-term but weak refresh 
 ***
 2. Decipher an access token
     ```   
-    AuthenticationTokenService::Access::Decoder.call(<refresh_token>)
+    AuthenticationTokenService::Access::Decoder.call(<access_token>)
     ```
    This decodes an access token and returns its claims.
    ####
