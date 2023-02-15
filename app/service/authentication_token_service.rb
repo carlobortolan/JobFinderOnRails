@@ -130,14 +130,6 @@ class AuthenticationTokenService
 
         end
       end
-      def self.valid?(token)
-        begin
-          self.call(token)
-          return true
-        rescue
-          return false
-        end
-      end
     end
   end
 
@@ -184,14 +176,6 @@ class AuthenticationTokenService
         end
       end
 
-      def self.valid?(token)
-        begin
-          self.call(token)
-          return true
-        rescue
-          return false
-        end
-      end
     end
 
   end
@@ -207,7 +191,7 @@ class AuthenticationTokenService
     class CustomEXP < StandardError
     end
 
-    class Token <StandardError
+    class Token < StandardError
     end
 
   end
