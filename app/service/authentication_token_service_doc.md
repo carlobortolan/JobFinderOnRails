@@ -38,21 +38,19 @@ The Authentication approach combines the benefits of long-term but weak refresh 
         + If ```<man_interval>``` is blank, or ```<man_interval>``` is too big/small, the token will expire after 4 hours
 
    ####
-   ###### Return
-    ```   
-    <refresh_token>
-    ```
+   ###### Pipeline
    First, the inputs are checked for correct formatting. Then the token claims are populated:
    + ``sub`` - who owns the token?:``<user_id>``
    + ``iat`` - when was the token issued?: An exact timestamp in seconds after 1am of the 01 01 1970
    + ``exp`` - when does the token expire?: If ``<man_interval>`` is not given/blank => 4 hours from now; If ``<man_interval>`` is given: => (``<man_interval>`` divided by 3600) hours from now. If ``<man_interval>`` is in the required format, but ``<man_interval>`` is either smaller that 1800 or greater than 86400, ``exp`` is either set to the 0.5 hours or the 24 hours - what ever is closer to ``<man_interval>``
    + ``jti`` - a unique identifier: A MD5 encoded, unique String
    + ``iss`` - who issued the token?: The name of the machine that issues this token
-   
+   The claims get wrapped in a hash (payload) and this hash is given to teh JWT.encode method, which encodes the claims ito a JWT token using the HS256 algorithm and a secret key.
    ####
-   ###### Pipeline
-   + String
-
+   ###### Return
+    ```   
+    <refresh_token>
+    ``` 
    ####
    ###### Exceptions
    ```
@@ -62,7 +60,7 @@ The Authentication approach combines the benefits of long-term but weak refresh 
     + ``::SUB``: When ``<user_id>`` is malformed 
     + ``::CustomEXP``: When ``<man_interval>`` is malformed
    ####   
-     ```
+   ```
    AuthenticationTokenService::InvalidUser
    ```
    You should only expect the following subclasses:
@@ -84,11 +82,15 @@ The Authentication approach combines the benefits of long-term but weak refresh 
         + ``<refresh_token>`` must not be blocked (listed on ``AuthBlacklist``)
 
    ####
+   ###### Pipeline
+   First, the inputs are checked for correct formatting. Then the token gets decoded.:
+   Third, the token and its claims get verified.
+   ####
    ###### Return
     ```   
-    <refresh_token_claims>
+    [{<refresh_token_claims>}]
     ```
-    + //?//
+    + Array
 
    ####
    ###### Exceptions
@@ -96,16 +98,19 @@ The Authentication approach combines the benefits of long-term but weak refresh 
    AuthenticationTokenService::InvalidInput
    ```
    You should only expect the following subclasses:
-    + ``::SUB``: When ``<user_id>`` is malformed
-    + ``::CustomEXP``: When ``<man_interval>`` is malformed
+    + ``::Token``: When ``<refresh_token>`` is malformed
    ####   
      ```
-   AuthenticationTokenService::InvalidUser
+   JWT
    ```
    You should only expect the following subclasses:
-    + ``::Unkown``: When there is no user for ``<user_id>``
-    + ``::Inactive::NotVerified``: When the user for ``<user_id>`` is not verified (``activity_status`` == 0)
-    + ``::Inactive::Blocked``: When the user for ``<user_id>`` has a record on ``UserBlacklist``
+    + ``::ExpiredSignature``: When ``<refresh_token>`` has expired
+    + ``::InvalidIssuerError``: When ``<refresh_token>`` was issued by an unknown issuer
+    + ``::InvalidJtiError``: When ``<refresh_token>`` has a record on ``AuthBlacklist`` (the token is blocked)
+    + ``::InvalidIatError``: When ``<refresh_token>`` was timestamped incorrectly
+    + ``::InvalidSubError``: When the owner of ``<refresh_token>`` is unknown
+    + ``::VerificationError``: When ``<refresh_token>`` was encoded with an unknown secret key and/or was tampered with
+    + ``::IncorrectAlgorithm``: When ``<refresh_token>`` was encoded using a unknown/incompatible algorithm
    ####
 ***
 ####
