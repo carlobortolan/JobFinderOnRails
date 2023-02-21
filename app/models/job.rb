@@ -2,7 +2,7 @@ class Job < ApplicationRecord
   include Visible
   has_many :applications, dependent: :delete_all
   has_many :notifications, dependent: :delete_all
-  # has_one :location
+  belongs_to :user
   validates :title, presence: true
   validates :description, presence: true, length: { minimum: 10 }
   validates :start_slot, presence: true

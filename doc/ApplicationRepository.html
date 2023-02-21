@@ -144,7 +144,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#change_status-instance_method" title="#change_status (instance method)">#<strong>change_status</strong>(job_id, account_id, new_status, response)  &#x21d2; Object </a>
+      <a href="#change_status-instance_method" title="#change_status (instance method)">#<strong>change_status</strong>(job_id, id, new_status, response)  &#x21d2; Object </a>
     
 
     
@@ -166,7 +166,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#create_application-instance_method" title="#create_application (instance method)">#<strong>create_application</strong>(job_id, account_id, text, documents)  &#x21d2; Object </a>
+      <a href="#create_application-instance_method" title="#create_application (instance method)">#<strong>create_application</strong>(job_id, id, text, documents)  &#x21d2; Object </a>
     
 
     
@@ -188,7 +188,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#find_account-instance_method" title="#find_account (instance method)">#<strong>find_account</strong>(account_id)  &#x21d2; Object </a>
+      <a href="#find_by_user-instance_method" title="#find_by_user (instance method)">#<strong>find_by_user</strong>(id)  &#x21d2; Object </a>
     
 
     
@@ -211,6 +211,28 @@
   <span class="summary_signature">
     
       <a href="#find_employer_id-instance_method" title="#find_employer_id (instance method)">#<strong>find_employer_id</strong>(job_id)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#find_user-instance_method" title="#find_user (instance method)">#<strong>find_user</strong>(id)  &#x21d2; Object </a>
     
 
     
@@ -353,7 +375,7 @@
       <div class="method_details first">
   <h3 class="signature first" id="change_status-instance_method">
   
-    #<strong>change_status</strong>(job_id, account_id, new_status, response)  &#x21d2; <tt>Object</tt> 
+    #<strong>change_status</strong>(job_id, id, new_status, response)  &#x21d2; <tt>Object</tt> 
   
 
   
@@ -379,12 +401,12 @@
     <td>
       <pre class="code"><span class="info file"># File 'app/repository/application_repository.rb', line 60</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_change_status'>change_status</span> <span class='lparen'>(</span><span class='id identifier rubyid_job_id'>job_id</span><span class='comma'>,</span> <span class='id identifier rubyid_account_id'>account_id</span><span class='comma'>,</span> <span class='id identifier rubyid_new_status'>new_status</span><span class='comma'>,</span> <span class='id identifier rubyid_response'>response</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_change_status'>change_status</span> <span class='lparen'>(</span><span class='id identifier rubyid_job_id'>job_id</span><span class='comma'>,</span> <span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_new_status'>new_status</span><span class='comma'>,</span> <span class='id identifier rubyid_response'>response</span><span class='rparen'>)</span>
   <span class='comment'># change status to -1/0/1;
 </span>  <span class='comment'># add response
-</span>  <span class='id identifier rubyid_query'>query</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>UPDATE applications SET status = &#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_new_status'>new_status</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;, response = &#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_response'>response</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39; WHERE job_id = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_job_id'>job_id</span><span class='embexpr_end'>}</span><span class='tstring_content'> AND applicant_id = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_account_id'>account_id</span> <span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+</span>  <span class='id identifier rubyid_query'>query</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>UPDATE applications SET status = &#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_new_status'>new_status</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;, response = &#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_response'>response</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39; WHERE job_id = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_job_id'>job_id</span><span class='embexpr_end'>}</span><span class='tstring_content'> AND applicant_id = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_id'>id</span> <span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
   <span class='id identifier rubyid_binds'>binds</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='const'>ActiveRecord</span><span class='op'>::</span><span class='const'>Relation</span><span class='op'>::</span><span class='const'>QueryAttribute</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>job_id</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_job_id'>job_id</span><span class='comma'>,</span> <span class='const'>ActiveRecord</span><span class='op'>::</span><span class='const'>Type</span><span class='op'>::</span><span class='const'>Integer</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='rparen'>)</span><span class='comma'>,</span>
-           <span class='const'>ActiveRecord</span><span class='op'>::</span><span class='const'>Relation</span><span class='op'>::</span><span class='const'>QueryAttribute</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>account_id</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_account_id'>account_id</span><span class='comma'>,</span> <span class='const'>ActiveRecord</span><span class='op'>::</span><span class='const'>Type</span><span class='op'>::</span><span class='const'>Integer</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='rparen'>)</span><span class='comma'>,</span>
+           <span class='const'>ActiveRecord</span><span class='op'>::</span><span class='const'>Relation</span><span class='op'>::</span><span class='const'>QueryAttribute</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>id</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='const'>ActiveRecord</span><span class='op'>::</span><span class='const'>Type</span><span class='op'>::</span><span class='const'>Integer</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='rparen'>)</span><span class='comma'>,</span>
            <span class='const'>ActiveRecord</span><span class='op'>::</span><span class='const'>Relation</span><span class='op'>::</span><span class='const'>QueryAttribute</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>new_status</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_new_status'>new_status</span><span class='comma'>,</span> <span class='const'>ActiveRecord</span><span class='op'>::</span><span class='const'>Type</span><span class='op'>::</span><span class='const'>String</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='rparen'>)</span><span class='comma'>,</span>
            <span class='const'>ActiveRecord</span><span class='op'>::</span><span class='const'>Relation</span><span class='op'>::</span><span class='const'>QueryAttribute</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>response</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_response'>response</span><span class='comma'>,</span> <span class='const'>ActiveRecord</span><span class='op'>::</span><span class='const'>Type</span><span class='op'>::</span><span class='const'>String</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='rparen'>)</span><span class='rbracket'>]</span>
   <span class='const'><span class='object_link'><a href="ApplicationRecord.html" title="ApplicationRecord (class)">ApplicationRecord</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connection'>connection</span><span class='period'>.</span><span class='id identifier rubyid_exec_query'>exec_query</span><span class='lparen'>(</span><span class='id identifier rubyid_query'>query</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>SQL</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_binds'>binds</span><span class='comma'>,</span> <span class='label'>prepare:</span> <span class='kw'>true</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_rows'>rows</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span>
@@ -397,7 +419,7 @@
       <div class="method_details ">
   <h3 class="signature " id="create_application-instance_method">
   
-    #<strong>create_application</strong>(job_id, account_id, text, documents)  &#x21d2; <tt>Object</tt> 
+    #<strong>create_application</strong>(job_id, id, text, documents)  &#x21d2; <tt>Object</tt> 
   
 
   
@@ -422,11 +444,11 @@
     <td>
       <pre class="code"><span class="info file"># File 'app/repository/application_repository.rb', line 50</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_create_application'>create_application</span> <span class='lparen'>(</span><span class='id identifier rubyid_job_id'>job_id</span><span class='comma'>,</span> <span class='id identifier rubyid_account_id'>account_id</span><span class='comma'>,</span> <span class='id identifier rubyid_text'>text</span><span class='comma'>,</span> <span class='id identifier rubyid_documents'>documents</span><span class='rparen'>)</span>
-  <span class='comment'># create new application as Application: {(job_id, user_id), text, status, response}
-</span>  <span class='id identifier rubyid_query'>query</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>INSERT INTO applications(job_id, applicant_id, application_text, application_documents) VALUES (</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_job_id'>job_id</span><span class='embexpr_end'>}</span><span class='tstring_content'>, </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_account_id'>account_id</span><span class='embexpr_end'>}</span><span class='tstring_content'>, &#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_text'>text</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;, &#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_documents'>documents</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;)</span><span class='tstring_end'>&quot;</span></span>
+<span class='kw'>def</span> <span class='id identifier rubyid_create_application'>create_application</span> <span class='lparen'>(</span><span class='id identifier rubyid_job_id'>job_id</span><span class='comma'>,</span> <span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_text'>text</span><span class='comma'>,</span> <span class='id identifier rubyid_documents'>documents</span><span class='rparen'>)</span>
+  <span class='comment'># create new application as Application: {(job_id, id), text, status, response}
+</span>  <span class='id identifier rubyid_query'>query</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>INSERT INTO applications(job_id, applicant_id, application_text, application_documents) VALUES (</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_job_id'>job_id</span><span class='embexpr_end'>}</span><span class='tstring_content'>, </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_id'>id</span><span class='embexpr_end'>}</span><span class='tstring_content'>, &#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_text'>text</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;, &#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_documents'>documents</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;)</span><span class='tstring_end'>&quot;</span></span>
   <span class='id identifier rubyid_binds'>binds</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='const'>ActiveRecord</span><span class='op'>::</span><span class='const'>Relation</span><span class='op'>::</span><span class='const'>QueryAttribute</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>job_id</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_job_id'>job_id</span><span class='comma'>,</span> <span class='const'>ActiveRecord</span><span class='op'>::</span><span class='const'>Type</span><span class='op'>::</span><span class='const'>Integer</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='rparen'>)</span><span class='comma'>,</span>
-           <span class='const'>ActiveRecord</span><span class='op'>::</span><span class='const'>Relation</span><span class='op'>::</span><span class='const'>QueryAttribute</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>account_id</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_account_id'>account_id</span><span class='comma'>,</span> <span class='const'>ActiveRecord</span><span class='op'>::</span><span class='const'>Type</span><span class='op'>::</span><span class='const'>Integer</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='rparen'>)</span><span class='comma'>,</span>
+           <span class='const'>ActiveRecord</span><span class='op'>::</span><span class='const'>Relation</span><span class='op'>::</span><span class='const'>QueryAttribute</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>id</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='const'>ActiveRecord</span><span class='op'>::</span><span class='const'>Type</span><span class='op'>::</span><span class='const'>Integer</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='rparen'>)</span><span class='comma'>,</span>
            <span class='const'>ActiveRecord</span><span class='op'>::</span><span class='const'>Relation</span><span class='op'>::</span><span class='const'>QueryAttribute</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>text</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_text'>text</span><span class='comma'>,</span> <span class='const'>ActiveRecord</span><span class='op'>::</span><span class='const'>Type</span><span class='op'>::</span><span class='const'>Text</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='rparen'>)</span><span class='comma'>,</span>
            <span class='const'>ActiveRecord</span><span class='op'>::</span><span class='const'>Relation</span><span class='op'>::</span><span class='const'>QueryAttribute</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>documents</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_documents'>documents</span><span class='comma'>,</span> <span class='const'>ActiveRecord</span><span class='op'>::</span><span class='const'>Type</span><span class='op'>::</span><span class='const'>String</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='rparen'>)</span><span class='rbracket'>]</span>
   <span class='const'><span class='object_link'><a href="ApplicationRecord.html" title="ApplicationRecord (class)">ApplicationRecord</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connection'>connection</span><span class='period'>.</span><span class='id identifier rubyid_exec_query'>exec_query</span><span class='lparen'>(</span><span class='id identifier rubyid_query'>query</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>SQL</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_binds'>binds</span><span class='comma'>,</span> <span class='label'>prepare:</span> <span class='kw'>true</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_rows'>rows</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span>
@@ -437,9 +459,9 @@
 </div>
     
       <div class="method_details ">
-  <h3 class="signature " id="find_account-instance_method">
+  <h3 class="signature " id="find_by_user-instance_method">
   
-    #<strong>find_account</strong>(account_id)  &#x21d2; <tt>Object</tt> 
+    #<strong>find_by_user</strong>(id)  &#x21d2; <tt>Object</tt> 
   
 
   
@@ -451,21 +473,19 @@
       <pre class="lines">
 
 
-37
-38
-39
-40
-41
-42</pre>
+82
+83
+84
+85
+86</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/repository/application_repository.rb', line 37</span>
+      <pre class="code"><span class="info file"># File 'app/repository/application_repository.rb', line 82</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_find_account'>find_account</span><span class='lparen'>(</span><span class='id identifier rubyid_account_id'>account_id</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_query'>query</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>SELECT account_id, first_name, last_name, email FROM accounts WHERE account_id = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_account_id'>account_id</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
-  <span class='id identifier rubyid_binds'>binds</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='const'>ActiveRecord</span><span class='op'>::</span><span class='const'>Relation</span><span class='op'>::</span><span class='const'>QueryAttribute</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>account_id</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_account_id'>account_id</span><span class='comma'>,</span> <span class='const'>ActiveRecord</span><span class='op'>::</span><span class='const'>Type</span><span class='op'>::</span><span class='const'>Integer</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='rparen'>)</span><span class='rbracket'>]</span>
-  <span class='id identifier rubyid_result'>result</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="ApplicationRecord.html" title="ApplicationRecord (class)">ApplicationRecord</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connection'>connection</span><span class='period'>.</span><span class='id identifier rubyid_exec_query'>exec_query</span><span class='lparen'>(</span><span class='id identifier rubyid_query'>query</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>SQL</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_binds'>binds</span><span class='comma'>,</span> <span class='label'>prepare:</span> <span class='kw'>true</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_rows'>rows</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span>
-  <span class='lbrace'>{</span> <span class='symbol'>:name</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_result'>result</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='period'>.</span><span class='id identifier rubyid_concat'>concat</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'> </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_result'>result</span><span class='lbracket'>[</span><span class='int'>2</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='comma'>,</span> <span class='symbol'>:email</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_result'>result</span><span class='lbracket'>[</span><span class='int'>3</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span> <span class='rbrace'>}</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_find_by_user'>find_by_user</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_query'>query</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>SELECT * FROM applications WHERE applicant_id = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_id'>id</span><span class='embexpr_end'>}</span><span class='tstring_content'> ORDER BY applied_at DESC</span><span class='tstring_end'>&quot;</span></span>
+  <span class='id identifier rubyid_binds'>binds</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='const'>ActiveRecord</span><span class='op'>::</span><span class='const'>Relation</span><span class='op'>::</span><span class='const'>QueryAttribute</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>id</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='const'>ActiveRecord</span><span class='op'>::</span><span class='const'>Type</span><span class='op'>::</span><span class='const'>Integer</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='rparen'>)</span><span class='rbracket'>]</span>
+  <span class='const'><span class='object_link'><a href="ApplicationRecord.html" title="ApplicationRecord (class)">ApplicationRecord</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connection'>connection</span><span class='period'>.</span><span class='id identifier rubyid_exec_query'>exec_query</span><span class='lparen'>(</span><span class='id identifier rubyid_query'>query</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>SQL</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_binds'>binds</span><span class='comma'>,</span> <span class='label'>prepare:</span> <span class='kw'>true</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_rows'>rows</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -497,9 +517,45 @@
       <pre class="code"><span class="info file"># File 'app/repository/application_repository.rb', line 31</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_find_employer_id'>find_employer_id</span> <span class='lparen'>(</span><span class='id identifier rubyid_job_id'>job_id</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_query'>query</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>SELECT account_id FROM jobs WHERE job_id = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_job_id'>job_id</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+  <span class='id identifier rubyid_query'>query</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>SELECT id FROM jobs WHERE job_id = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_job_id'>job_id</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
   <span class='id identifier rubyid_binds'>binds</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='const'>ActiveRecord</span><span class='op'>::</span><span class='const'>Relation</span><span class='op'>::</span><span class='const'>QueryAttribute</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>job_id</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_job_id'>job_id</span><span class='comma'>,</span> <span class='const'>ActiveRecord</span><span class='op'>::</span><span class='const'>Type</span><span class='op'>::</span><span class='const'>Integer</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='rparen'>)</span><span class='rbracket'>]</span>
   <span class='const'><span class='object_link'><a href="ApplicationRecord.html" title="ApplicationRecord (class)">ApplicationRecord</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connection'>connection</span><span class='period'>.</span><span class='id identifier rubyid_exec_query'>exec_query</span><span class='lparen'>(</span><span class='id identifier rubyid_query'>query</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>SQL</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_binds'>binds</span><span class='comma'>,</span> <span class='label'>prepare:</span> <span class='kw'>true</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_rows'>rows</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="find_user-instance_method">
+  
+    #<strong>find_user</strong>(id)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+37
+38
+39
+40
+41
+42</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/repository/application_repository.rb', line 37</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_find_user'>find_user</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_query'>query</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>SELECT id, first_name, last_name, email FROM users WHERE id = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_id'>id</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+  <span class='id identifier rubyid_binds'>binds</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='const'>ActiveRecord</span><span class='op'>::</span><span class='const'>Relation</span><span class='op'>::</span><span class='const'>QueryAttribute</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>id</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='const'>ActiveRecord</span><span class='op'>::</span><span class='const'>Type</span><span class='op'>::</span><span class='const'>Integer</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='rparen'>)</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_result'>result</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="ApplicationRecord.html" title="ApplicationRecord (class)">ApplicationRecord</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connection'>connection</span><span class='period'>.</span><span class='id identifier rubyid_exec_query'>exec_query</span><span class='lparen'>(</span><span class='id identifier rubyid_query'>query</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>SQL</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_binds'>binds</span><span class='comma'>,</span> <span class='label'>prepare:</span> <span class='kw'>true</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_rows'>rows</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span>
+  <span class='lbrace'>{</span> <span class='symbol'>:name</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_result'>result</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='period'>.</span><span class='id identifier rubyid_concat'>concat</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'> </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_result'>result</span><span class='lbracket'>[</span><span class='int'>2</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='comma'>,</span> <span class='symbol'>:email</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_result'>result</span><span class='lbracket'>[</span><span class='int'>3</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span> <span class='rbrace'>}</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -720,7 +776,7 @@
 </div>
 
       <div id="footer">
-  Generated on Fri Dec 23 22:39:28 2022 by
+  Generated on Tue Jan  3 13:27:55 2023 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.28 (ruby-2.7.5).
 </div>

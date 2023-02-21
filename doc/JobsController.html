@@ -248,7 +248,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>A new instance of JobsController.</p>
+<p>http_basic_authenticate_with name: “cb”, password: “1”, except: [:index, :show].</p>
 </div></span>
   
 </li>
@@ -258,6 +258,28 @@
   <span class="summary_signature">
     
       <a href="#new-instance_method" title="#new (instance method)">#<strong>new</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#own_jobs-instance_method" title="#own_jobs (instance method)">#<strong>own_jobs</strong>  &#x21d2; Object </a>
     
 
     
@@ -352,6 +374,11 @@
   
   
   
+  
+  
+  <h3 class="inherited">Methods inherited from <span class='object_link'><a href="ApplicationController.html" title="ApplicationController (class)">ApplicationController</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="ApplicationController.html#require_user_be_owner!-instance_method" title="ApplicationController#require_user_be_owner! (method)">#require_user_be_owner!</a></span>, <span class='object_link'><a href="ApplicationController.html#require_user_logged_in!-instance_method" title="ApplicationController#require_user_logged_in! (method)">#require_user_logged_in!</a></span>, <span class='object_link'><a href="ApplicationController.html#set_current_user-instance_method" title="ApplicationController#set_current_user (method)">#set_current_user</a></span></p>
+
   <div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
@@ -367,7 +394,7 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns a new instance of JobsController.</p>
+<p>http_basic_authenticate_with name: “cb”, password: “1”, except: [:index, :show]</p>
 
 
   </div>
@@ -418,7 +445,6 @@
       <pre class="lines">
 
 
-23
 24
 25
 26
@@ -427,16 +453,19 @@
 29
 30
 31
-32</pre>
+32
+33
+34</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/controllers/jobs_controller.rb', line 23</span>
+      <pre class="code"><span class="info file"># File 'app/controllers/jobs_controller.rb', line 24</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_create'>create</span>
+  <span class='id identifier rubyid_require_user_logged_in!'>require_user_logged_in!</span>
   <span class='ivar'>@job</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="Job.html" title="Job (class)">Job</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_job_params'>job_params</span><span class='rparen'>)</span>
-
+  <span class='ivar'>@job</span><span class='period'>.</span><span class='id identifier rubyid_user_id'>user_id</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="Current.html" title="Current (class)">Current</a></span></span><span class='period'>.</span><span class='id identifier rubyid_user'>user</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span>
   <span class='kw'>if</span> <span class='ivar'>@job</span><span class='period'>.</span><span class='id identifier rubyid_save'>save</span>
-    <span class='ivar'>@job_service</span><span class='period'>.</span><span class='id identifier rubyid_set_notification'>set_notification</span><span class='lparen'>(</span><span class='ivar'>@job</span><span class='lbracket'>[</span><span class='symbol'>:id</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span><span class='comma'>,</span> <span class='ivar'>@job</span><span class='lbracket'>[</span><span class='symbol'>:account_id</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span><span class='comma'>,</span> <span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:job</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:notify</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_eql?'>eql?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>1</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='rparen'>)</span>
+    <span class='ivar'>@job_service</span><span class='period'>.</span><span class='id identifier rubyid_set_notification'>set_notification</span><span class='lparen'>(</span><span class='ivar'>@job</span><span class='lbracket'>[</span><span class='symbol'>:id</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span><span class='comma'>,</span> <span class='ivar'>@job</span><span class='lbracket'>[</span><span class='symbol'>:user_id</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span><span class='comma'>,</span> <span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:job</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:notify</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_eql?'>eql?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>1</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_redirect_to'>redirect_to</span> <span class='ivar'>@job</span>
   <span class='kw'>else</span>
     <span class='id identifier rubyid_render'>render</span> <span class='symbol'>:new</span><span class='comma'>,</span> <span class='label'>status:</span> <span class='symbol'>:unprocessable_entity</span>
@@ -462,21 +491,23 @@
       <pre class="lines">
 
 
-49
-50
-51
-52
 53
-54</pre>
+54
+55
+56
+57
+58
+59</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/controllers/jobs_controller.rb', line 49</span>
+      <pre class="code"><span class="info file"># File 'app/controllers/jobs_controller.rb', line 53</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_destroy'>destroy</span>
   <span class='ivar'>@job</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="Job.html" title="Job (class)">Job</a></span></span><span class='period'>.</span><span class='id identifier rubyid_find'>find</span><span class='lparen'>(</span><span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:id</span><span class='rbracket'>]</span><span class='rparen'>)</span>
-  <span class='ivar'>@job</span><span class='period'>.</span><span class='id identifier rubyid_destroy'>destroy</span>
-
-  <span class='id identifier rubyid_redirect_to'>redirect_to</span> <span class='id identifier rubyid_jobs_path'>jobs_path</span><span class='comma'>,</span> <span class='label'>status:</span> <span class='symbol'>:see_other</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_require_user_be_owner!'>require_user_be_owner!</span>
+    <span class='ivar'>@job</span><span class='period'>.</span><span class='id identifier rubyid_destroy'>destroy</span>
+    <span class='id identifier rubyid_redirect_to'>redirect_to</span> <span class='id identifier rubyid_jobs_path'>jobs_path</span><span class='comma'>,</span> <span class='label'>status:</span> <span class='symbol'>:see_other</span>
+  <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -498,15 +529,17 @@
       <pre class="lines">
 
 
-34
-35
-36</pre>
+36
+37
+38
+39</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/controllers/jobs_controller.rb', line 34</span>
+      <pre class="code"><span class="info file"># File 'app/controllers/jobs_controller.rb', line 36</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_edit'>edit</span>
   <span class='ivar'>@job</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="Job.html" title="Job (class)">Job</a></span></span><span class='period'>.</span><span class='id identifier rubyid_find'>find</span><span class='lparen'>(</span><span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:id</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_require_user_be_owner!'>require_user_be_owner!</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -528,28 +561,16 @@
       <pre class="lines">
 
 
-56
-57
-58
-59
-60
 61
 62
-63
-64</pre>
+63</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/controllers/jobs_controller.rb', line 56</span>
+      <pre class="code"><span class="info file"># File 'app/controllers/jobs_controller.rb', line 61</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_find'>find</span>
-  <span class='ivar'>@jobs</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="Job.html" title="Job (class)">Job</a></span></span><span class='period'>.</span><span class='id identifier rubyid_all'>all</span>
-  <span class='comment'># begin
-</span>  <span class='comment'># my_args = { &quot;longitude&quot; =&gt; params[:longitude].to_f, &quot;latitude&quot; =&gt; params[:latitude].to_f, &quot;radius&quot; =&gt; params[:radius].to_f, &quot;time&quot; =&gt; Time.parse(params[:time]), &quot;limit&quot; =&gt; params[:limit].to_i }
-</span>  <span class='comment'>#@result = FeedGenerator.initialize_feed(@jobs.as_json, my_args)
-</span>  <span class='comment'># rescue
-</span>  <span class='comment'># Ignored
-</span>  <span class='comment'># end
-</span><span class='kw'>end</span></pre>
+  <span class='ivar'>@jobs</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="Job.html" title="Job (class)">Job</a></span></span><span class='period'>.</span><span class='id identifier rubyid_all'>all</span><span class='period'>.</span><span class='id identifier rubyid_where'>where</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>status = &#39;public&#39;</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
@@ -602,13 +623,49 @@
 
 19
 20
-21</pre>
+21
+22</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'app/controllers/jobs_controller.rb', line 19</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_new'>new</span>
+  <span class='id identifier rubyid_require_user_logged_in!'>require_user_logged_in!</span>
   <span class='ivar'>@job</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="Job.html" title="Job (class)">Job</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="own_jobs-instance_method">
+  
+    #<strong>own_jobs</strong>  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+70
+71
+72
+73
+74</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/controllers/jobs_controller.rb', line 70</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_own_jobs'>own_jobs</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_require_user_logged_in!'>require_user_logged_in!</span>
+    <span class='ivar'>@jobs</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="Job.html" title="Job (class)">Job</a></span></span><span class='period'>.</span><span class='id identifier rubyid_all'>all</span><span class='period'>.</span><span class='id identifier rubyid_where'>where</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>user_id = </span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="Current.html" title="Current (class)">Current</a></span></span><span class='period'>.</span><span class='id identifier rubyid_user'>user</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -630,23 +687,17 @@
       <pre class="lines">
 
 
+65
 66
 67
-68
-69
-70
-71
-72</pre>
+68</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/controllers/jobs_controller.rb', line 66</span>
+      <pre class="code"><span class="info file"># File 'app/controllers/jobs_controller.rb', line 65</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_parse_inputs'>parse_inputs</span>
-  <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>PARAMS = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_params'>params</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
-  <span class='id identifier rubyid_my_args'>my_args</span> <span class='op'>=</span> <span class='lbrace'>{</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>longitude</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:longitude</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_f'>to_f</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>latitude</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:latitude</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_f'>to_f</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>radius</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:radius</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_f'>to_f</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>time</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:time</span><span class='rbracket'>]</span><span class='rparen'>)</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>limit</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:limit</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span> <span class='rbrace'>}</span>
-  <span class='ivar'>@result</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="FeedGenerator.html" title="FeedGenerator (class)">FeedGenerator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_initialize_feed'><span class='object_link'><a href="FeedGenerator.html#initialize_feed-class_method" title="FeedGenerator.initialize_feed (method)">initialize_feed</a></span></span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="Job.html" title="Job (class)">Job</a></span></span><span class='period'>.</span><span class='id identifier rubyid_all'>all</span><span class='period'>.</span><span class='id identifier rubyid_as_json'>as_json</span><span class='comma'>,</span> <span class='id identifier rubyid_my_args'>my_args</span><span class='rparen'>)</span>
-  <span class='ivar'>@my_args</span> <span class='op'>=</span> <span class='id identifier rubyid_my_args'>my_args</span>
-  <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>MY_ARGS === </span><span class='embexpr_beg'>#{</span><span class='ivar'>@my_args</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+  <span class='ivar'>@my_args</span> <span class='op'>=</span> <span class='lbrace'>{</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>longitude</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:longitude</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_f'>to_f</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>latitude</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:latitude</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_f'>to_f</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>radius</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:radius</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_f'>to_f</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>time</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:time</span><span class='rbracket'>]</span><span class='rparen'>)</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>limit</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:limit</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span> <span class='rbrace'>}</span>
+  <span class='ivar'>@result</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="FeedGenerator.html" title="FeedGenerator (class)">FeedGenerator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_initialize_feed'><span class='object_link'><a href="FeedGenerator.html#initialize_feed-class_method" title="FeedGenerator.initialize_feed (method)">initialize_feed</a></span></span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="Job.html" title="Job (class)">Job</a></span></span><span class='period'>.</span><span class='id identifier rubyid_all'>all</span><span class='period'>.</span><span class='id identifier rubyid_where'>where</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>status = &#39;public&#39;</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_as_json'>as_json</span><span class='comma'>,</span> <span class='ivar'>@my_args</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -698,28 +749,30 @@
       <pre class="lines">
 
 
-38
-39
-40
 41
 42
 43
 44
 45
 46
-47</pre>
+47
+48
+49
+50
+51</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/controllers/jobs_controller.rb', line 38</span>
+      <pre class="code"><span class="info file"># File 'app/controllers/jobs_controller.rb', line 41</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_update'>update</span>
   <span class='ivar'>@job</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="Job.html" title="Job (class)">Job</a></span></span><span class='period'>.</span><span class='id identifier rubyid_find'>find</span><span class='lparen'>(</span><span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:id</span><span class='rbracket'>]</span><span class='rparen'>)</span>
-
-  <span class='kw'>if</span> <span class='ivar'>@job</span><span class='period'>.</span><span class='id identifier rubyid_update'>update</span><span class='lparen'>(</span><span class='id identifier rubyid_job_params'>job_params</span><span class='rparen'>)</span>
-    <span class='ivar'>@job_service</span><span class='period'>.</span><span class='id identifier rubyid_edit_notification'>edit_notification</span><span class='lparen'>(</span><span class='ivar'>@job</span><span class='lbracket'>[</span><span class='symbol'>:id</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span><span class='comma'>,</span> <span class='ivar'>@job</span><span class='lbracket'>[</span><span class='symbol'>:account_id</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span><span class='comma'>,</span> <span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:job</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:notify</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_eql?'>eql?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>1</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_redirect_to'>redirect_to</span> <span class='ivar'>@job</span>
-  <span class='kw'>else</span>
-    <span class='id identifier rubyid_render'>render</span> <span class='symbol'>:edit</span><span class='comma'>,</span> <span class='label'>status:</span> <span class='symbol'>:unprocessable_entity</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_require_user_be_owner!'>require_user_be_owner!</span>
+    <span class='kw'>if</span> <span class='ivar'>@job</span><span class='period'>.</span><span class='id identifier rubyid_update'>update</span><span class='lparen'>(</span><span class='id identifier rubyid_job_params'>job_params</span><span class='rparen'>)</span>
+      <span class='ivar'>@job_service</span><span class='period'>.</span><span class='id identifier rubyid_edit_notification'>edit_notification</span><span class='lparen'>(</span><span class='ivar'>@job</span><span class='lbracket'>[</span><span class='symbol'>:id</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span><span class='comma'>,</span> <span class='ivar'>@job</span><span class='lbracket'>[</span><span class='symbol'>:user_id</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span><span class='comma'>,</span> <span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:job</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:notify</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_eql?'>eql?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>1</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_redirect_to'>redirect_to</span> <span class='ivar'>@job</span>
+    <span class='kw'>else</span>
+      <span class='id identifier rubyid_render'>render</span> <span class='symbol'>:edit</span><span class='comma'>,</span> <span class='label'>status:</span> <span class='symbol'>:unprocessable_entity</span>
+    <span class='kw'>end</span>
   <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -732,7 +785,7 @@
 </div>
 
       <div id="footer">
-  Generated on Fri Dec 23 22:39:28 2022 by
+  Generated on Tue Jan  3 13:27:55 2023 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.28 (ruby-2.7.5).
 </div>

@@ -10,7 +10,9 @@ gem "rails", "~> 7.0.4.1"
 gem "sprockets-rails"
 
 # Use mysql as the database for Active Record
-gem "mysql2", "~> 0.5.4"
+gem "mysql2", "~> 0.5"
+# Use jsonapi-rb for efficiently operating JSON API services
+gem "jsonapi-rails"
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", "~> 5.0"
@@ -44,6 +46,16 @@ gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
 
+gem "active_model_serializers"
+
+gem "yard"
+
+gem "time"
+
+gem "digest"
+
+gem "jwt"
+gem "openssl" , "~> 2.1"
 # Use Sass to process CSS
 # gem "sassc-rails"
 
@@ -53,11 +65,13 @@ gem "bootsnap", require: false
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
+  gem "rspec-rails"
 end
 
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+  gem "rspec-rails"
 
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
   # gem "rack-mini-profiler"
@@ -71,4 +85,5 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
   gem "webdrivers"
+  gem "rspec-rails"
 end

@@ -57,10 +57,7 @@
         <div class="clear"></div>
       </div>
 
-      <div id="content"><div id='filecontents'><h1>
-<br>
-<a href="https://gitlab.com/github4touchdouble/versuchundirrtum/"><img src="https://gitlab.com/github4touchdouble/versuchundirrtum/-/raw/dev/versuch_und_irrtum.png" alt="V&I" width="500"></a>
-</h1>
+      <div id="content"><div id='filecontents'><h1>Versuch und Irrtum on RAILS</h1>
 <h2 id="label-License">License</h2>
 
 <h3 id="label-Licensed+under+either+of">Licensed under either of</h3>
@@ -79,7 +76,9 @@
 </li><li>
 <p>Write new code/comments</p>
 </li><li>
-<p>Update the documentation using <code>$ yardoc &#39;lib/*<strong>/</strong>.rb&#39; &#39;src/*<strong>/</strong>.rb&#39; &#39;spec/*<strong>/</strong>.rb&#39;</code></p>
+<p>Update the documentation  using <code>$ yardoc &#39;app/views/*.html.erb&#39; &#39;app/controllers/*.rb&#39; &#39;app/models/*.rb&#39; &#39;app/helpers/*.rb&#39; &#39;app/repository/*.rb&#39; &#39;app/service/*.rb&#39; &#39;app/controllers/*.rb&#39; &#39;lib/*<strong>/</strong>.rb&#39;</code></p>
+</li><li>
+<p>View the documentation under: <a href="http://localhost:63342/insert-here-project-name/doc">localhost:63342/insert-here-project-name/doc</a>/</p>
 </li></ol>
 
 <p>&lt;/details&gt;</p>
@@ -88,19 +87,78 @@
 
 <h3 id="label-Managing+of+applications+for+available+jobs">Managing of applications for available jobs</h3>
 
-<p>The system is able to manage application (supporting basic <a href="https://www.javatpoint.com/crud-operations-in-sql">CRUD-Operations</a>) and notifies the employer when a new application is submitted as well as the applicant when his application is accepted.</p>
+<p>The system is able to manage jobs and application (supporting basic <a href="https://www.javatpoint.com/crud-operations-in-sql">CRUD-Operations</a>) and notifies the employer when a new application is submitted as well as the applicant when his application is accepted.</p>
 
 <p>All notifications are sent using <a href="https://en.wikipedia.org/wiki/Simple_Mail_Transfer_Protocol">SMTP</a>.</p>
 
 <h3 id="label-Filtering+of+available+jobs">Filtering of available jobs</h3>
 
-<p>The system receives a set of available jobs and filters them returning a sorted feed according to the user&#39;s parameters.</p>
+<p>The system receives a set of available jobs and filters them returning a sorted feed according to the user&#39;s parameters. <em>Default values for search</em>:</p>
+<ul><li>
+<p>coordinates <em>0.0</em>, <em>0.0</em></p>
+</li><li>
+<p>radius: <em>50.0</em></p>
+</li><li>
+<p>timeslot: <em>Time.now</em></p>
+</li><li>
+<p>limit (=maximum number of jobs shown): <em>100</em></p>
+</li></ul>
+
+<h3 id="label-User+authentication">User authentication</h3>
+
+<p>Users can set up an account with their email address and a password. The password is instantaneously encrypted using <a href="https://en.wikipedia.org/wiki/Bcrypt">bcryt</a> and stored in form of a encrypted hash in the database. In case the user forgets this password, it can be reset via standard email authentication.</p>
 
 <h2 id="label-How+it+works">How it works</h2>
 
+<p>Simply start the server and go to <a href="http://localhost:3000">localhost:3000</a>/ and create a new account or log in with an existing account</p>
+
 <h2 id="label-Config">Config</h2>
 
+<p><strong>EITHER</strong> (<em>recommended</em>)</p>
+<ul><li>
+<p>create a new schema called <code>jobdata</code> in your MySql database</p>
+</li><li>
+<p>add a new user called <code>rm_user</code> with full access to all administrative roles and the  password <code>hô[ÕiÚéjÚ¢X*t/t¢ÕeR/ü¾nõ'g'ñ¢ß«Tíwàx²"¡jÛß´*PZÏmõ}ßX¨º*¤àÙ7ü'ÌJÌ=´Lh#M[NöèD`¿üåvã^àði®$4¦{·d3ZE~üMêr.7>þSrÖô(òúHÒDÊ]!Ä-¯.ï!òHúã¡</code></p>
+</li><li>
+<p>run <code>$ rails db:migrate</code> to create all necessary  tables</p>
+</li><li>
+<p>run <code>$ rails server</code> to start the server</p>
+</li></ul>
+
+<p><strong>OR</strong></p>
+<ul><li>
+<p>modify the values for</p>
+<ul><li>
+<p><code>default: username</code>, <code>default: password</code>,</p>
+</li><li>
+<p><code>production: database</code>,</p>
+</li><li>
+<p><code>production: database</code>, <code>deployment: username</code></p>
+</li></ul>
+</li><li>
+<p>run <code>$ rails db:migrate</code> to create all necessary</p>
+</li><li>
+<p>run <code>$ rails server</code> to start the server</p>
+</li></ul>
+
+<blockquote>
+<p><strong>Optional:(ignore for now)</strong> &lt;s&gt;Add example data by importing <code>/db/importdata.sql</code> into the schema jobdata.&lt;/s&gt;</p>
+</blockquote>
+
 <h2 id="label-Sources">Sources</h2>
+
+<p><em>(TODO)</em></p>
+
+<h2 id="label-TODO">TODO</h2>
+<ul><li>
+<p>Fix seed / importdata</p>
+</li><li>
+<p>Add remaining <strong>job-attributes</strong> in <code>job_create</code> and <code>job_show</code></p>
+</li><li>
+<p>Implement <strong>location system</strong> (+ function from address to coordinates)</p>
+</li><li>
+<p>Add appropriate <strong>HTML/CSS</strong> to improve look of views</p>
+</li></ul>
 
 <p>—</p>
 
@@ -112,7 +170,7 @@
 </div></div>
 
       <div id="footer">
-  Generated on Fri Dec 23 22:39:28 2022 by
+  Generated on Tue Jan  3 13:28:36 2023 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.28 (ruby-2.7.5).
 </div>

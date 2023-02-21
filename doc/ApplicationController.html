@@ -103,9 +103,8 @@
 
 <div id="subclasses">
   <h2>Direct Known Subclasses</h2>
-  <p class="children"><span class='object_link'><a href="ApplicationsController.html" title="ApplicationsController (class)">ApplicationsController</a></span>, <span class='object_link'><a href="JobsController.html" title="JobsController (class)">JobsController</a></span></p>
+  <p class="children"><span class='object_link'><a href="Api/V0/JobsController.html" title="Api::V0::JobsController (class)">Api::V0::JobsController</a></span>, <span class='object_link'><a href="Api/V0/RegistrationsController.html" title="Api::V0::RegistrationsController (class)">Api::V0::RegistrationsController</a></span>, <span class='object_link'><a href="ApplicationsController.html" title="ApplicationsController (class)">ApplicationsController</a></span>, <span class='object_link'><a href="JobsController.html" title="JobsController (class)">JobsController</a></span>, <span class='object_link'><a href="PasswordResetsController.html" title="PasswordResetsController (class)">PasswordResetsController</a></span>, <span class='object_link'><a href="PasswordsController.html" title="PasswordsController (class)">PasswordsController</a></span>, <span class='object_link'><a href="RegistrationsController.html" title="RegistrationsController (class)">RegistrationsController</a></span>, <span class='object_link'><a href="SessionsController.html" title="SessionsController (class)">SessionsController</a></span>, <span class='object_link'><a href="WelcomeController.html" title="WelcomeController (class)">WelcomeController</a></span></p>
 </div>
-
 
 
 
@@ -114,11 +113,203 @@
 
 
   
+    <h2>
+      Instance Method Summary
+      <small><a href="#" class="summary_toggle">collapse</a></small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#require_user_be_owner!-instance_method" title="#require_user_be_owner! (instance method)">#<strong>require_user_be_owner!</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#require_user_logged_in!-instance_method" title="#require_user_logged_in! (instance method)">#<strong>require_user_logged_in!</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#set_current_user-instance_method" title="#set_current_user (instance method)">#<strong>set_current_user</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="require_user_be_owner!-instance_method">
+  
+    #<strong>require_user_be_owner!</strong>  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+16
+17
+18
+19
+20
+21
+22
+23</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/controllers/application_controller.rb', line 16</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_require_user_be_owner!'>require_user_be_owner!</span>
+  <span class='kw'>if</span> <span class='const'><span class='object_link'><a href="Current.html" title="Current (class)">Current</a></span></span><span class='period'>.</span><span class='id identifier rubyid_user'>user</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='op'>||</span> <span class='ivar'>@job</span><span class='period'>.</span><span class='id identifier rubyid_user_id'>user_id</span> <span class='op'>!=</span> <span class='const'><span class='object_link'><a href="Current.html" title="Current (class)">Current</a></span></span><span class='period'>.</span><span class='id identifier rubyid_user'>user</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span>
+    <span class='id identifier rubyid_redirect_back'>redirect_back</span><span class='lparen'>(</span><span class='label'>fallback_location:</span> <span class='id identifier rubyid_jobs_path'>jobs_path</span><span class='comma'>,</span> <span class='label'>alert:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Not allowed</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+    <span class='comment'># job_path(@job), status: :unauthorized, alert: &#39;Not allowed&#39;
+</span>    <span class='kw'>return</span> <span class='kw'>false</span>
+  <span class='kw'>end</span>
+  <span class='kw'>true</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="require_user_logged_in!-instance_method">
+  
+    #<strong>require_user_logged_in!</strong>  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+8
+9
+10
+11
+12
+13
+14</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/controllers/application_controller.rb', line 8</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_require_user_logged_in!'>require_user_logged_in!</span>
+  <span class='kw'>if</span> <span class='const'><span class='object_link'><a href="Current.html" title="Current (class)">Current</a></span></span><span class='period'>.</span><span class='id identifier rubyid_user'>user</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+    <span class='id identifier rubyid_redirect_to'>redirect_to</span> <span class='id identifier rubyid_sign_in_path'>sign_in_path</span><span class='comma'>,</span> <span class='label'>alert:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>You must be signed in..</span><span class='tstring_end'>&#39;</span></span>
+    <span class='kw'>return</span> <span class='kw'>false</span>
+  <span class='kw'>end</span>
+  <span class='kw'>true</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="set_current_user-instance_method">
+  
+    #<strong>set_current_user</strong>  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+4
+5
+6</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/controllers/application_controller.rb', line 4</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_set_current_user'>set_current_user</span>
+  <span class='const'><span class='object_link'><a href="Current.html" title="Current (class)">Current</a></span></span><span class='period'>.</span><span class='id identifier rubyid_user'>user</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="User.html" title="User (class)">User</a></span></span><span class='period'>.</span><span class='id identifier rubyid_find_by'>find_by</span><span class='lparen'>(</span><span class='label'>id:</span> <span class='id identifier rubyid_session'>session</span><span class='lbracket'>[</span><span class='symbol'>:user_id</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_session'>session</span><span class='lbracket'>[</span><span class='symbol'>:user_id</span><span class='rbracket'>]</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
 
 </div>
 
       <div id="footer">
-  Generated on Fri Dec 23 22:39:28 2022 by
+  Generated on Tue Jan  3 13:27:55 2023 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.28 (ruby-2.7.5).
 </div>
