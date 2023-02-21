@@ -2,6 +2,16 @@ Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   root 'welcome#index'
 
+  namespace :api, defaults: { format: 'json' } do
+    namespace :v0 do
+      post 'user', to: 'registrations#create'
+      get 'user/verify', to: 'registrations#verify'
+      post 'user/auth/token/refresh', to: 'authentications#create_refresh'
+      post 'user/auth/token/access', to: 'authentications#create_access'
+
+    end
+  end
+
   resources :jobs do
     resources :applications
   end
@@ -33,16 +43,7 @@ Rails.application.routes.draw do
   get 'password/reset/edit', to: 'password_resets#edit'
   patch 'password/reset/edit', to: 'password_resets#update'
 
-  namespace :api, defaults: {format: 'json'} do
-    namespace :v0 do
-      post 'user', to: 'registrations#create'
-      get 'user/verify', to: 'registrations#verify'
-      post 'user/auth/token/refresh', to: 'authentications#create_refresh'
-      post 'user/auth/token/access', to: 'authentications#create_access'
-
-
-    end
-  end
-
-  # Defines the root path route ("/")
+  get 'reviews', :to => 'reviews#index', as: 'reviews'
+  get 'reviews/(/:user_id)', :to => 'reviews#for_user', as: 'reviews_user'
+  post 'reviews', :to => 'reviews#index'
 end

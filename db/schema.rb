@@ -106,7 +106,7 @@ ActiveRecord::Schema[7.0].define(version: 202301100105555) do
     t.integer "created_by", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.references :user, null: false, foreign_key: true
+    # t.references :user, null: false, foreign_key: true
     t.index ["created_by"], name: "fk_rails_50d2809d9b"
   end
 
@@ -129,6 +129,14 @@ ActiveRecord::Schema[7.0].define(version: 202301100105555) do
     t.index ["email"], name: "account_email_UNIQUE", unique: true
   end
 
+  create_table "user_blacklists", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "reason"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "user_id_UNIQUE", unique: true
+  end
+
   add_foreign_key "applications", "jobs", primary_key: "job_id"
   add_foreign_key "applications", "users", column: "applicant_id"
   add_foreign_key "company_users", "users"
@@ -138,4 +146,5 @@ ActiveRecord::Schema[7.0].define(version: 202301100105555) do
   add_foreign_key "private_users", "users"
   add_foreign_key "reviews", "users", column: "user_id"
   add_foreign_key "reviews", "users", column: "created_by"
+  add_foreign_key "user_blacklists", "users", column: "user_id"
 end
