@@ -33,7 +33,6 @@ class JobRepository
     binds = [ActiveRecord::Relation::QueryAttribute.new('new_value', new_value, ActiveRecord::Type::Boolean.new),
              ActiveRecord::Relation::QueryAttribute.new('job_id', job_id, ActiveRecord::Type::Integer.new),
              ActiveRecord::Relation::QueryAttribute.new('employer_id', employer_id, ActiveRecord::Type::Integer.new)]
-    puts "QUERY = #{query}"
     ApplicationRecord.connection.exec_query(query, 'SQL', binds, prepare: true)
   end
 

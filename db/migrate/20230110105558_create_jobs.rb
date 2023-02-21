@@ -4,11 +4,7 @@ class CreateJobs < ActiveRecord::Migration[7.0]
       t.column "job_type", "enum('typa','typb','typc')"
       t.integer "job_status", limit: 1, default: 0
       t.string "status", default: "0"
-      t.datetime "created_at", default: DateTime.now, null: false
-      t.datetime "updated_at", default: DateTime.now, null: false
       t.integer "user_id", default: 0
-      t.float "latitude", default: 0.0
-      t.float "longitude", default: 0.0
       t.integer "duration", default: 0
       t.string "code_lang", limit: 2
       t.string "title", limit: 100
@@ -17,14 +13,13 @@ class CreateJobs < ActiveRecord::Migration[7.0]
       t.column "currency", "enum('eur','usd','chf','gbp')"
       t.string "image_url", limit: 500
       t.datetime "start_slot", precision: nil
-      t.string "time_zone", limit: 45
-      t.integer "application_count", default: 0
+      t.float "longitude", null: false
+      t.float "latitude", null: false
+      # t.integer "location_id", default: 0, null: false
       t.integer "view_count", default: 0
-      t.integer "favorite_count", default: 0
-      t.index ["longitude", "latitude"], name: "job_information_location_id_idx"
+      t.timestamps
+      t.index ["location_id"], name: "fk_rails_e1588fa548"
       t.index ["user_id"], name: "job_information_account_id_idx"
     end
-    # add_foreign_key "jobs", "accounts", primary_key: "account_id", name: "job_account_id", on_update: :cascade, on_delete: :cascade
-    # add_foreign_key "jobs", "locations", primary_key: "location_id", name: "job_location_id", on_update: :cascade
   end
 end

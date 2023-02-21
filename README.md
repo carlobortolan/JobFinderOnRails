@@ -1,4 +1,4 @@
-<h1>Versuch und Irrtum on RAILS</h1>
+<h1>JobFinder on RAILS</h1>
 
 ## License
 
@@ -81,11 +81,7 @@ Simply start the server and go to http://localhost:3000/ and create a new accoun
 
 ## TODO
 
-- Fix seed / importdata
-- Add remaining **job-attributes** in ``job_create`` and ``job_show``
-- Implement **location system** (+ function from address to coordinates)
-- Add appropriate **HTML/CSS** to improve look of views
-
+- see TODOs issued in GitLab
 ---
 > Carlo Bortolan &nbsp;&middot;&nbsp;
 > GitHub [@carlobortolan](https://github.com/carlobortolan) &nbsp;&middot;&nbsp;
