@@ -10,7 +10,7 @@ gem "rails", "~> 7.0.4.1"
 gem "sprockets-rails"
 
 # Use mysql as the database for Active Record
-gem "mysql2", "~> 0.5"
+gem "mysql2", "~> 0.5.4"
 # Use jsonapi-rb for efficiently operating JSON API services
 gem "jsonapi-rails"
 
