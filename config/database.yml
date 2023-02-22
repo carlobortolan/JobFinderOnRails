@@ -13,9 +13,12 @@ default: &default
   adapter: mysql2
   encoding: utf8mb4
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  username: rm_user
-  password: hô[ÕiÚéjÚ¢X*t/t¢ÕeR/ü¾nõ'g'ñ¢ß«Tíwàx²"¡jÛß´*PZÏmõ}ßX¨º*¤àÙ7ü'ÌJÌ=´Lh#M[NöèD`¿üåvã^àði®$4¦{·d3ZE~üMêr.7>þSrÖô(òúHÒDÊ]!Ä-¯.ï!òHúã¡
-#  password: R2Q9WtdEz&3o9VmzN3ZYdMunU2%%ETsx`C7qT>ZpWE$VzZ>49kDyS>jQEVKd
+  #username: rm_user
+  #password: hô[ÕiÚéjÚ¢X*t/t¢ÕeR/ü¾nõ'g'ñ¢ß«Tíwàx²"¡jÛß´*PZÏmõ}ßX¨º*¤àÙ7ü'ÌJÌ=´Lh#M[NöèD`¿üåvã^àði®$4¦{·d3ZE~üMêr.7>þSrÖô(òúHÒDÊ]!Ä-¯.ï!òHúã¡
+  username: <%=ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  password: <%= ENV["TEST4_DATABASE_PASSWORD"] %>
+
+  #  password: R2Q9WtdEz&3o9VmzN3ZYdMunU2%%ETsx`C7qT>ZpWE$VzZ>49kDyS>jQEVKd
   host: localhost
   port: 3306
 #  port: 3305

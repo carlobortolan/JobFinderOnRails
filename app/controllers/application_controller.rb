@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   before_action :set_current_user
+  # protect_from_forgery with::exception
 
   def set_current_user
     Current.user = User.find_by(id: session[:user_id]) if session[:user_id]
@@ -21,4 +22,44 @@ class ApplicationController < ActionController::Base
     end
     true
   end
+
+  rescue_from ::ActiveRecord::RecordNotFound, with: :record_not_found
+  rescue_from ::NameError, with: :error_occurred
+  rescue_from ::ActionController::RoutingError, with: :error_occurred
+  # Don't resuce from Exception as it will resuce from everything as mentioned here "http://stackoverflow.com/questions/10048173/why-is-it-bad-style-to-rescue-exception-e-in-ruby" Thanks for @Thibaut Barrère for mention that
+  # rescue_from ::Exception, with: :error_occurred
+
+  protected
+
+  def record_not_found(exception)
+    render json: {error: exception.message}.to_json, status: 404
+    return
+  end
+
+  def error_occurred(exception)
+    render json: {error: exception.message}.to_json, status: 500
+    return
+  end
+
+
+  #  rescue_from ActionController::RoutingError, :with => :error_render_method
+  #rescue_from ::ActiveRecord::RecordNotFound, with: :record_not_found
+  #rescue_from ::ActionController::RoutingError, with: :routing_error
+
+
+
+  #protected
+
+  #def record_not_found(exception)
+    #if Current.user && Current.user.role == 'Admin'
+      #render json: { error: exception.message }.to_json, status: 404
+      #else
+      #render(:file => File.join(Rails.root, 'public/403.html'), :status => 403, :layout => false)
+      #end
+    #end
+
+  #def routing_error(exception)
+  #  render(:file => File.join(Rails.root, 'public/404.html'), :status => 404, :layout => false)
+  #end
+
 end

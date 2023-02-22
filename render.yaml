@@ -1,0 +1,18 @@
+databases:
+  - name: jobdata
+    databaseName: jobdata
+    user: b_user
+
+services:
+  - type: web
+    name: whatsnext
+    env: ruby
+    buildCommand: "./bin/render-build.sh"
+    startCommand: "bundle exec puma -C config/puma.rb"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: jobdata
+          property: connectionString
+      - key: xF+40P6lAv1Q84VhoHweR4lrnSiz9pqseBfAM1cxTfz1MWv9UHfiwtVdE/JQS0Z9sEk6LfVc7XyeSn7LClVW9qT1DTELOYNuUUOegqv4RhINX4DqFnktQWOXyQ5o/k7+b5HQb1Yn53Xw/3eg/aH+iBJLpTJAjdTxNn4/FBicZjfkEr3lY/QBL8K9kxoeqqVUpHtopctkQz5RtRihVkmtWxAphQaEeOaqF6aJhf8a1IDjO/2T2Ep1tP2sg+k81FEqddamsm3KPluFlQs7ovsw7dP0WVN1ob45aaaHEVEgDlK9w1kVRlPOT65fsE+Vjzur39l3R3CjCo0Vru1ceTxV0o1NVwKprwoxLesJhp/GzOSsZRjBHqgdevSvpOdq/meyXiX9tBGjsZYfufw1qTN7yrMUzp5nfxrMAh0Q--8rptVWkwEWnmyroJ--Y3yxHGB4e531et68asusOQ==
+        sync: false

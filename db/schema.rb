@@ -11,7 +11,7 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.0].define(version: 202301100105555) do
-  create_table "applications", primary_key: %w[job_id applicant_id], charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "applications", primary_key: ["job_id", "applicant_id"], charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "job_id", null: false
     t.integer "applicant_id", null: false
     t.datetime "applied_at", null: false
@@ -20,13 +20,7 @@ ActiveRecord::Schema[7.0].define(version: 202301100105555) do
     t.string "application_documents", limit: 100
     t.string "response", limit: 500
     t.index ["applicant_id"], name: "account_id_idx"
-    t.index %w[job_id applicant_id], name: "index_applications_on_job_id_and_applicant_id", unique: true
-  end
-
-  create_table "company_users", primary_key: "user_id", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "company_name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.index ["job_id", "applicant_id"], name: "index_applications_on_job_id_and_applicant_id", unique: true
   end
 
   create_table "auth_blacklists", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -37,12 +31,8 @@ ActiveRecord::Schema[7.0].define(version: 202301100105555) do
     t.index ["token"], name: "token_UNIQUE", unique: true
   end
 
-  create_table "authentications", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "token", null: false
-    t.integer "scope", null: false
-    t.string "checksum", null: false
-    t.integer "user", null: false
-    t.datetime "expires_at", null: false
+  create_table "company_users", primary_key: "user_id", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "company_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -87,7 +77,7 @@ ActiveRecord::Schema[7.0].define(version: 202301100105555) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "notifications", primary_key: %w[employer_id job_id], charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "notifications", primary_key: ["employer_id", "job_id"], charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "employer_id", null: false
     t.integer "job_id", null: false
     t.column "notify", "enum(' 0',' 1')"
@@ -106,8 +96,15 @@ ActiveRecord::Schema[7.0].define(version: 202301100105555) do
     t.integer "created_by", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    # t.references :user, null: false, foreign_key: true
     t.index ["created_by"], name: "fk_rails_50d2809d9b"
+  end
+
+  create_table "user_blacklists", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "reason"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "user_id_UNIQUE", unique: true
   end
 
   create_table "users", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -129,14 +126,6 @@ ActiveRecord::Schema[7.0].define(version: 202301100105555) do
     t.index ["email"], name: "account_email_UNIQUE", unique: true
   end
 
-  create_table "user_blacklists", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.integer "reason"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "user_id_UNIQUE", unique: true
-  end
-
   add_foreign_key "applications", "jobs", primary_key: "job_id"
   add_foreign_key "applications", "users", column: "applicant_id"
   add_foreign_key "company_users", "users"
@@ -144,7 +133,6 @@ ActiveRecord::Schema[7.0].define(version: 202301100105555) do
   add_foreign_key "notifications", "jobs", primary_key: "job_id"
   add_foreign_key "notifications", "users", column: "employer_id"
   add_foreign_key "private_users", "users"
-  add_foreign_key "reviews", "users", column: "user_id"
+  add_foreign_key "reviews", "users"
   add_foreign_key "reviews", "users", column: "created_by"
-  add_foreign_key "user_blacklists", "users", column: "user_id"
 end
