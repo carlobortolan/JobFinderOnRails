@@ -1,17 +1,38 @@
-<h1>Authentication</h1>
+<div class="container card">
+  <h1>Welcome to JobFinder</h1>
 
-<% if Current.user %>
-  <% @user = Current.user %>
-  Logged in as: <%= Current.user.email %><br>
-  <%= link_to 'Edit Password', edit_password_path %>
-  <%= button_to 'Logout', logout_path, method: :delete %>
-  <%= button_to 'View all available jobs', jobs_path, method: :get %>
-  <%= button_to 'View submitted applications', own_applications_path, method: :get %>
-  <%= button_to 'View your jobs', own_jobs_path, method: :get %>
-  <%= button_to 'View your reviews', reviews_path, method: :get %>
-  <%= button_to 'View review for specific user', reviews_user_path, method: :get %>
-<% else %>
-  <%= link_to 'Sign Up', sign_up_path %>
-  or
-  <%= link_to 'Login', sign_in_path %>
-<% end %>
+
+  <% if Current.user %>
+    <% @user = Current.user %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <strong> Logged in as:</strong> <%= Current.user.email %>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+    <%= button_to 'View all available jobs', jobs_path, method: :get %>
+    <%= button_to 'View submitted applications', own_applications_path, method: :get %>
+    <%= button_to 'View your jobs', own_jobs_path, method: :get %>
+    <%= button_to 'View your reviews', reviews_path, method: :get %>
+    <%= button_to 'View review for specific user', reviews_user_path, method: :get %>
+  <% else %>
+
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <strong>Permission denied!</strong>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      <strong>Currently not logged in!</strong> You need to log into your account to access out service.
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <%= link_to 'Sign Up', sign_up_path %>
+    or
+    <%= link_to 'Login', sign_in_path %>
+  <% end %>
+</div>

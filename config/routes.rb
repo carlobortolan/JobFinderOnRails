@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-  root 'welcome#index'
+  root 'welcome#index', as: 'welcome'
 
   namespace :api, defaults: { format: 'json' } do
     namespace :v0 do
@@ -20,6 +20,11 @@ Rails.application.routes.draw do
   get 'jobs/(/:job_id)/applications/(/:application_id)/reject', :to => 'applications#reject', as: 'job_application_reject'
   get 'jobs/(/:job_id)/applications_reject_all', :to => 'applications#reject_all', as: 'job_applications_reject_all'
   delete 'jobs/(/:job_id)/applications/(/:application_id)' => 'applications#destroy'
+
+  get 'about', :to => 'welcome#about', as: 'about'
+
+  get 'profile', :to => 'profile#index', as: 'profile_index'
+  get 'profile/settings', :to => 'profile#settings', as: 'profile_settings'
 
   get 'user/applications', :to => 'applications#own_applications', as: 'own_applications'
   get 'user/jobs', :to => 'jobs#own_jobs', as: 'own_jobs'
