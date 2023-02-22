@@ -13,6 +13,11 @@ Rails.application.routes.draw do
 
   root 'welcome#index', as: :welcome
   get 'about', :to => 'welcome#about', as: :about
+  get 'about/privacy/policy', :to => 'welcome#privacy_policy', as: :privacy_policy
+  get 'about/privacy/cookies', :to => 'welcome#cookies', as: :cookies
+  get 'about/help', :to => 'welcome#help', as: :help
+  get 'about/api', :to => 'welcome#api', as: :api
+  get 'about/faq', :to => 'welcome#faq', as: :faq
 
   # START NAMESPACE
   resources :jobs do
