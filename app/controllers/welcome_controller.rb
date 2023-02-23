@@ -20,7 +20,7 @@ class WelcomeController < ApplicationController
   end
 
   def apidoc
-    render json: File.read('app/views/welcome/dist/apidoc.json')
+    render json: File.read('app/views/welcome/apidoc.json')
   end
 
   def faq
