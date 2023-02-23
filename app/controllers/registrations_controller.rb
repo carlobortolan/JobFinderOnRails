@@ -15,7 +15,7 @@ class RegistrationsController < ApplicationController
     findCoordinates
 
     if @user.save
-      WelcomeMailer.with(user: @user).welcome_email.deliver_now
+      # WelcomeMailer.with(user: @user).welcome_email.deliver_now
       session[:user_id] = @user.id
       redirect_to welcome_path, notice: 'Successfully created account'
     else
@@ -26,6 +26,6 @@ class RegistrationsController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:email, :first_name, :last_name, :password, :password_confirmation, :longitude, :latitude, :country_code, :postal_code, :city, :address)
+    params.require(:user).permit(:email, :first_name, :last_name, :password, :password_confirmation, :longitude, :latitude, :country_code, :city, :postal_code, :address, :date_of_birth, :password_repeat)
   end
 end

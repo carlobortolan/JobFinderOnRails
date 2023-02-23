@@ -14,6 +14,7 @@ class CreateUsers < ActiveRecord::Migration[7.0]
       t.string "postal_code", limit: 45
       t.string "city", limit: 45
       t.string "address", limit: 45
+      t.datetime "date_of_birth",null: false
       t.column "user_type", "enum('company','private')", default: "private", null: false
 
       t.index ["email"], name: "account_email_UNIQUE", unique: true

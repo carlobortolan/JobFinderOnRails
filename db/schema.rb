@@ -31,6 +31,16 @@ ActiveRecord::Schema[7.0].define(version: 202301100105555) do
     t.index ["token"], name: "token_UNIQUE", unique: true
   end
 
+  create_table "authentications", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "token", null: false
+    t.integer "scope", null: false
+    t.string "checksum", null: false
+    t.integer "user", null: false
+    t.datetime "expires_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "company_users", primary_key: "user_id", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "company_name"
     t.datetime "created_at", null: false
@@ -121,6 +131,7 @@ ActiveRecord::Schema[7.0].define(version: 202301100105555) do
     t.string "city", limit: 45
     t.string "address", limit: 45
     t.column "user_type", "enum('company','private')", default: "private", null: false
+    t.datetime "date_of_birth", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "account_email_UNIQUE", unique: true
@@ -135,4 +146,5 @@ ActiveRecord::Schema[7.0].define(version: 202301100105555) do
   add_foreign_key "private_users", "users"
   add_foreign_key "reviews", "users"
   add_foreign_key "reviews", "users", column: "created_by"
+  add_foreign_key "user_blacklists", "users"
 end

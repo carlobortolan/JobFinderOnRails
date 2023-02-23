@@ -22,12 +22,12 @@ class ApplicationController < ActionController::Base
     true
   end
 
-  rescue_from ::ActiveRecord::RecordNotFound, with: :record_not_found
-  rescue_from ::NameError, with: :err_server
-  rescue_from ::NoMethodError, with: :err_server
-  rescue_from ::ActionController::InvalidAuthenticityToken, with: :err_not_allowed
-  rescue_from ::ActionController::RoutingError, with: :err_server
-  rescue_from ::AbstractController::DoubleRenderError, with: :err_server
+  # rescue_from ::ActiveRecord::RecordNotFound, with: :record_not_found
+  # rescue_from ::NameError, with: :err_server
+  # rescue_from ::NoMethodError, with: :err_server
+  # rescue_from ::ActionController::InvalidAuthenticityToken, with: :err_not_allowed
+  # rescue_from ::ActionController::RoutingError, with: :err_server
+  # rescue_from ::AbstractController::DoubleRenderError, with: :err_server
 
   protected
 

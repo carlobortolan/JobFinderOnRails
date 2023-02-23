@@ -10,19 +10,19 @@
     <%= link_to "Learn more", about_path, class: 'btn btn-primary btn-lg' %>
   <% else %>
     <div class="container">
-      <div class="row">
-        <div class="col-sm">
-          <h1 class="display-1">
-            JobFinder
-          </h1>
-          <h4 class="display-5">
-            <%= "Apply now to more than #{Job.count} jobs" %>
-          </h4>
-        </div>
-        <div class="col-sm">
-        </div>
-        <div class="col-sm">
-          <%= render "sessions/login_form", user: @user %>
+<!--      <div class="row">-->
+<!--        <div class="col-sm">-->
+<!--          <h1 class="display-1">-->
+<!--            JobFinder-->
+<!--          </h1>-->
+<!--          <h4 class="display-5">-->
+            <%#= "Apply now to more than #{Job.count} jobs" %>
+<!--          </h4>-->
+<!--        </div>-->
+<!--        <div class="col-sm">-->
+<!--        </div>-->
+<!--        <div class="col-sm">-->
+          <%= render "sessions/login_form_raw", user: @user %>
         </div>
       </div>
     </div>
