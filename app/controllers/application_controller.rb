@@ -23,43 +23,34 @@ class ApplicationController < ActionController::Base
     true
   end
 
-  # rescue_from ::ActiveRecord::RecordNotFound, with: :record_not_found
-  # rescue_from ::NameError, with: :error_occurred
-  # rescue_from ::ActionController::RoutingError, with: :error_occurred
-  # rescue_from ::AbstractController::DoubleRenderError, with: :error_occurred
-
-  # Don't resuce from Exception as it will resuce from everything as mentioned here "http://stackoverflow.com/questions/10048173/why-is-it-bad-style-to-rescue-exception-e-in-ruby" Thanks for @Thibaut Barrère for mention that
-  # rescue_from ::Exception, with: :error_occurred
+  rescue_from ::ActiveRecord::RecordNotFound, with: :record_not_found
+  rescue_from ::NameError, with: :err_server
+  rescue_from ::NoMethodError, with: :err_server
+  rescue_from ::ActionController::InvalidAuthenticityToken, with: :err_not_allowed
+  rescue_from ::ActionController::RoutingError, with: :err_server
+  rescue_from ::AbstractController::DoubleRenderError, with: :err_server
 
   protected
 
+  def err_server
+    render(:file => File.join(Rails.root, 'public/500.html'), :status => 500, :layout => false)
+  end
+
+  def err_not_allowed
+    render(:file => File.join(Rails.root, 'public/403.html'), :status => 403, :layout => false)
+  end
+
   def record_not_found(exception)
-    render json: {error: exception.message}.to_json, status: 404
+    if Current.user
+      # && Current.user.role == 'Admin'
+      render json: { error: exception.message }.to_json, status: 404
+    else
+      err_not_allowed # end
+    end
   end
 
-  def error_occurred(exception)
-     render(:file => File.join(Rails.root, 'public/500.html'), :status => 500, :layout => false)
+  def routing_error(exception)
+    render(:file => File.join(Rails.root, 'public/404.html'), :status => 404, :layout => false)
   end
-
-
-  #  rescue_from ActionController::RoutingError, :with => :error_render_method
-  #rescue_from ::ActiveRecord::RecordNotFound, with: :record_not_found
-  #rescue_from ::ActionController::RoutingError, with: :routing_error
-
-
-
-  #protected
-
-  #def record_not_found(exception)
-    #if Current.user && Current.user.role == 'Admin'
-      #render json: { error: exception.message }.to_json, status: 404
-      #else
-      #render(:file => File.join(Rails.root, 'public/403.html'), :status => 403, :layout => false)
-      #end
-    #end
-
-  #def routing_error(exception)
-  #  render(:file => File.join(Rails.root, 'public/404.html'), :status => 404, :layout => false)
-  #end
 
 end
