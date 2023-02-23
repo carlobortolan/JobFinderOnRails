@@ -1,8 +1,7 @@
 <div class="container card">
   <h1>Your Profile</h1>
-  <% if Current.user %>
-    <% @user = Current.user %>
-    Logged in as: <%= Current.user.email %><br>
+  <% if @user %>
+    Logged in as: <%= @user.email %><br>
     <%= link_to 'Edit Password', edit_password_path %>
     <%= button_to 'Logout', logout_path, method: :delete %>
     <%= button_to 'Settings', profile_settings_path, method: :get %>

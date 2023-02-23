@@ -1,59 +1,154 @@
-<%= form_with model: @user, url: sign_up_path do |f| %>
-  <p>
-    Required fields are marked with an asterisk (<abbr
-    title="required">*</abbr>).
-  </p>
-  <fieldset>
-    <p>
-      <%= f.label 'email *' %><br>
-      <%= f.email_field :email %>
-    </p>
-  </fieldset>
-  <fieldset>
-    <legend>Credentials</legend>
-    <p>
-      <%= f.label 'first_name *' %><br>
-      <%= f.text_field :first_name %><br>
-      <%= f.label 'last_name *' %><br>
-      <%= f.text_field :last_name %><br>
-    </p>
-  </fieldset>
-  <fieldset>
-    <legend>Address</legend>
-    <p>
-      <%= f.label 'country_code' %><br>
-      <%= f.text_field :country_code, pattern: "^(A(D|E|F|G|I|L|M|N|O|R|S|T|Q|U|W|X|Z)|B(A|B|D|E|F|G|H|I|J|L|M|N|O|R|S|T|V|W|Y|Z)|C(A|C|D|F|G|H|I|K|L|M|N|O|R|U|V|X|Y|Z)|D(E|J|K|M|O|Z)|E(C|E|G|H|R|S|T)|F(I|J|K|M|O|R)|G(A|B|D|E|F|G|H|I|L|M|N|P|Q|R|S|T|U|W|Y)|H(K|M|N|R|T|U)|I(D|E|Q|L|M|N|O|R|S|T)|J(E|M|O|P)|K(E|G|H|I|M|N|P|R|W|Y|Z)|L(A|B|C|I|K|R|S|T|U|V|Y)|M(A|C|D|E|F|G|H|K|L|M|N|O|Q|P|R|S|T|U|V|W|X|Y|Z)|N(A|C|E|F|G|I|L|O|P|R|U|Z)|OM|P(A|E|F|G|H|K|L|M|N|R|S|T|W|Y)|QA|R(E|O|S|U|W)|S(A|B|C|D|E|G|H|I|J|K|L|M|N|O|R|T|V|Y|Z)|T(C|D|F|G|H|J|K|L|M|N|O|R|T|V|W|Z)|U(A|G|M|S|Y|Z)|V(A|C|E|G|I|N|U)|W(F|S)|Y(E|T)|Z(A|M|W))$" %>
-      <br>
+<!--<form>-->
 
-      <%= f.label 'postal_code' %><br>
-      <%= f.text_field :postal_code, pattern: "[\\d]{5}(-[\\d]{4})?" %><br>
 
-      <%= f.label 'city' %><br>
-      <%= f.text_field :city %><br>
+<!--  <div class="invalid-feedback">-->
+<!--    Please choose a username. <%#= :first_name %>-->
+<!--  </div>-->
+<%# else %>
+<%#= text_field(:post, :first_name, maxlength: 30, class: "form-control is-valid") %>
+<!--  <div class="valid-feedback">-->
+<!--    Looks good! <%#= :first_name %>-->
+<!--  </div>-->
+<%# end %>
+<!--  </div>-->
+<!--  <div class="col-md-4 mb-3">-->
 
-      <%= f.label 'address (streetname and house number)' %><br>
-      <%= f.text_field :address %>
-    </p>
-  </fieldset>
-  <fieldset>
-    <legend>Authentication</legend>
-    <p>
-      <%= f.label 'password *' %><br>
-      <%= f.password_field :password %><br>
-      <%= f.label 'password_confirmation *' %><br>
-      <%= f.password_field :password_confirmation %>
-    </p>
-  </fieldset>
-  <p>
-    <%= f.submit 'Sign Up' %>
-  </p>
-  <p>
-    <% f.label 'longitude' %><br>
-    <% f.number_field :longitude, default: 0.0 %>
-  </p>
-  <p>
-    <% f.label 'latitude' %><br>
-    <% f.number_field :latitude, default: 0.0 %>
-  </p>
-<% end %>
+<!--  <div class="col-md-4 mb-3">-->
+<!--    <label for="validationServerUsername">Username</label>-->
+<!--    <div class="input-group">-->
+<!--      <div class="input-group-prepend">-->
+<!--        <span class="input-group-text" id="inputGroupPrepend3">@</span>-->
+<!--      </div>-->
+<!--      <input type="text" class="form-control is-invalid" id="validationServerUsername" placeholder="Username" aria-describedby="inputGroupPrepend3" required>-->
+<!--      <div class="invalid-feedback">-->
+<!--        Please choose a username.-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
 
+
+
+            <form class="was-validated">
+              <div class="form-row">
+                <div class="col-md-4 mb-3">
+                  <label for="validationServer01">First name</label>
+                  <input type="text" class="form-control is-valid" id="validationServer01" placeholder="First name" value="Mark" required>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                  <label for="validationServer02">Last name</label>
+                  <input type="text" class="form-control is-valid" id="validationServer02" placeholder="Last name" value="Otto" required>
+                </div>
+
+                <div class="col-md-2 mb-3">
+                  <label for="validationServer02">Date of birth</label>
+                  <input type="date" class="form-control is-valid" id="validationServer02" placeholder="Last name" value="Otto" required>
+                </div>
+
+              </div>
+
+              <div class="form-row">
+                <div class="col-md-1 mb-3">
+                  <label for="validationServer03">Country</label>
+                  <input type="text" class="form-control is-invalid" id="validationServer03" placeholder="City" required>
+                </div>
+                <div class="col-md-3 mb-3">
+                  <label for="validationServer03">City</label>
+                  <input type="text" class="form-control is-invalid" id="validationServer03" placeholder="City" required>
+                </div>
+                <div class="col-md-2 mb-3">
+                  <label for="validationServer05">Zip</label>
+                  <input type="text" class="form-control is-invalid" id="validationServer05" placeholder="Zip" required>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label for="validationServer03">Address (street)</label>
+                  <input type="text" class="form-control is-invalid" id="validationServer03" placeholder="City" required>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="col-md-5 mb-3">
+                  <label for="colFormLabelLg">Email</label>
+                  <input type="email" class="form-control form-control-lg" id="colFormLabelLg" placeholder="Email">
+                </div>
+                <div class="col-md-5 mb-3 mx-sm-3">
+                  <label for="inputPassword6">Password</label>
+                  <input type="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline">
+                  <small id="passwordHelpInline" class="text-muted">
+                    Must be 8-20 characters long.
+                  </small>
+                </div>
+              </div>
+            </form>
+            <div class="form-group">
+              <div class="form-check">
+                <input class="form-check-input is-invalid" type="checkbox" value="" id="invalidCheck3" required>
+                <label class="form-check-label" for="invalidCheck3">
+                  Agree to terms and conditions
+                </label>
+                <div class="invalid-feedback">
+                  You must agree before submitting.
+                </div>
+              </div>
+            </div>
+
+            <!--            <div class="row justify-content-center">-->
+            <!--              c-->
+            <!--              <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">-->
+            <!--                d-->
+
+            <!--                <form class="mx-1 mx-md-4">-->
+
+            <!--                  <div class="d-flex flex-row align-items-center mb-4">-->
+            <!--                    <i class="fas fa-user fa-lg me-3 fa-fw"></i>-->
+            <!--                    <div class="form-outline flex-fill mb-0">-->
+            <!--                      <input type="text" id="form3Example1c" class="form-control"/>-->
+            <!--                      <label class="form-label" for="form3Example1c">Your Name</label>-->
+            <!--                    </div>-->
+            <!--                  </div>-->
+
+            <!--                  <div class="d-flex flex-row align-items-center mb-4">-->
+            <!--                    <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>-->
+            <!--                    <div class="form-outline flex-fill mb-0">-->
+            <!--                      <input type="email" id="form3Example3c" class="form-control"/>-->
+            <!--                      <label class="form-label" for="form3Example3c">Your Email</label>-->
+            <!--                    </div>-->
+            <!--                  </div>-->
+
+            <!--                  <div class="d-flex flex-row align-items-center mb-4">-->
+            <!--                    <i class="fas fa-lock fa-lg me-3 fa-fw"></i>-->
+            <!--                    <div class="form-outline flex-fill mb-0">-->
+            <!--                      <input type="password" id="form3Example4c" class="form-control"/>-->
+            <!--                      <label class="form-label" for="form3Example4c">Password</label>-->
+            <!--                    </div>-->
+            <!--                  </div>-->
+
+            <!--                  <div class="d-flex flex-row align-items-center mb-4">-->
+            <!--                    <i class="fas fa-key fa-lg me-3 fa-fw"></i>-->
+            <!--                    <div class="form-outline flex-fill mb-0">-->
+            <!--                      <input type="password" id="form3Example4cd" class="form-control"/>-->
+            <!--                      <label class="form-label" for="form3Example4cd">Repeat your password</label>-->
+            <!--                    </div>-->
+            <!--                  </div>-->
+
+            <!--                  <div class="form-check d-flex justify-content-center mb-5">-->
+            <!--                    <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3c"/>-->
+            <!--                    <label class="form-check-label" for="form2Example3">-->
+            <!--                      I agree all statements in <a href="#!">Terms of service</a>-->
+            <!--                    </label>-->
+            <!--                  </div>-->
+
+            <!--                  <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">-->
+            <!--                    <button type="button" class="btn btn-primary btn-lg">Register</button>-->
+            <!--                  </div>-->
+
+            <!--                </form>-->
+
+            <!--              </div>-->
+            <!--              <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">-->
+
+            <!--                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"-->
+            <!--                     class="img-fluid" alt="Sample image">-->
+
+            <!--              </div>-->
+            <!--            </div>-->
