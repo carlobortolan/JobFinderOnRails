@@ -1,0 +1,84 @@
+<div class="container-fluid">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="#">API Documentation</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="#introduction">Introduction</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#endpoints">Endpoints</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#examples">Examples</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#reference">Reference</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="jumbotron jumbotron-fluid">
+    <div class="container">
+      <h1 class="display-4" id="introduction">Introduction</h1>
+      <p class="lead">This API allows you to...</p>
+    </div>
+  </div>
+
+  <div class="container-fluid" id="endpoints">
+    <h2>Endpoints</h2>
+    <table class="table">
+      <thead>
+      <tr>
+        <th>HTTP Verb</th>
+        <th>URL</th>
+        <th>Description</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>GET</td>
+        <td>/api/users</td>
+        <td>Returns a list of all users</td>
+      </tr>
+      <tr>
+        <td>GET</td>
+        <td>/api/users/:id</td>
+        <td>Returns a specific user by ID</td>
+      </tr>
+      <tr>
+        <td>POST</td>
+        <td>/api/users</td>
+        <td>Creates a new user</td>
+      </tr>
+      <tr>
+        <td>PUT</td>
+        <td>/api/users/:id</td>
+        <td>Updates a specific user by ID</td>
+      </tr>
+      <tr>
+        <td>DELETE</td>
+        <td>/api/users/:id</td>
+        <td>Deletes a specific user by ID</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="container-fluid" id="examples">
+    <h2>Examples</h2>
+    <p>Here are some examples of how to use this API:</p>
+    <div class="card mb-3">
+      <div class="card-header">
+        GET /api/users
+      </div>
+      <div class="card-body">
+        <pre><code>curl http://localhost:3000/api/users</code></pre>
+      </div>
+    </div>
+  </div>
+</div>

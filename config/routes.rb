@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   get 'about/privacy/cookies', :to => 'welcome#cookies', as: :cookies
   get 'about/help', :to => 'welcome#help', as: :help
   get 'about/api', :to => 'welcome#api', as: :api
+  get 'about/api/apidoc.json', :to => 'welcome#apidoc', as: :apidoc
   get 'about/faq', :to => 'welcome#faq', as: :faq
 
   # START NAMESPACE

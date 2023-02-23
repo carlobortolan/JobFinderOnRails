@@ -1,4 +1,6 @@
 class WelcomeController < ApplicationController
+  require "json"
+
   def index
     if Current.user
       # flash.now[:notice] = "Logged in as #{Current.user.email}"
@@ -14,6 +16,11 @@ class WelcomeController < ApplicationController
   end
 
   def api
+
+  end
+
+  def apidoc
+    render json: File.read('app/views/welcome/dist/apidoc.json')
   end
 
   def faq
