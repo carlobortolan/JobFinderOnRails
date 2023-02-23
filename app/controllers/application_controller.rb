@@ -1,6 +1,5 @@
 class ApplicationController < ActionController::Base
   before_action :set_current_user
-  # protect_from_forgery with::exception
 
   def set_current_user
     Current.user = User.find_by(id: session[:user_id]) if session[:user_id]
@@ -45,7 +44,7 @@ class ApplicationController < ActionController::Base
       # && Current.user.role == 'Admin'
       render json: { error: exception.message }.to_json, status: 404
     else
-      err_not_allowed # end
+      err_not_allowed
     end
   end
 
