@@ -26,7 +26,6 @@ GEM
       net-smtp
     actionmailer (7.0.4.1)
       actionpack (= 7.0.4.1)
-      rack (>= 2.2.0, ~> 2.0)
       actionview (= 7.0.4.1)
       activejob (= 7.0.4.1)
       activesupport (= 7.0.4.1)
