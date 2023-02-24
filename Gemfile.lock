@@ -293,7 +293,7 @@ DEPENDENCIES
   web-console
   webdrivers
   yard
-actionpack (>= 5.2)
+
 RUBY VERSION
    ruby 2.7.5p203
 
