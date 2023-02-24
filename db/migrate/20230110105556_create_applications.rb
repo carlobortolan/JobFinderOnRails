@@ -5,7 +5,7 @@ class CreateApplications < ActiveRecord::Migration[7.0]
       t.integer "applicant_id", null: false
       t.datetime "applied_at", default: -> { DateTime.now }
       t.column "status", "enum('-1','0','1')", default: "0", null: false
-      t.string "application_text", limit: 500
+      t.string "application_text", limit: 1000
       t.string "application_documents", limit: 100
       t.string "response", limit: 500
       t.index ["applicant_id"], name: "account_id_idx"

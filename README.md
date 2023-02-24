@@ -82,12 +82,12 @@ Simply start the server and go to http://localhost:3000/ and create a new accoun
 ## TODO
 
 > Update profile section UI
-> Update sign up UI
+> ~~Update sign up UI~~
 > Update Job & Application UI
 > Deploy test version
-> Complete API doc
+> ~~Complete API doc (related to different issue)~~
 > Implement basic search function
-> Create seeds for jobs, users and applications
+> ~~Create seeds for jobs, users and applications~~
 
 - see TODOs issued in GitLab
 

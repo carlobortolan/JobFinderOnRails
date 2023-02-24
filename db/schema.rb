@@ -16,7 +16,7 @@ ActiveRecord::Schema[7.0].define(version: 202301100105555) do
     t.integer "applicant_id", null: false
     t.datetime "applied_at", null: false
     t.column "status", "enum('-1','0','1')", default: "0", null: false
-    t.string "application_text", limit: 500
+    t.string "application_text", limit: 1000
     t.string "application_documents", limit: 100
     t.string "response", limit: 500
     t.index ["applicant_id"], name: "account_id_idx"
@@ -53,20 +53,26 @@ ActiveRecord::Schema[7.0].define(version: 202301100105555) do
   end
 
   create_table "jobs", primary_key: "job_id", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.column "job_type", "enum('typa','typb','typc')"
+    t.string "job_type"
     t.integer "job_status", limit: 1, default: 0
-    t.string "status", default: "0"
     t.integer "user_id", default: 0
     t.integer "duration", default: 0
     t.string "code_lang", limit: 2
     t.string "title", limit: 100
+    t.string "position", limit: 100
     t.text "description"
+    t.string "key_skills", limit: 100
     t.integer "salary"
-    t.column "currency", "enum('eur','usd','chf','gbp')"
+    t.string "currency"
+    # , "enum('eur','usd','chf','gbp')"
     t.string "image_url", limit: 500
     t.datetime "start_slot", precision: nil
     t.float "longitude", null: false
     t.float "latitude", null: false
+    t.string "country_code", limit: 45
+    t.string "postal_code", limit: 45
+    t.string "city", limit: 45
+    t.string "address", limit: 45
     t.integer "view_count", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
