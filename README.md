@@ -1,8 +1,7 @@
 <h1>JobFinder on RAILS</h1>
 
 
-> __NOTE__: _THIS REPOSITORY CONTAINS A DEPRECATED VERSION OF EMBLOY.COM. THE CURRENT VERSION CAN BE FOUND _
-___[HERE](https://github.com/carlobortolan/Embloy)___
+> __NOTE__: _THIS REPOSITORY CONTAINS A DEPRECATED VERSION OF EMBLOY.COM. THE CURRENT VERSION CAN BE FOUND_ ___[HERE](https://github.com/carlobortolan/Embloy)___
 
 
 
