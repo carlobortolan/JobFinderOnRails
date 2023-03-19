@@ -1,12 +1,15 @@
 <h1>JobFinder on RAILS</h1>
 
-## License
 
-### Licensed under either of
+> __NOTE__: _THIS REPOSITORY CONTAINS A DEPRECATED VERSION OF EMBLOY.COM. THE CURRENT VERSION CAN BE FOUND _
+___[HERE](https://github.com/carlobortolan/Embloy)___
 
-> Apache License, Version 2.0, ([LICENSE-APACHE](http://www.apache.org/licenses/LICENSE-2.0))
 
-> MIT license ([LICENSE-MIT](http://opensource.org/licenses/MIT))
+
+## Licensed under
+
+> GNU AFFERO GENERAL PUBLIC LICENSE v3.0 ([gpl-3](https://www.gnu.org/licenses/gpl-3.0.en.html))
+
 
 ## Contribution
 
